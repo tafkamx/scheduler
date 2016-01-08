@@ -20,6 +20,10 @@ var middlewares = [
     path : 'middlewares/MethodOverride.js'
   },
   {
+    name : 'Domain Parser',
+    path : 'middlewares/DomainParser.js'
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
@@ -30,6 +34,14 @@ var middlewares = [
   {
     name : 'CSRF Error',
     path : 'middlewares/CSRFError.js'
+  },
+  {
+    name : 'Passport Initialize',
+    path : 'middlewares/PassportInit.js'
+  },
+  {
+    name : 'Passport Session',
+    path : 'middlewares/PassportSession.js'
   },
   {
     name : 'Locals',

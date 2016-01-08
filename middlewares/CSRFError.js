@@ -1,3 +1,5 @@
+// error handler middleware for CSRF
+
 if (CONFIG[CONFIG.environment].sessions === false) {
   return module.exports = function(req, res, next) {
     next();
@@ -5,6 +7,6 @@ if (CONFIG[CONFIG.environment].sessions === false) {
 }
 
 module.exports = function (err, req, res, next) {
-  logger.error('CSRF', err, res.locals._csrf);
+  logger.error('CSRF', err, res.locals._csrf)
   next(err);
 };

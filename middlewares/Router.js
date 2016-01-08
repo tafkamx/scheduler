@@ -26,10 +26,10 @@ routeMapper.routes.forEach(function(route) {
     if (beforeActions.length > 0) {
       var filters = beforeActions.filter(function(item) {
           if (item.actions.indexOf(action) !== -1) {
-              return true;
+            return true;
           }
       }).map(function(item) {
-          return item.before;
+        return item.before;
       });
 
       _.flatten(filters).reverse().forEach(function(filter) {

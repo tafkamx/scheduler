@@ -1,13 +1,19 @@
+var path = require('path');
+var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+
 var HomeController = Class('HomeController').inherits(BaseController)({
   beforeActions : [
-    {
-      before : ['_beforeIndex'],
-      actions : ['index']
-    }
+    // {
+    //   before : ['_authenticate'],
+    //   actions : ['index']
+    // }
   ],
   prototype : {
-    _beforeIndex : function(req, res, next) {
-      logger.info('Before Index');
+    _authenticate : function(req, res, next) {
+      if (!req.user) {
+        return res.redirect(urlFor.installationAdminLogin());
+      }
+
       next();
     },
 

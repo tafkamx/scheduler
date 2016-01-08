@@ -1,0 +1,8 @@
+<form class="" action="<%= urlFor.login() %>" method="post">
+    <p>email : <input type="text" name="email" value="" /></p>
+    <p>password : <input type="password" name="password" value="" /></p>
+    <% if (CONFIG.environment !== 'test') { %>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <% } %>
+    <p><input type="submit" value="Login" /></p>
+</form>
