@@ -1,14 +1,20 @@
 expect = require('chai').expect;
 sa = require('superagent');
-baseURL = 'http://localhost:3000';
 var Promise = require('bluebird');
+var path = require('path');
 
-require(process.cwd() + '/bin/server.js');
-require('./integration/controllers/InstallationAdmin/AdminUsersController');
-require('./integration/controllers/InstallationAdmin/InstallationsController');
-require('./integration/controllers/InstallationAdmin/SessionsController');
-require('./integration/controllers/UsersController');
-require('./integration/controllers/SessionsController');
+
+baseURL = 'http://localhost:3000';
+
+
+require(path.join(process.cwd(), '/bin/server.js'));
+require(path.join(__dirname, '/integration/controllers/InstallationAdmin/AdminUsersController'));
+require(path.join(__dirname, '/integration/controllers/InstallationAdmin/InstallationsController'));
+require(path.join(__dirname, '/integration/controllers/InstallationAdmin/SessionsController'));
+require(path.join(__dirname, '/integration/controllers/UsersController'));
+require(path.join(__dirname, '/integration/controllers/SessionsController'));
+
+require(path.join(__dirname, '/unit/mailers/AdminUserMailer'));
 
 logger.log = function(){};
 logger.info = logger.log;
