@@ -2,6 +2,6 @@
 languages:
   JavaScript: true
 exclude_paths:
-- "tests/**/*.js"
+- "test/**/*.js"
 - "public/js/vendor/*.js"
 - "lib/core/*.js"
