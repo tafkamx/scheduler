@@ -8,7 +8,7 @@
     "node": ">=0.10.33"
   },
   "scripts": {
-    "test": "NODE_ENV=test knex --knexfile KnexInstallationAdmin.js migrate:rollback ; NODE_ENV=test knex --knexfile KnexInstallationAdmin.js migrate:latest; NODE_ENV=test mocha -t 10000 --reporter spec",
+    "test": "NODE_ENV=test knex --knexfile KnexInstallationAdmin.js migrate:rollback ; NODE_ENV=test knex --knexfile KnexInstallationAdmin.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec",
     "start": "node bin/server.js"
   },
   "dependencies": {

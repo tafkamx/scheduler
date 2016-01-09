@@ -23,6 +23,6 @@ describe('AdminUserMailer', function() {
   after(function(done) {
     AdminUser.query().delete().then(function() {
       done();
-    })
+    });
   });
 });
