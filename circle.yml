@@ -1,10 +1,10 @@
-general:
-  branches:
-    only:
-      - master
-      - development
-      - /sprint-.*/
-
+# general:
+#   branches:
+#     only:
+#       - master
+#       - development
+#       - /sprint-.*/
+#
 machine:
   node:
     version: 4.4.0
@@ -31,8 +31,5 @@ database:
   override:
     - cp config/knexfile.sample.js knexfile.js
     - cp config/knexinstallationadmin.sample.js knexinstallationadmin.js
-    - createdb -h localhost installation-one-test
-    - createdb -h localhost installation-two-test
-    - createdb -h localhost three-test
     - createdb -h localhost patos-installation-admin-test
     - knex migrate:latest
