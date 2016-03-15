@@ -1,5 +1,6 @@
 // Use this middleware to set res.locals variables
 
+var path = require('path');
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 var _ = require('lodash');
 

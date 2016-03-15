@@ -9,9 +9,38 @@
 
 ## Setup
 
+### Config
+
+You will need to create the `config.js` file.
+
+### Knex files
+
+You will need to create the `KnexInstallationAdmin.js` and `knexfile.js` files.
+
+### Hosts
+
+Add the following to your `/etc/hosts` file:
+
+```
+#### PatOS ####
+
+127.0.0.1 default.installation-one.test-installation.com
+127.0.0.1 installation-one.test-installation.com
+127.0.0.1 default.installation-one.test-installation.com
+127.0.0.1 installation-one.test-installation.com
+
+127.0.0.1 default.installation-two.test-installation.com
+127.0.0.1 default.installation-two.test-installation.com
+127.0.0.1 installation-two.test-installation.com
+127.0.0.1 installation-two.test-installation.com
+127.0.0.1 default.installation-three.test-installation.com
+```
 
 ## Run the server
-    npm start
+
+```
+$ npm start
+```
 
 ## Database Migrations
 
@@ -38,7 +67,7 @@ Neonode is possible thanks to these wonderful libraries
 
 [Krypton][9]
 
-[Fuorine][7]
+[Fluorine][7]
 
 [Cobalt][8]
 
