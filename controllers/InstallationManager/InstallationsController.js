@@ -1,7 +1,7 @@
 var path = require('path');
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 
-InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'InstallationsController').inherits(BaseController)({
+InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions : [
     {
@@ -103,4 +103,4 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
   }
 });
 
-module.exports = new InstallationAdmin.InstallationsController();
+module.exports = new InstallationManager.InstallationsController();

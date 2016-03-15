@@ -6,7 +6,7 @@ var adminUser = new AdminUser({
   password : '12345678'
 });
 
-describe('InstallationAdmin.Sessions Controller', function() {
+describe('InstallationManager.Sessions Controller', function() {
   before(function(done) {
     adminUser.save().then(function(res) {
       done();
@@ -14,7 +14,7 @@ describe('InstallationAdmin.Sessions Controller', function() {
   });
 
   it('Should fail login because the account has not been activated', function(done) {
-    sa.agent().post(baseURL + '/InstallationAdmin/login')
+    sa.agent().post(baseURL + '/InstallationManager/login')
       .send({ email: adminUser.email, password: adminUser.password})
       .end(function(err, res) {
         assert(res.text.search('User not activated') !== -1, 'User not activated');
@@ -23,7 +23,7 @@ describe('InstallationAdmin.Sessions Controller', function() {
   });
 
   it('Should login and activate with the users token', function(done) {
-    sa.agent().get(baseURL + '/InstallationAdmin/login?email=false&token=' + adminUser.token)
+    sa.agent().get(baseURL + '/InstallationManager/login?email=false&token=' + adminUser.token)
     .end(function(err, res) {
       assert(res.text.search('"success": "PatOS Installation Admin."') !== -1, 'Logged in');
       done();
@@ -32,7 +32,7 @@ describe('InstallationAdmin.Sessions Controller', function() {
   });
 
   it('Should login with the email/password', function(done) {
-    sa.agent().post(baseURL + '/InstallationAdmin/login')
+    sa.agent().post(baseURL + '/InstallationManager/login')
       .send({ email: adminUser.email, password: adminUser.password})
       .end(function(err, res) {
         assert(res.text.search('"success": "PatOS Installation Admin."') !== -1, 'Logged in');
@@ -42,11 +42,11 @@ describe('InstallationAdmin.Sessions Controller', function() {
 
   it('Should logout', function(done) {
     var agent = sa.agent();
-    agent.post(baseURL + '/InstallationAdmin/login')
+    agent.post(baseURL + '/InstallationManager/login')
       .send({ email: adminUser.email, password: adminUser.password})
       .end(function(err, res) {
         assert(res.text.search('"success": "PatOS Installation Admin."') !== -1, 'Logged in');
-        agent.get(baseURL + '/InstallationAdmin/logout')
+        agent.get(baseURL + '/InstallationManager/logout')
         .end(function(err, res) {
           assert(res.text.search('"success": "Signed off"') !== -1, 'Signed off');
           done();
@@ -57,12 +57,12 @@ describe('InstallationAdmin.Sessions Controller', function() {
 
   it('Should not let a logged in user login', function(done) {
     var agent = sa.agent();
-    agent.post(baseURL + '/InstallationAdmin/login')
+    agent.post(baseURL + '/InstallationManager/login')
       .send({ email: adminUser.email, password: adminUser.password})
       .end(function(err, res) {
         assert(res.text.search('"success": "PatOS Installation Admin."') !== -1, 'Logged in');
 
-        agent.get(baseURL + '/InstallationAdmin/login')
+        agent.get(baseURL + '/InstallationManager/login')
         .end(function(err, res) {
           assert(res.text.search('"info": "You are already logged in"') !== -1, 'Already logged in');
           done();

@@ -8,7 +8,7 @@ routeMapper
 
   .resources(['Users'])
 
-  .namespace('InstallationAdmin', function() {
+  .namespace('InstallationManager', function() {
     routeMapper
       .get('/login', { to : 'Sessions#new'})
       .get('/logout', { to : 'Sessions#destroy'})
