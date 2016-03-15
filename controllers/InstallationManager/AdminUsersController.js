@@ -42,7 +42,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
         res.format({
           html : function() {
-            res.render('InstallationAdmin/AdminUsers/index.html');
+            res.render('InstallationManager/AdminUsers/index.html');
           },
           json : function() {
             res.json(results);
@@ -57,7 +57,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/show.html');
+          res.render('InstallationManager/AdminUsers/show.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -66,7 +66,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
     },
 
     new : function(req, res, next) {
-      res.render('InstallationAdmin/AdminUsers/new.html');
+      res.render('InstallationManager/AdminUsers/new.html');
     },
 
     create : function create(req, res, next) {
@@ -90,7 +90,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/edit.html');
+          res.render('InstallationManager/AdminUsers/edit.html');
         },
         json : function() {
           res.json(res.locals.adminUser);

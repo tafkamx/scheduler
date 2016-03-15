@@ -12,7 +12,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
       }
 
       if (!req.query.token) {
-        return res.render('InstallationAdmin/sessions/new.html',  { urlFor : urlFor });
+        return res.render('InstallationManager/sessions/new.html',  { urlFor : urlFor });
       }
 
       passport.authenticate('InstallationAdminTokenStrategy', function(err, user, info) {

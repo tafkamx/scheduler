@@ -34,7 +34,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
       Installation.query().then(function(results) {
         res.format({
           html : function() {
-            res.render('InstallationAdmin/Installations/index.html', {installations : results});
+            res.render('InstallationManager/Installations/index.html', {installations : results});
           },
           json : function() {
             res.json(results);
@@ -46,7 +46,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     show : function show(req, res, next) {
       res.format({
         html : function() {
-          res.render('InstallationAdmin/Installations/show.html', { installation : req.installation});
+          res.render('InstallationManager/Installations/show.html', { installation : req.installation});
         },
         json : function() {
           res.json(req.installation);
@@ -55,7 +55,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     },
 
     new : function(req, res, next) {
-      res.render('InstallationAdmin/Installations/new.html');
+      res.render('InstallationManager/Installations/new.html');
     },
 
     create : function create(req, res, next) {
@@ -73,7 +73,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     edit : function edit(req, res, next) {
       res.format({
         html : function() {
-          res.render('InstallationAdmin/Installations/edit.html', { installation : req.installation });
+          res.render('InstallationManager/Installations/edit.html', { installation : req.installation });
         },
         json : function() {
           res.json(req.installation);
