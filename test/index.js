@@ -13,7 +13,7 @@ require(path.join(__dirname, '/integration/controllers/InstallationManager/Insta
 require(path.join(__dirname, '/integration/controllers/InstallationManager/SessionsController'));
 require(path.join(__dirname, '/integration/controllers/UsersController'));
 require(path.join(__dirname, '/integration/controllers/SessionsController'));
-
+//
 require(path.join(__dirname, '/unit/mailers/AdminUserMailer'));
 
 logger.log = function(){};

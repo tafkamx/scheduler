@@ -131,9 +131,10 @@ describe('InstallationManager.InstallationsController', function() {
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('name must only contain alpha-numeric characters and dashes.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
         done();
       })
   });
@@ -147,9 +148,10 @@ describe('InstallationManager.InstallationsController', function() {
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
       })
   });
@@ -163,9 +165,10 @@ describe('InstallationManager.InstallationsController', function() {
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
       })
   });
@@ -180,10 +183,11 @@ describe('InstallationManager.InstallationsController', function() {
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('name already exists.');
-        expect(res.body.errors.domain).to.be.equal('domain already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('name already exists.');
+        expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
         done();
       })
   });
@@ -198,9 +202,10 @@ describe('InstallationManager.InstallationsController', function() {
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.domain).to.be.equal('Invalid domain.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.domain[0]).to.be.equal('Invalid domain.');
         done();
       })
   });
@@ -215,10 +220,11 @@ describe('InstallationManager.InstallationsController', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name must not exceed 128 characters long');
-        expect(res.body.errors.domain).to.be.equal('The domain must not exceed 255 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name must not exceed 128 characters long');
+        expect(err.response.body.domain[0]).to.be.equal('The domain must not exceed 255 characters long');
         done();
       })
   });
@@ -294,9 +300,11 @@ describe('InstallationManager.InstallationsController', function() {
         .set('Accept', 'application/json')
         .send(data)
         .end(function(err, res) {
-          expect(err).to.be.eql(null);
-          expect(res.body.errors.name).to.be.equal('name already exists.');
-          expect(res.body.errors.domain).to.be.equal('domain already exists.');
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('name already exists.');
+          expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
           done();
         })
     });
@@ -335,11 +343,17 @@ describe('InstallationManager.InstallationsController', function() {
   after(function(done) {
     Promise.all([
       AdminUser.query().delete(),
-      // AdminUser.knex().raw('DROP DATABASE installation_one_test'),
-      // AdminUser.knex().raw('DROP DATABASE installation_two_test'),
-      // AdminUser.knex().raw('DROP DATABASE three_test'),
+      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
+      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
+      // AdminUser.knex().raw("DROP DATABASE 'installation-one-test'"),
+      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
+      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
+      // AdminUser.knex().raw("DROP DATABASE 'installation-two-test'"),
+      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
+      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
+      // AdminUser.knex().raw("DROP DATABASE 'three-test'"),
     ]).then(function() {
       return done();
-    });
+    }).catch(done);
   });
 });
