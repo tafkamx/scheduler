@@ -2,7 +2,8 @@ var installation = 'installation-one';
 
 var user, knex, Knex, knexConfig;
 
-var installationURL = 'http://default.' + installation + '.test-installation.com:3000';
+var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
+var installationURL = 'http://default.' + installation + '.' + websiteUrl;
 
 var agent = sa.agent();
 
