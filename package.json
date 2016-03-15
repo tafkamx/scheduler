@@ -29,7 +29,7 @@
     "glob": "^6.0.3",
     "imports-loader": "^0.6.5",
     "knex": "^0.9.0",
-    "krypton-orm": "0.0.5",
+    "krypton-orm": "0.0.12",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
     "lodash": "^3.10.1",
@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "istanbul": "0.4.2",
     "mocha": "^2.3.4",
     "nodemailer-stub-transport": "^1.0.0",
     "superagent": "^1.6.1"
