@@ -17,10 +17,7 @@ checkout:
     - cp config/config.sample.js config/config.js
 
 dependencies:
-  cache_directories:
-    - redis-3.0.7
   pre:
-    - if [[ ! -e redis-3.0.7/src/redis-server ]]; then wget http://download.redis.io/releases/redis-3.0.7.tar.gz && tar xzf redis-3.0.7.tar.gz && cd redis-3.0.7 && make; fi
     - npm install istanbul -g
 
 database:
@@ -31,3 +28,4 @@ database:
     - createdb -h localhost installation-two-test
     - createdb -h localhost three-test
     - createdb -h localhost patos-installation-admin-test
+    - knex migrate:latest
