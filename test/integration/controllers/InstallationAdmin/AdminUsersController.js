@@ -124,10 +124,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        // expect(err).to.be.equal(Error);
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
         done();
       })
   });
@@ -140,9 +140,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email must be a valid email address');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email must be a valid email address');
         done();
       })
   });
@@ -155,10 +156,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        // console.log(err, res)
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email is required');
         done();
       })
   });
@@ -171,9 +172,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email must not exceed 255 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email must not exceed 255 characters long');
         done();
       })
   });
@@ -186,9 +188,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : '1234567'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.password).to.be.equal('The password must be at least 8 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
         done();
       })
   });
@@ -261,8 +264,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : 'abcdefghi'
       })
       .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors.email).to.be.equal('The email already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
         expect(res.body.encryptedPassword).to.be.undefined;
         expect(res.body.token).to.be.undefined;
         done();
@@ -276,8 +281,10 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
         password : 'abcd'
       })
       .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors.password).to.be.equal('The password must be at least 8 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
         expect(res.body.encryptedPassword).to.be.undefined;
         expect(res.body.token).to.be.undefined;
         done();

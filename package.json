@@ -8,7 +8,7 @@
     "node": ">=0.10.33"
   },
   "scripts": {
-    "test": "NODE_ENV=test knex --knexfile knexinstallationadmin.js migrate:rollback ; NODE_ENV=test knex --knexfile knexinstallationadmin.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec",
+    "test": "NODE_ENV=test knex --knexfile knexinstallationadmin.js migrate:rollback ; NODE_ENV=test knex --knexfile knexinstallationadmin.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec; psql -c 'DROP DATABASE \"installation-one-test\"'; psql -c 'DROP DATABASE \"installation-two-test\"'; psql -c 'DROP DATABASE \"three-test\"';",
     "start": "node bin/server.js"
   },
   "dependencies": {
@@ -29,7 +29,7 @@
     "glob": "6.0.3",
     "imports-loader": "0.6.5",
     "knex": "0.9.0",
-    "krypton-orm": "0.0.12",
+    "krypton-orm": "0.0.13",
     "less": "2.5.3",
     "less-loader": "2.2.2",
     "lodash": "3.10.1",
