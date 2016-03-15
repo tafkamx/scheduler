@@ -1,0 +1,31 @@
+machine:
+  node:
+    version: 4.4.0
+  hosts:
+    default.installation-one.test-installation.com: 127.0.0.1
+    installation-one.test-installation.com: 127.0.0.1
+    default.installation-one.test-installation.com: 127.0.0.1
+    installation-one.test-installation.com: 127.0.0.1
+    default.installation-two.test-installation.com: 127.0.0.1
+    default.installation-two.test-installation.com: 127.0.0.1
+    installation-two.test-installation.com: 127.0.0.1
+    installation-two.test-installation.com: 127.0.0.1
+    default.installation-three.test-installation.com: 127.0.0.1
+
+checkout:
+  post:
+    - cp config/config.sample.js config/config.js
+
+dependencies:
+  pre:
+    - npm install istanbul -g
+
+database:
+  override:
+    - cp config/knexfile.sample.js knexfile.js
+    - cp config/knexinstallationadmin.sample.js knexinstallationadmin.js
+    - createdb -h localhost installation-one-test
+    - createdb -h localhost installation-two-test
+    - createdb -h localhost three-test
+    - createdb -h localhost patos-installation-admin-test
+    - knex migrate:latest
