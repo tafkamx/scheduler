@@ -15,9 +15,10 @@ var Promise = require('bluebird');
 
 var installationOne = 'installation-one';
 var installationTwo = 'installation-two';
+var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
 
-var installationOneURL = 'http://default.' + installationOne + '.test-installation.com:3000';
-var installationTwoURL = 'http://default.' + installationTwo + '.test-installation.com:3000';
+var installationOneURL = 'http://default.' + installationOne + '.' + websiteUrl;
+var installationTwoURL = 'http://default.' + installationTwo + '.' + websiteUrl;
 
 var agent1 = sa.agent();
 var agent2 = sa.agent();
