@@ -1,10 +1,10 @@
-# general:
-#   branches:
-#     only:
-#       - master
-#       - development
-#       - /sprint-.*/
-#
+general:
+  branches:
+    only:
+      - master
+      - development
+      - /sprint-.*/
+
 machine:
   node:
     version: 4.4.0
