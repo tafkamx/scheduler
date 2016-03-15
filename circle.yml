@@ -21,4 +21,4 @@ database:
     - createdb -h localhost installation-one-test
     - createdb -h localhost installation-two-test
     - createdb -h localhost three-test
-    - createdb -hsi localhost patos-installation-admin-test
+    - createdb -h localhost patos-installation-admin-test
