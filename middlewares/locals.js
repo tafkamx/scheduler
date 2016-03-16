@@ -15,9 +15,15 @@ module.exports = function(req, res, next) {
     req.role = 'Admin';
   }
 
-  res.locals.helpers = {
+  if (_.isUndefined(res.locals.helpers) {
+    res.locals.helpers = {};
+  }
+
+  var helpers = {
     urlFor: urlFor
   };
+
+  _.assign(res.locals.helpers, helpers);
 
   next();
 }
