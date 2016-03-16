@@ -2,7 +2,7 @@ var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
 
-var Installation = Class('Installation').inherits(InstallationManagerModel)({
+InstallationManager.Installation = Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
   validations : {
     name : [
@@ -20,7 +20,7 @@ var Installation = Class('Installation').inherits(InstallationManagerModel)({
       },
       {
         rule : function(val) {
-          var query = Installation.query().where({
+          var query = InstallationManager.Installation.query().where({
             name : val
           });
 
@@ -53,7 +53,7 @@ var Installation = Class('Installation').inherits(InstallationManagerModel)({
       {
         rule : function(val) {
           if (val) {
-            var query = Installation.query().where({
+            var query = InstallationManager.Installation.query().where({
               domain : val
             });
 
@@ -90,7 +90,7 @@ var Installation = Class('Installation').inherits(InstallationManagerModel)({
     domain : null,
 
     init : function(config) {
-      InstallationManagerModel.prototype.init.call(this, config);
+      InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
@@ -125,4 +125,4 @@ var Installation = Class('Installation').inherits(InstallationManagerModel)({
   }
 });
 
-module.exports = Installation;
+module.exports = InstallationManager.Installation;

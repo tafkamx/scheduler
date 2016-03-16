@@ -1,7 +1,7 @@
 var path = require('path');
 var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
 
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.AdminUser({
   email : 'sergio@delagarza.io',
   password : '12345678'
 });
@@ -21,7 +21,7 @@ describe('AdminUserMailer', function() {
   });
 
   after(function(done) {
-    AdminUser.query().delete().then(function() {
+    InstallationManager.AdminUser.query().delete().then(function() {
       done();
     });
   });

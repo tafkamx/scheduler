@@ -1,11 +1,11 @@
 var Promise = require('bluebird');
 
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.AdminUser({
   email : 'test@example.com',
   password : '12345678'
 });
 
-var installation = new Installation({
+var installation = new InstallationManager.Installation({
   name : 'installation-one'
 });
 
@@ -288,7 +288,7 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
   it('Sould fail update if name exists or domain exists', function(done) {
-    Installation.query().where({
+    InstallationManager.Installation.query().where({
       name : 'installation-two'
     }).then(function(result) {
       var data = {
@@ -342,7 +342,7 @@ describe('InstallationManager.InstallationsController', function() {
 
   after(function(done) {
     Promise.all([
-      AdminUser.query().delete(),
+      InstallationManager.AdminUser.query().delete(),
       // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
       // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
       // AdminUser.knex().raw("DROP DATABASE 'installation-one-test'"),

@@ -3,14 +3,14 @@ var path = require('path');
 
 var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
 
-var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
+InstallationManager.AdminUser = Class(InstallationManager, 'AdminUser').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Users',
   validations : {
     'email' : [
       'email',
       {
         rule : function(val) {
-          var query = AdminUser.query()
+          var query = InstallationManager.AdminUser.query()
             .where({
               email : val
             });
@@ -41,7 +41,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
     encryptedPassword : null,
     token : null,
     init : function(config) {
-      InstallationManagerModel.prototype.init.call(this, config);
+      InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
@@ -74,4 +74,4 @@ var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
   }
 });
 
-module.exports = AdminUser;
+module.exports = InstallationManager.AdminUser;

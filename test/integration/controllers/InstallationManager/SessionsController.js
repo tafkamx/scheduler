@@ -1,7 +1,7 @@
 var agent = sa.agent();
 var assert = require('chai').assert;
 
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.AdminUser({
   email : 'test@example.com',
   password : '12345678'
 });
@@ -72,7 +72,7 @@ describe('InstallationManager.Sessions Controller', function() {
   });
 
   after(function(done) {
-    AdminUser.query().delete().then(function() {
+    InstallationManager.AdminUser.query().delete().then(function() {
       done();
     });
   });

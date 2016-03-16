@@ -17,7 +17,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
 
   prototype : {
     _loadResource : function(req, res, next) {
-      Installation.query().where({id : req.params.id}).then(function(result) {
+      InstallationManager.Installation.query().where({id : req.params.id}).then(function(result) {
 
         if (result.length === 0) {
           throw new NotFoundError('Installation ' + req.params.id + ' not found');
@@ -31,7 +31,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     },
 
     index : function index(req, res, next) {
-      Installation.query().then(function(results) {
+      InstallationManager.Installation.query().then(function(results) {
         res.format({
           html : function() {
             res.render('InstallationManager/Installations/index.html', {installations : results});
@@ -61,7 +61,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     create : function create(req, res, next) {
       res.format({
         json : function() {
-          var installation = new Installation(req.body);
+          var installation = new InstallationManager.Installation(req.body);
 
           installation.save().then(function() {
             res.json(installation);

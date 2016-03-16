@@ -17,7 +17,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
   prototype : {
     _loadAdminUser : function(req, res, next) {
-      AdminUser.query().where({id : req.params.id}).then(function(result) {
+      InstallationManager.AdminUser.query().where({id : req.params.id}).then(function(result) {
 
         if (result.length === 0) {
           throw new NotFoundError('AdminUser ' + req.params.id + ' not found');
@@ -32,7 +32,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
     },
 
     index : function index(req, res, next) {
-      AdminUser.query().then(function(results) {
+      InstallationManager.AdminUser.query().then(function(results) {
         results.forEach(function(result) {
           delete result.encryptedPassword;
           delete result.token;
@@ -72,7 +72,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
     create : function create(req, res, next) {
       res.format({
         json : function() {
-          var adminUser = new AdminUser(req.body);
+          var adminUser = new InstallationManager.AdminUser(req.body);
 
           adminUser.save().then(function() {
             delete adminUser.encryptedPassword;
