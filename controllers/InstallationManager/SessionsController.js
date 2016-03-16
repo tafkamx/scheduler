@@ -1,6 +1,6 @@
 var path = require('path');
-var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationAdminStrategy.js'));
-passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationAdminTokenStrategy.js'))(passport);
+var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerStrategy.js'));
+passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerTokenStrategy.js'))(passport);
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 
 InstallationManager.SessionsController = Class(InstallationManager, 'SessionsController').inherits(BaseController)({
@@ -15,7 +15,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
         return res.render('InstallationManager/sessions/new.html',  { urlFor : urlFor });
       }
 
-      passport.authenticate('InstallationAdminTokenStrategy', function(err, user, info) {
+      passport.authenticate('InstallationManagerTokenStrategy', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
 
@@ -51,7 +51,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
         return res.redirect('/');
       }
 
-      passport.authenticate('InstallationAdmin', function(err, user, info) {
+      passport.authenticate('InstallationManager', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
           return res.redirect(urlFor.installationManagerLogin());
