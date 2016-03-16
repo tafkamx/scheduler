@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
     req.role = 'Admin';
   }
 
-  if (_.isUndefined(res.locals.helpers) {
+  if (_.isUndefined(res.locals.helpers)) {
     res.locals.helpers = {};
   }
 
