@@ -29,7 +29,7 @@ describe('SessionsController', function() {
 
     knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
     knexOneConfig = _.clone(knexConfig, true);
-     knexTwoConfig = _.clone(knexConfig, true);
+    knexTwoConfig = _.clone(knexConfig, true);
 
     knexOneConfig[CONFIG.environment].connection.database = installationOne.toLowerCase() + '-' + CONFIG.environment;
 

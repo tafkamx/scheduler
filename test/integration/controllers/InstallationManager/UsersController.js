@@ -5,7 +5,7 @@ var adminUser = new InstallationManager.User({
 
 var agent = sa.agent();
 
-describe('InstallationManager.Users Controller', function() {
+describe('InstallationManager.UsersController', function() {
 
   before(function(done) {
     adminUser.save().then(function() {
