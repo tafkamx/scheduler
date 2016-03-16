@@ -1,4 +1,4 @@
-var _      = require('lodash');
+var _ = require('lodash');
 _.mixin(require('lodash-inflection'));
 
 var routeMapper = require('./../config/routeMapper.js');
@@ -6,7 +6,6 @@ var routeMapper = require('./../config/routeMapper.js');
 var router = global.neonode.express.Router();
 
 logger.info('Loading routes...');
-logger.info("\n\n\n\n\n");
 
 logger.info('Routes')
 routeMapper.routes.forEach(function(route) {
@@ -25,9 +24,9 @@ routeMapper.routes.forEach(function(route) {
 
     if (beforeActions.length > 0) {
       var filters = beforeActions.filter(function(item) {
-          if (item.actions.indexOf(action) !== -1) {
-            return true;
-          }
+        if (item.actions.indexOf(action) !== -1) {
+          return true;
+        }
       }).map(function(item) {
         return item.before;
       });
@@ -48,8 +47,9 @@ routeMapper.routes.forEach(function(route) {
     router.route(route.path)[verb](args);
   });
 });
+
 logger.info("---------------------------------");
-logger.info("\n\n");
+logger.info('\n');
 
 logger.info('Route Helpers:');
 
@@ -57,6 +57,6 @@ for (var helper in routeMapper.helpers) {
   logger.info(helper)
 }
 
-logger.info("\n\n\n\n\n");
+logger.info('\n');
 
 module.exports = router;
