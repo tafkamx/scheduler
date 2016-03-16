@@ -15,7 +15,7 @@ routeMapper
       .post('/login', { to : 'Sessions#create'})
 
       .resources([
-        'AdminUsers',
+        'Users',
         'Installations'
       ])
   });

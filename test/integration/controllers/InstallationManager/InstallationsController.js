@@ -1,11 +1,11 @@
 var Promise = require('bluebird');
 
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.User({
   email : 'test@example.com',
   password : '12345678'
 });
 
-var installation = new Installation({
+var installation = new InstallationManager.Installation({
   name : 'installation-one'
 });
 
@@ -29,7 +29,7 @@ describe('InstallationManager.InstallationsController', function() {
     });
   });
 
-  it('Sould render /InstallationManager/Installations/', function(done) {
+  it('Should render /InstallationManager/Installations/', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -39,7 +39,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould get the Installations Array from /InstallationManager/Installations/', function(done) {
+  it('Should get the Installations Array from /InstallationManager/Installations/', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .end(function(err, res) {
@@ -50,7 +50,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould render /InstallationManager/Installations/:id', function(done) {
+  it('Should render /InstallationManager/Installations/:id', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -60,7 +60,7 @@ describe('InstallationManager.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+  it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -71,7 +71,7 @@ describe('InstallationManager.InstallationsController', function() {
 
   });
 
-  it('Sould get /InstallationManager/Installations/:id', function(done) {
+  it('Should get /InstallationManager/Installations/:id', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
@@ -83,7 +83,7 @@ describe('InstallationManager.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+  it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'application/json')
       .end(function(err, res) {
@@ -93,7 +93,7 @@ describe('InstallationManager.InstallationsController', function() {
       });
   });
 
-  it('Sould render /InstallationManager/Installations/new', function(done) {
+  it('Should render /InstallationManager/Installations/new', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -103,7 +103,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould create a new Installation', function(done) {
+  it('Should create a new Installation', function(done) {
     var data = {
       name : 'installation-two',
       domain : 'empathia.academy'
@@ -122,7 +122,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the name contains spaces', function(done) {
+  it('Should fail to create an Installation if the name contains spaces', function(done) {
     var data = {
       name : 'my installation'
     };
@@ -139,7 +139,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the nameis empty', function(done) {
+  it('Should fail to create an Installation if the nameis empty', function(done) {
     var data = {
       name : ''
     };
@@ -156,7 +156,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the name is undefined', function(done) {
+  it('Should fail to create an Installation if the name is undefined', function(done) {
     var data = {
       name : undefined
     };
@@ -173,7 +173,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the name exists', function(done) {
+  it('Should fail to create an Installation if the name exists', function(done) {
     var data = {
       name : 'installation-one',
       domain : 'empathia.academy'
@@ -192,7 +192,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the domain is not a valid domain with tld', function(done) {
+  it('Should fail to create an Installation if the domain is not a valid domain with tld', function(done) {
     var data = {
       name : 'my-installation',
       domain : 'myinstallation'
@@ -211,7 +211,7 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
 
-  it('Sould fail if the name is > 128 or domain is > 255', function(done) {
+  it('Should fail if the name is > 128 or domain is > 255', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send({
@@ -229,7 +229,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould render /InstallationManager/Installations/:id/edit', function(done) {
+  it('Should render /InstallationManager/Installations/:id/edit', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -239,7 +239,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould get the installation object /InstallationManager/Installations/:id/edit', function(done) {
+  it('Should get the installation object /InstallationManager/Installations/:id/edit', function(done) {
     agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
@@ -250,7 +250,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould update installation attributes', function(done) {
+  it('Should update installation attributes', function(done) {
     var data = {
       domain : 'delagarza.io'
     };
@@ -268,7 +268,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould update installation attributes if send the same domain', function(done) {
+  it('Should update installation attributes if send the same domain', function(done) {
     var data = {
       name : 'Installation-ONE',
       domain : 'delagarza.io'
@@ -287,8 +287,8 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Sould fail update if name exists or domain exists', function(done) {
-    Installation.query().where({
+  it('Should fail update if name exists or domain exists', function(done) {
+    InstallationManager.Installation.query().where({
       name : 'installation-two'
     }).then(function(result) {
       var data = {
@@ -312,7 +312,7 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
 
-  it('Sould destroy a record', function(done) {
+  it('Should destroy a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations/')
       .send({
         name : 'three'
@@ -328,7 +328,7 @@ describe('InstallationManager.InstallationsController', function() {
       });
   });
 
-  it('Sould fail if id doesnt exist when destroying a record', function(done) {
+  it('Should fail if id doesnt exist when destroying a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations/' + installation.id + '1')
     .send({'_method' : 'DELETE'})
 
@@ -342,16 +342,16 @@ describe('InstallationManager.InstallationsController', function() {
 
   after(function(done) {
     Promise.all([
-      AdminUser.query().delete(),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'installation-one-test'"),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'installation-two-test'"),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'three-test'"),
+      InstallationManager.User.query().delete(),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'three-test'"),
     ]).then(function() {
       return done();
     }).catch(done);

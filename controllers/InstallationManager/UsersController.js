@@ -1,7 +1,7 @@
 var path = require('path');
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 
-InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUsersController').inherits(BaseController)({
+InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
   beforeActions : [
     {
@@ -10,17 +10,17 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
     },
     {
-      before : ['_loadAdminUser'],
+      before : ['_loadUser'],
       actions : ['show', 'edit', 'update', 'destroy']
     }
   ],
 
   prototype : {
-    _loadAdminUser : function(req, res, next) {
-      AdminUser.query().where({id : req.params.id}).then(function(result) {
+    _loadUser : function(req, res, next) {
+      InstallationManager.User.query().where({id : req.params.id}).then(function(result) {
 
         if (result.length === 0) {
-          throw new NotFoundError('AdminUser ' + req.params.id + ' not found');
+          throw new NotFoundError('User ' + req.params.id + ' not found');
         }
 
         res.locals.adminUser = result[0];
@@ -32,7 +32,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
     },
 
     index : function index(req, res, next) {
-      AdminUser.query().then(function(results) {
+      InstallationManager.User.query().then(function(results) {
         results.forEach(function(result) {
           delete result.encryptedPassword;
           delete result.token;
@@ -42,7 +42,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
         res.format({
           html : function() {
-            res.render('InstallationManager/AdminUsers/index.html');
+            res.render('InstallationManager/Users/index.html');
           },
           json : function() {
             res.json(results);
@@ -57,7 +57,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
       res.format({
         html : function() {
-          res.render('InstallationManager/AdminUsers/show.html');
+          res.render('InstallationManager/Users/show.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -66,13 +66,13 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
     },
 
     new : function(req, res, next) {
-      res.render('InstallationManager/AdminUsers/new.html');
+      res.render('InstallationManager/Users/new.html');
     },
 
     create : function create(req, res, next) {
       res.format({
         json : function() {
-          var adminUser = new AdminUser(req.body);
+          var adminUser = new InstallationManager.User(req.body);
 
           adminUser.save().then(function() {
             delete adminUser.encryptedPassword;
@@ -90,7 +90,7 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
 
       res.format({
         html : function() {
-          res.render('InstallationManager/AdminUsers/edit.html');
+          res.render('InstallationManager/Users/edit.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -123,4 +123,4 @@ InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUser
   }
 });
 
-module.exports = new InstallationManager.AdminUsersController();
+module.exports = new InstallationManager.UsersController();

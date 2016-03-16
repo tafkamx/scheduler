@@ -1,16 +1,16 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
 
-var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
+var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
-var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
+InstallationManager.User = Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Users',
   validations : {
     'email' : [
       'email',
       {
         rule : function(val) {
-          var query = AdminUser.query()
+          var query = InstallationManager.User.query()
             .where({
               email : val
             });
@@ -41,7 +41,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
     encryptedPassword : null,
     token : null,
     init : function(config) {
-      InstallationManagerModel.prototype.init.call(this, config);
+      InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
@@ -58,7 +58,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
       });
 
       this.on('afterCreate', function(next) {
-        AdminUserMailer.sendActivationLink(model).then(function() {
+        UserMailer.sendActivationLink(model).then(function() {
           next();
         }).catch(function(err) {
           throw new Error(err);
@@ -74,4 +74,4 @@ var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
   }
 });
 
-module.exports = AdminUser;
+module.exports = InstallationManager.User;
