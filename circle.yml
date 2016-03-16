@@ -30,9 +30,6 @@ dependencies:
 database:
   override:
     - cp config/knexfile.sample.js knexfile.js
-    - cp config/knexinstallationadmin.sample.js knexinstallationadmin.js
-    - createdb -h localhost installation-one-test
-    - createdb -h localhost installation-two-test
-    - createdb -h localhost three-test
+    - cp config/knexinstallationmanager.sample.js knexinstallationmanager.js
     - createdb -h localhost patos-installation-admin-test
     - knex migrate:latest
