@@ -1,7 +1,7 @@
 // Use this middleware to set res.locals variables
 
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 var _ = require('lodash');
 
 module.exports = function(req, res, next) {

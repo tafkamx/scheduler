@@ -2,7 +2,7 @@ var path = require('path');
 var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationStrategy.js'));
 passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationTokenStrategy.js'))(passport);
 
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 
 var SessionsController = Class('SessionsController').inherits(BaseController)({
   prototype : {
