@@ -33,7 +33,7 @@ describe('UsersController', function() {
 
   });
 
-  it('Sould render /Users/', function(done) {
+  it('Should render /Users/', function(done) {
     agent.get(installationURL + '/Users')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -110,7 +110,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould create a new User', function(done) {
+  it('Should create a new User', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -127,7 +127,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould fail if the email exists', function(done) {
+  it('Should fail if the email exists', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -143,7 +143,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould fail if the email is no email', function(done) {
+  it('Should fail if the email is no email', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -159,7 +159,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould fail if the email is empty', function(done) {
+  it('Should fail if the email is empty', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -175,7 +175,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould fail if the email is > 255', function(done) {
+  it('Should fail if the email is > 255', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -191,7 +191,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould fail if the password is < 8', function(done) {
+  it('Should fail if the password is < 8', function(done) {
     agent.post(installationURL + '/Users')
       .set('Accept', 'application/json')
       .send({
@@ -207,7 +207,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould render /Users/:id/edit', function(done) {
+  it('Should render /Users/:id/edit', function(done) {
     agent.get(installationURL + '/Users/' + user.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
@@ -217,7 +217,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould get the user object /Users/:id/edit', function(done) {
+  it('Should get the user object /Users/:id/edit', function(done) {
     agent.get(installationURL + '/Users/' + user.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
@@ -230,7 +230,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould update user attributes', function(done) {
+  it('Should update user attributes', function(done) {
     agent.put(installationURL + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
@@ -249,7 +249,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould update user attributes if its the same email', function(done) {
+  it('Should update user attributes if its the same email', function(done) {
     agent.put(installationURL + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
@@ -267,7 +267,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould fail update if password doesnt validate', function(done) {
+  it('Should fail update if password doesnt validate', function(done) {
     agent.put(installationURL + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
@@ -284,7 +284,7 @@ describe('UsersController', function() {
       })
   });
 
-  it('Sould destroy a record', function(done) {
+  it('Should destroy a record', function(done) {
     agent.post(installationURL + '/Users')
       .send({
         email : 'temp@example.com',
@@ -301,7 +301,7 @@ describe('UsersController', function() {
       });
   });
 
-  it('Sould fail if id doesnt exist when destroy a record', function(done) {
+  it('Should fail if id doesnt exist when destroy a record', function(done) {
     agent.post(installationURL + '/Users/' + user.id + '1')
     .send({'_method' : 'DELETE'})
 
