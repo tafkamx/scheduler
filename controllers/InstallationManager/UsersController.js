@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = CONFIG.router.urlFor;
+var urlFor = CONFIG.router.helpers;
 
 InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
