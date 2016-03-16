@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
 
-var adminUser = new InstallationManager.AdminUser({
+var adminUser = new InstallationManager.User({
   email : 'test@example.com',
   password : '12345678'
 });
@@ -342,16 +342,16 @@ describe('InstallationManager.InstallationsController', function() {
 
   after(function(done) {
     Promise.all([
-      InstallationManager.AdminUser.query().delete(),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'installation-one-test'"),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'installation-two-test'"),
-      // AdminUser.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
-      // AdminUser.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
-      // AdminUser.knex().raw("DROP DATABASE 'three-test'"),
+      InstallationManager.User.query().delete(),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'three-test'"),
     ]).then(function() {
       return done();
     }).catch(done);

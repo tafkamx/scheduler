@@ -1,0 +1,12 @@
+config/routeMapper.js:1
+controllers/InstallationManager/AdminUsersController.js:13
+lib/passport/InstallationManagerStrategy.js:2
+lib/passport/InstallationManagerTokenStrategy.js:1
+mailers/AdminUserMailer.js:4
+models/InstallationManager/AdminUser.js:7
+models/User.js:3
+test/index.js:2
+test/integration/controllers/InstallationManager/AdminUsersController.js:38
+test/integration/controllers/InstallationManager/InstallationsController.js:11
+test/integration/controllers/InstallationManager/SessionsController.js:2
+test/unit/mailers/AdminUserMailer.js:6
