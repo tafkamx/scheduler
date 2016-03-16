@@ -47,7 +47,7 @@ var config = {
 
 config.logFile = path.join(process.cwd(), '/log/' + env + '.log');
 
-config.database        = require('./../knexinstallationadmin.js');
+config.database        = require('./../knexinstallationmanager.js');
 
 config.middlewares     = require('./middlewares.js');
 

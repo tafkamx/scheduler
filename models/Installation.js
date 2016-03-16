@@ -2,7 +2,7 @@ var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
 
-var Installation = Class('Installation').inherits(InstallationAdminModel)({
+var Installation = Class('Installation').inherits(InstallationManagerModel)({
   tableName : 'Installations',
   validations : {
     name : [
@@ -90,7 +90,7 @@ var Installation = Class('Installation').inherits(InstallationAdminModel)({
     domain : null,
 
     init : function(config) {
-      InstallationAdminModel.prototype.init.call(this, config);
+      InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 

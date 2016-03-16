@@ -3,7 +3,7 @@ var path = require('path');
 
 var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
 
-var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
+var AdminUser = Class('AdminUser').inherits(InstallationManagerModel)({
   tableName : 'Users',
   validations : {
     'email' : [
@@ -41,7 +41,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
     encryptedPassword : null,
     token : null,
     init : function(config) {
-      InstallationAdminModel.prototype.init.call(this, config);
+      InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
