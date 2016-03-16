@@ -105,7 +105,7 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
       return this;
     },
 
-    createDatabase : function createDatabase() {
+    createDatabase : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
       var knex = new Knex(conf[CONFIG.environment]);
@@ -113,7 +113,7 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
       return knex.raw('CREATE DATABASE "' + this.name + '-' + CONFIG.environment + '";')
     },
 
-    migrate : function migrate() {
+    migrate : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
       conf[CONFIG.environment].connection.database = this.name + '-' + CONFIG.environment;

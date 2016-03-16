@@ -23,7 +23,7 @@ var installationTwoURL = 'http://default.' + installationTwo + '.' + websiteUrl;
 var agent1 = sa.agent();
 var agent2 = sa.agent();
 
-describe('Sessions Controller', function() {
+describe('SessionsController', function() {
   before(function(done) {
     Knex = require('knex');
 

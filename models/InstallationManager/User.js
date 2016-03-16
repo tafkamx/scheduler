@@ -61,7 +61,7 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
         UserMailer.sendActivationLink(model).then(function() {
           next();
         }).catch(function(err) {
-          throw new Error(err);
+          throw err;
         });
       });
     },

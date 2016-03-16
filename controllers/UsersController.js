@@ -24,11 +24,13 @@ var UsersController = Class('UsersController').inherits(BaseController)({
         }
 
         res.locals.user = result[0];
+        req.user = result[0];
+
         next();
       }).catch(next);
     },
 
-    index : function index(req, res, next) {
+    index : function (req, res, next) {
       User.query(req.knex).then(function(results) {
         results.forEach(function(result) {
           delete result.encryptedPassword;
@@ -48,7 +50,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       }).catch(next);
     },
 
-    show : function show(req, res, next) {
+    show : function (req, res, next) {
       delete res.locals.user.encryptedPassword;
       delete res.locals.user.token;
 
@@ -82,7 +84,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       });
     },
 
-    edit : function edit(req, res, next) {
+    edit : function (req, res, next) {
       delete res.locals.user.encryptedPassword;
       delete res.locals.user.token;
 
@@ -96,7 +98,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       });
     },
 
-    update : function update(req, res, next) {
+    update : function (req, res, next) {
       res.format({
         json : function() {
           res.locals.user.updateAttributes(req.body).save(req.knex).then(function(val) {
@@ -111,10 +113,10 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       });
     },
 
-    destroy : function destroy(req, res, next) {
+    destroy : function (req, res, next) {
       res.format({
         json : function() {
-          res.locals.user.destroy(req.knex).then(function() {
+          req.user.destroy(req.knex).then(function() {
             res.json({deleted: true});
           }).catch(next);
         }
