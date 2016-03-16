@@ -9,7 +9,7 @@
     <tr>
         <td><%= installation.id %></td>
         <td><%= installation.name %></td>
-        <td><a href="<%= %>">Login to installation</a></td>
+        <td><a href="http://default.<%= installation.name %>.<%= CONFIG[CONFIG.environment].defaultDomainName %><%= helpers.urlFor.login() %>">Login to installation</a></td>
     </tr>
     <% }) %>
 </table>

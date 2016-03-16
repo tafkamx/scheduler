@@ -1,5 +1,3 @@
 <p>Activation Link: <a href="<%= CONFIG[CONFIG.environment].siteURL + helpers.urlFor.installationManagerLogin() %>?email=null&token=<%= adminUser.token %>">Activate</a></p>
 
-<pre>
-    <%= JSON.stringify(adminUser, null, 2) %>
-</pre>
+<pre><%= JSON.stringify(adminUser, null, 2) %></pre>
