@@ -8,9 +8,9 @@ baseURL = 'http://localhost:3000';
 
 
 require(path.join(process.cwd(), '/bin/server.js'));
-require(path.join(__dirname, '/integration/controllers/InstallationAdmin/AdminUsersController'));
-require(path.join(__dirname, '/integration/controllers/InstallationAdmin/InstallationsController'));
-require(path.join(__dirname, '/integration/controllers/InstallationAdmin/SessionsController'));
+require(path.join(__dirname, '/integration/controllers/InstallationManager/AdminUsersController'));
+require(path.join(__dirname, '/integration/controllers/InstallationManager/InstallationsController'));
+require(path.join(__dirname, '/integration/controllers/InstallationManager/SessionsController'));
 require(path.join(__dirname, '/integration/controllers/UsersController'));
 require(path.join(__dirname, '/integration/controllers/SessionsController'));
 //

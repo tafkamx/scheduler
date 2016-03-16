@@ -5,14 +5,14 @@ var adminUser = new AdminUser({
 
 var agent = sa.agent();
 
-describe('InstallationAdmin.AdminUsers Controller', function() {
+describe('InstallationManager.AdminUsers Controller', function() {
 
   before(function(done) {
     adminUser.save().then(function() {
       return adminUser;
     }).then(function(res) {
       res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationAdmin/login')
+        agent.post(baseURL + '/InstallationManager/login')
           .send({ email: adminUser.email, password: '12345678'})
           .end(function(err, res) {
             done();
@@ -21,8 +21,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
     });
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Sould render /InstallationManager/AdminUsers/', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -31,8 +31,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould get the AdminUsers Array from /InstallationAdmin/AdminUsers/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Sould get the AdminUsers Array from /InstallationManager/AdminUsers/', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -44,8 +44,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Sould render /InstallationManager/AdminUsers/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -54,8 +54,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould fail when a AdminUser.id doesnt exists /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Sould fail when a AdminUser.id doesnt exists /InstallationManager/AdminUsers/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -65,8 +65,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
 
   });
 
-  it('Sould get /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Sould get /InstallationManager/AdminUsers/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -79,8 +79,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould fail when a AdminUser.id doesnt exists /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Sould fail when a AdminUser.id doesnt exists /InstallationManager/AdminUsers/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -89,8 +89,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/new', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/new')
+  it('Sould render /InstallationManager/AdminUsers/new', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -100,7 +100,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould create a new AdminUser', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -117,7 +117,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if the email exists', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -133,7 +133,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if the email is no email', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : 'test2example.com',
@@ -149,7 +149,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if the email is empty', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : '',
@@ -165,7 +165,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if the email is > 255', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
@@ -181,7 +181,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if the password is < 8', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+    agent.post(baseURL + '/InstallationManager/AdminUsers')
       .set('Accept', 'application/json')
       .send({
         email : 'test3@example.com',
@@ -196,8 +196,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '/edit')
+  it('Sould render /InstallationManager/AdminUsers/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -206,8 +206,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould get the adminUser object /InstallationAdmin/AdminUsers/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '/edit')
+  it('Sould get the adminUser object /InstallationManager/AdminUsers/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -220,7 +220,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould update adminUser attributes', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+    agent.put(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         email : 'email@example.com',
@@ -239,7 +239,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould update adminUser attributes if its the same email', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+    agent.put(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcdefghi'
@@ -257,7 +257,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail update if email exists', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+    agent.put(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -275,7 +275,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail update if password doesnt validate', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+    agent.put(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcd'
@@ -292,12 +292,12 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers/')
+    agent.post(baseURL + '/InstallationManager/AdminUsers/')
       .send({
         email : 'temp@example.com',
         password : '12345678'
       }).end(function(err, res) {
-        agent.post(baseURL + '/InstallationAdmin/AdminUsers/' + res.body.id)
+        agent.post(baseURL + '/InstallationManager/AdminUsers/' + res.body.id)
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -309,7 +309,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
   });
 
   it('Sould fail if id doesnt exist when destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '1')
+    agent.post(baseURL + '/InstallationManager/AdminUsers/' + adminUser.id + '1')
     .send({'_method' : 'DELETE'})
 
       .set('Accept', 'application/json')

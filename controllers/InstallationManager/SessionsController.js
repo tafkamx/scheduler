@@ -1,9 +1,9 @@
 var path = require('path');
-var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationAdminStrategy.js'));
-passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationAdminTokenStrategy.js'))(passport);
+var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerStrategy.js'));
+passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerTokenStrategy.js'))(passport);
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 
-InstallationAdmin.SessionsController = Class(InstallationAdmin, 'SessionsController').inherits(BaseController)({
+InstallationManager.SessionsController = Class(InstallationManager, 'SessionsController').inherits(BaseController)({
   prototype : {
     new : function(req, res, next) {
       if (req.user) {
@@ -12,19 +12,19 @@ InstallationAdmin.SessionsController = Class(InstallationAdmin, 'SessionsControl
       }
 
       if (!req.query.token) {
-        return res.render('InstallationAdmin/sessions/new.html',  { urlFor : urlFor });
+        return res.render('InstallationManager/sessions/new.html',  { urlFor : urlFor });
       }
 
-      passport.authenticate('InstallationAdminTokenStrategy', function(err, user, info) {
+      passport.authenticate('InstallationManagerTokenStrategy', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
 
-          return res.redirect(urlFor.installationAdminLogin());
+          return res.redirect(urlFor.installationManagerLogin());
         }
 
         if (!user) {
           req.flash('error', 'Invalid email or password!');
-          return res.redirect(urlFor.installationAdminLogin());
+          return res.redirect(urlFor.installationManagerLogin());
         }
 
         user.token = null;
@@ -51,10 +51,10 @@ InstallationAdmin.SessionsController = Class(InstallationAdmin, 'SessionsControl
         return res.redirect('/');
       }
 
-      passport.authenticate('InstallationAdmin', function(err, user, info) {
+      passport.authenticate('InstallationManager', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
-          return res.redirect(urlFor.installationAdminLogin());
+          return res.redirect(urlFor.installationManagerLogin());
         }
 
         req.login(user, function(err) {
@@ -72,10 +72,10 @@ InstallationAdmin.SessionsController = Class(InstallationAdmin, 'SessionsControl
     destroy : function(req, res, next) {
       req.logout();
       req.flash('success', 'Signed off');
-      return res.redirect(urlFor.installationAdminLogin());
+      return res.redirect(urlFor.installationManagerLogin());
     }
 
   }
 });
 
-module.exports = new InstallationAdmin.SessionsController();
+module.exports = new InstallationManager.SessionsController();

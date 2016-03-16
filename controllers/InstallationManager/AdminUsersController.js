@@ -1,7 +1,7 @@
 var path = require('path');
 var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
 
-InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersController').inherits(BaseController)({
+InstallationManager.AdminUsersController = Class(InstallationManager, 'AdminUsersController').inherits(BaseController)({
 
   beforeActions : [
     {
@@ -42,7 +42,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
         res.format({
           html : function() {
-            res.render('InstallationAdmin/AdminUsers/index.html');
+            res.render('InstallationManager/AdminUsers/index.html');
           },
           json : function() {
             res.json(results);
@@ -57,7 +57,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/show.html');
+          res.render('InstallationManager/AdminUsers/show.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -66,7 +66,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
     },
 
     new : function(req, res, next) {
-      res.render('InstallationAdmin/AdminUsers/new.html');
+      res.render('InstallationManager/AdminUsers/new.html');
     },
 
     create : function create(req, res, next) {
@@ -90,7 +90,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/edit.html');
+          res.render('InstallationManager/AdminUsers/edit.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -123,4 +123,4 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
   }
 });
 
-module.exports = new InstallationAdmin.AdminUsersController();
+module.exports = new InstallationManager.AdminUsersController();

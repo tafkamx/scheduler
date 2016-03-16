@@ -11,14 +11,14 @@ var installation = new Installation({
 
 var agent = sa.agent();
 
-describe('InstallationAdmin.InstallationsController', function() {
+describe('InstallationManager.InstallationsController', function() {
 
   before(function(done) {
     adminUser.save().then(function() {
       return adminUser;
     }).then(function(res) {
       res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationAdmin/login')
+        agent.post(baseURL + '/InstallationManager/login')
           .send({ email: adminUser.email, password: adminUser.password })
           .end(function(err, res) {
             installation.save().then(function() {
@@ -29,8 +29,8 @@ describe('InstallationAdmin.InstallationsController', function() {
     });
   });
 
-  it('Sould render /InstallationAdmin/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations')
+  it('Sould render /InstallationManager/Installations/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -39,8 +39,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould get the Installations Array from /InstallationAdmin/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations')
+  it('Sould get the Installations Array from /InstallationManager/Installations/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -50,8 +50,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+  it('Sould render /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -60,8 +60,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Sould fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -71,8 +71,8 @@ describe('InstallationAdmin.InstallationsController', function() {
 
   });
 
-  it('Sould get /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+  it('Sould get /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -83,8 +83,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Sould fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -93,8 +93,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould render /InstallationAdmin/Installations/new', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/new')
+  it('Sould render /InstallationManager/Installations/new', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -109,7 +109,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       domain : 'empathia.academy'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -127,7 +127,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       name : 'my installation'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -144,7 +144,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       name : ''
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -161,7 +161,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       name : undefined
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -179,7 +179,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       domain : 'empathia.academy'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -198,7 +198,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       domain : 'myinstallation'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -212,7 +212,7 @@ describe('InstallationAdmin.InstallationsController', function() {
 
 
   it('Sould fail if the name is > 128 or domain is > 255', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send({
         name : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs',
@@ -229,8 +229,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id + '/edit')
+  it('Sould render /InstallationManager/Installations/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -239,8 +239,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould get the installation object /InstallationAdmin/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id + '/edit')
+  it('Sould get the installation object /InstallationManager/Installations/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -255,7 +255,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       domain : 'delagarza.io'
     };
 
-    agent.put(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+    agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -274,7 +274,7 @@ describe('InstallationAdmin.InstallationsController', function() {
       domain : 'delagarza.io'
     };
 
-    agent.put(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+    agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -296,7 +296,7 @@ describe('InstallationAdmin.InstallationsController', function() {
         domain : 'delagarza.io'
       };
 
-      agent.put(baseURL + '/InstallationAdmin/Installations/' + result[0].id)
+      agent.put(baseURL + '/InstallationManager/Installations/' + result[0].id)
         .set('Accept', 'application/json')
         .send(data)
         .end(function(err, res) {
@@ -313,11 +313,11 @@ describe('InstallationAdmin.InstallationsController', function() {
 
 
   it('Sould destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations/')
+    agent.post(baseURL + '/InstallationManager/Installations/')
       .send({
         name : 'three'
       }).end(function(err, res) {
-        agent.post(baseURL + '/InstallationAdmin/Installations/' + res.body.id)
+        agent.post(baseURL + '/InstallationManager/Installations/' + res.body.id)
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -329,7 +329,7 @@ describe('InstallationAdmin.InstallationsController', function() {
   });
 
   it('Sould fail if id doesnt exist when destroying a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations/' + installation.id + '1')
+    agent.post(baseURL + '/InstallationManager/Installations/' + installation.id + '1')
     .send({'_method' : 'DELETE'})
 
       .set('Accept', 'application/json')
