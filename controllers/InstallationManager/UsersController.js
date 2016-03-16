@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.urlFor;
 
 InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
 

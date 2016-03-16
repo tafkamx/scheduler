@@ -1,7 +1,7 @@
 var path = require('path');
 var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerStrategy.js'));
 passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerTokenStrategy.js'))(passport);
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 
 InstallationManager.SessionsController = Class(InstallationManager, 'SessionsController').inherits(BaseController)({
   prototype : {

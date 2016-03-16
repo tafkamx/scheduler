@@ -1,7 +1,7 @@
 var _      = require('lodash');
 _.mixin(require('lodash-inflection'));
 
-var routeMapper = require('./../config/routeMapper.js');
+var routeMapper = CONFIG.router;
 
 var router = global.neonode.express.Router();
 
