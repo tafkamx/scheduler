@@ -15,11 +15,9 @@ module.exports = function(req, res, next) {
     req.role = 'Admin';
   }
 
-  var helpers = {
-    urlFor : urlFor
+  res.locals.helpers = {
+    urlFor: urlFor
   };
-
-  _.assign(res.locals.helpers, helpers);
 
   next();
 }
