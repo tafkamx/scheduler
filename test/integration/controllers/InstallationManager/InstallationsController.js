@@ -1,24 +1,24 @@
 var Promise = require('bluebird');
 
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.User({
   email : 'test@example.com',
   password : '12345678'
 });
 
-var installation = new Installation({
+var installation = new InstallationManager.Installation({
   name : 'installation-one'
 });
 
 var agent = sa.agent();
 
-describe('InstallationAdmin.InstallationsController', function() {
+describe('InstallationManager.InstallationsController', function() {
 
   before(function(done) {
     adminUser.save().then(function() {
       return adminUser;
     }).then(function(res) {
       res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationAdmin/login')
+        agent.post(baseURL + '/InstallationManager/login')
           .send({ email: adminUser.email, password: adminUser.password })
           .end(function(err, res) {
             installation.save().then(function() {
@@ -29,8 +29,8 @@ describe('InstallationAdmin.InstallationsController', function() {
     });
   });
 
-  it('Sould render /InstallationAdmin/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations')
+  it('Should render /InstallationManager/Installations/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -39,8 +39,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould get the Installations Array from /InstallationAdmin/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations')
+  it('Should get the Installations Array from /InstallationManager/Installations/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -50,8 +50,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+  it('Should render /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -60,8 +60,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -71,8 +71,8 @@ describe('InstallationAdmin.InstallationsController', function() {
 
   });
 
-  it('Sould get /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+  it('Should get /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -83,8 +83,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould fail when a installation.id doesnt exists /InstallationAdmin/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -93,8 +93,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould render /InstallationAdmin/Installations/new', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/new')
+  it('Should render /InstallationManager/Installations/new', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -103,13 +103,13 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould create a new Installation', function(done) {
+  it('Should create a new Installation', function(done) {
     var data = {
       name : 'installation-two',
       domain : 'empathia.academy'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -122,92 +122,97 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould fail to create an Installation if the name contains spaces', function(done) {
+  it('Should fail to create an Installation if the name contains spaces', function(done) {
     var data = {
       name : 'my installation'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('name must only contain alpha-numeric characters and dashes.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
         done();
       })
   });
 
-  it('Sould fail to create an Installation if the nameis empty', function(done) {
+  it('Should fail to create an Installation if the name is empty', function(done) {
     var data = {
       name : ''
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
       })
   });
 
-  it('Sould fail to create an Installation if the name is undefined', function(done) {
+  it('Should fail to create an Installation if the name is undefined', function(done) {
     var data = {
       name : undefined
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
       })
   });
 
-  it('Sould fail to create an Installation if the name exists', function(done) {
+  it('Should fail to create an Installation if the name exists', function(done) {
     var data = {
       name : 'installation-one',
       domain : 'empathia.academy'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('name already exists.');
-        expect(res.body.errors.domain).to.be.equal('domain already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('name already exists.');
+        expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
         done();
       })
   });
 
-  it('Sould fail to create an Installation if the domain is not a valid domain with tld', function(done) {
+  it('Should fail to create an Installation if the domain is not a valid domain with tld', function(done) {
     var data = {
       name : 'my-installation',
       domain : 'myinstallation'
     };
 
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.domain).to.be.equal('Invalid domain.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.domain[0]).to.be.equal('Invalid domain.');
         done();
       })
   });
 
 
-  it('Sould fail if the name is > 128 or domain is > 255', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations')
+  it('Should fail if the name is > 128 or domain is > 255', function(done) {
+    agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send({
         name : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs',
@@ -215,16 +220,17 @@ describe('InstallationAdmin.InstallationsController', function() {
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.name).to.be.equal('The name must not exceed 128 characters long');
-        expect(res.body.errors.domain).to.be.equal('The domain must not exceed 255 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.name[0]).to.be.equal('The name must not exceed 128 characters long');
+        expect(err.response.body.domain[0]).to.be.equal('The domain must not exceed 255 characters long');
         done();
       })
   });
 
-  it('Sould render /InstallationAdmin/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id + '/edit')
+  it('Should render /InstallationManager/Installations/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -233,8 +239,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould get the installation object /InstallationAdmin/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/Installations/' + installation.id + '/edit')
+  it('Should get the installation object /InstallationManager/Installations/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -244,12 +250,12 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould update installation attributes', function(done) {
+  it('Should update installation attributes', function(done) {
     var data = {
       domain : 'delagarza.io'
     };
 
-    agent.put(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+    agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -262,13 +268,13 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould update installation attributes if send the same domain', function(done) {
+  it('Should update installation attributes if send the same domain', function(done) {
     var data = {
       name : 'Installation-ONE',
       domain : 'delagarza.io'
     };
 
-    agent.put(baseURL + '/InstallationAdmin/Installations/' + installation.id)
+    agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
@@ -281,8 +287,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       })
   });
 
-  it('Sould fail update if name exists or domain exists', function(done) {
-    Installation.query().where({
+  it('Should fail update if name exists or domain exists', function(done) {
+    InstallationManager.Installation.query().where({
       name : 'installation-two'
     }).then(function(result) {
       var data = {
@@ -290,13 +296,15 @@ describe('InstallationAdmin.InstallationsController', function() {
         domain : 'delagarza.io'
       };
 
-      agent.put(baseURL + '/InstallationAdmin/Installations/' + result[0].id)
+      agent.put(baseURL + '/InstallationManager/Installations/' + result[0].id)
         .set('Accept', 'application/json')
         .send(data)
         .end(function(err, res) {
-          expect(err).to.be.eql(null);
-          expect(res.body.errors.name).to.be.equal('name already exists.');
-          expect(res.body.errors.domain).to.be.equal('domain already exists.');
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('name already exists.');
+          expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
           done();
         })
     });
@@ -304,12 +312,12 @@ describe('InstallationAdmin.InstallationsController', function() {
   });
 
 
-  it('Sould destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations/')
+  it('Should destroy a record', function(done) {
+    agent.post(baseURL + '/InstallationManager/Installations/')
       .send({
         name : 'three'
       }).end(function(err, res) {
-        agent.post(baseURL + '/InstallationAdmin/Installations/' + res.body.id)
+        agent.post(baseURL + '/InstallationManager/Installations/' + res.body.id)
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -320,8 +328,8 @@ describe('InstallationAdmin.InstallationsController', function() {
       });
   });
 
-  it('Sould fail if id doesnt exist when destroying a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/Installations/' + installation.id + '1')
+  it('Should fail if id doesnt exist when destroying a record', function(done) {
+    agent.post(baseURL + '/InstallationManager/Installations/' + installation.id + '1')
     .send({'_method' : 'DELETE'})
 
       .set('Accept', 'application/json')
@@ -334,12 +342,18 @@ describe('InstallationAdmin.InstallationsController', function() {
 
   after(function(done) {
     Promise.all([
-      AdminUser.query().delete(),
-      // AdminUser.knex().raw('DROP DATABASE installation_one_test'),
-      // AdminUser.knex().raw('DROP DATABASE installation_two_test'),
-      // AdminUser.knex().raw('DROP DATABASE three_test'),
+      InstallationManager.User.query().delete(),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-one-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-two-test'"),
+      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
+      // InstallationManager.User.knex().raw("DROP DATABASE 'three-test'"),
     ]).then(function() {
       return done();
-    });
+    }).catch(done);
   });
 });

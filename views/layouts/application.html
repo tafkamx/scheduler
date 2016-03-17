@@ -17,9 +17,7 @@
     <header>
     </header>
     <div class="yield">
-        <pre>
-            <%= JSON.stringify(flash, null, 2) %>
-        </pre>
+        <pre><%= JSON.stringify(flash, null, 2) %></pre>
 
         <%= yield %>
     </div>

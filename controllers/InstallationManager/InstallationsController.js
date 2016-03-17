@@ -1,7 +1,7 @@
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 
-InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'InstallationsController').inherits(BaseController)({
+InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions : [
     {
@@ -17,7 +17,7 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
 
   prototype : {
     _loadResource : function(req, res, next) {
-      Installation.query().where({id : req.params.id}).then(function(result) {
+      InstallationManager.Installation.query().where({id : req.params.id}).then(function(result) {
 
         if (result.length === 0) {
           throw new NotFoundError('Installation ' + req.params.id + ' not found');
@@ -31,10 +31,10 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     },
 
     index : function index(req, res, next) {
-      Installation.query().then(function(results) {
+      InstallationManager.Installation.query().then(function(results) {
         res.format({
           html : function() {
-            res.render('InstallationAdmin/Installations/index.html', {installations : results});
+            res.render('InstallationManager/Installations/index.html', {installations : results});
           },
           json : function() {
             res.json(results);
@@ -46,7 +46,7 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     show : function show(req, res, next) {
       res.format({
         html : function() {
-          res.render('InstallationAdmin/Installations/show.html', { installation : req.installation});
+          res.render('InstallationManager/Installations/show.html', { installation : req.installation});
         },
         json : function() {
           res.json(req.installation);
@@ -55,13 +55,13 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     },
 
     new : function(req, res, next) {
-      res.render('InstallationAdmin/Installations/new.html');
+      res.render('InstallationManager/Installations/new.html');
     },
 
     create : function create(req, res, next) {
       res.format({
         json : function() {
-          var installation = new Installation(req.body);
+          var installation = new InstallationManager.Installation(req.body);
 
           installation.save().then(function() {
             res.json(installation);
@@ -73,7 +73,7 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     edit : function edit(req, res, next) {
       res.format({
         html : function() {
-          res.render('InstallationAdmin/Installations/edit.html', { installation : req.installation });
+          res.render('InstallationManager/Installations/edit.html', { installation : req.installation });
         },
         json : function() {
           res.json(req.installation);
@@ -103,4 +103,4 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
   }
 });
 
-module.exports = new InstallationAdmin.InstallationsController();
+module.exports = new InstallationManager.InstallationsController();

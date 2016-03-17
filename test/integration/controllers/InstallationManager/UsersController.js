@@ -1,18 +1,18 @@
-var adminUser = new AdminUser({
+var adminUser = new InstallationManager.User({
   email : 'test@example.com',
   password : '12345678'
 });
 
 var agent = sa.agent();
 
-describe('InstallationAdmin.AdminUsers Controller', function() {
+describe('InstallationManager.UsersController', function() {
 
   before(function(done) {
     adminUser.save().then(function() {
       return adminUser;
     }).then(function(res) {
       res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationAdmin/login')
+        agent.post(baseURL + '/InstallationManager/login')
           .send({ email: adminUser.email, password: '12345678'})
           .end(function(err, res) {
             done();
@@ -21,8 +21,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
     });
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should render /InstallationManager/Users/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -31,8 +31,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould get the AdminUsers Array from /InstallationAdmin/AdminUsers/', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should get the Users Array from /InstallationManager/Users/', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -44,8 +44,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should render /InstallationManager/Users/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -54,8 +54,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould fail when a AdminUser.id doesnt exists /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Should fail when a adminUser.id doesnt exists /InstallationManager/Users/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -65,8 +65,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
 
   });
 
-  it('Sould get /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should get /InstallationManager/Users/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -79,8 +79,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould fail when a AdminUser.id doesnt exists /InstallationAdmin/AdminUsers/:id', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+  it('Should fail when a adminUser.id doesnt exists /InstallationManager/Users/:id', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -89,8 +89,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/new', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/new')
+  it('Should render /InstallationManager/Users/new', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -99,8 +99,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould create a new AdminUser', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should create a new User', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -116,85 +116,88 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould fail if the email exists', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should fail if the email exists', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
         password : '12345678'
       })
       .end(function(err, res) {
-        // expect(err).to.be.equal(Error);
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
         done();
       })
   });
 
-  it('Sould fail if the email is no email', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should fail if the email is no email', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test2example.com',
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email must be a valid email address');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email must be a valid email address');
         done();
       })
   });
 
-  it('Sould fail if the email is empty', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should fail if the email is empty', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : '',
         password : '12345678'
       })
       .end(function(err, res) {
-        // console.log(err, res)
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email is required');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email is required');
         done();
       })
   });
 
-  it('Sould fail if the email is > 255', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should fail if the email is > 255', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
         password : '12345678'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.email).to.be.equal('The email must not exceed 255 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email must not exceed 255 characters long');
         done();
       })
   });
 
-  it('Sould fail if the password is < 8', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers')
+  it('Should fail if the password is < 8', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test3@example.com',
         password : '1234567'
       })
       .end(function(err, res) {
-        expect(res.status).to.be.eql(200);
-        expect(res.body.errors).to.exists;
-        expect(res.body.errors.password).to.be.equal('The password must be at least 8 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
         done();
       })
   });
 
-  it('Sould render /InstallationAdmin/AdminUsers/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '/edit')
+  it('Should render /InstallationManager/Users/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -203,8 +206,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould get the adminUser object /InstallationAdmin/AdminUsers/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '/edit')
+  it('Should get the adminUser object /InstallationManager/Users/:id/edit', function(done) {
+    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -216,8 +219,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould update adminUser attributes', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should update adminUser attributes', function(done) {
+    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         email : 'email@example.com',
@@ -235,8 +238,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould update adminUser attributes if its the same email', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should update adminUser attributes if its the same email', function(done) {
+    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcdefghi'
@@ -253,44 +256,48 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       })
   });
 
-  it('Sould fail update if email exists', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should fail update if email exists', function(done) {
+    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
         password : 'abcdefghi'
       })
       .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors.email).to.be.equal('The email already exists.');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
         expect(res.body.encryptedPassword).to.be.undefined;
         expect(res.body.token).to.be.undefined;
         done();
       })
   });
 
-  it('Sould fail update if password doesnt validate', function(done) {
-    agent.put(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id)
+  it('Should fail update if password doesnt validate', function(done) {
+    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcd'
       })
       .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors.password).to.be.equal('The password must be at least 8 characters long');
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.eql(500);
+        expect(err.response.body).to.exists;
+        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
         expect(res.body.encryptedPassword).to.be.undefined;
         expect(res.body.token).to.be.undefined;
         done();
       })
   });
 
-  it('Sould destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers/')
+  it('Should destroy a record', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users/')
       .send({
         email : 'temp@example.com',
         password : '12345678'
       }).end(function(err, res) {
-        agent.post(baseURL + '/InstallationAdmin/AdminUsers/' + res.body.id)
+        agent.post(baseURL + '/InstallationManager/Users/' + res.body.id)
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -301,8 +308,8 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
       });
   });
 
-  it('Sould fail if id doesnt exist when destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationAdmin/AdminUsers/' + adminUser.id + '1')
+  it('Should fail if id doesnt exist when destroy a record', function(done) {
+    agent.post(baseURL + '/InstallationManager/Users/' + adminUser.id + '1')
     .send({'_method' : 'DELETE'})
 
       .set('Accept', 'application/json')
@@ -314,7 +321,7 @@ describe('InstallationAdmin.AdminUsers Controller', function() {
 
 
   after(function(done) {
-    AdminUser.query().delete().then(function() {
+    InstallationManager.User.query().delete().then(function() {
       return done();
     });
   });

@@ -15,7 +15,7 @@ You will need to create the `config.js` file.
 
 ### Knex files
 
-You will need to create the `KnexInstallationAdmin.js` and `knexfile.js` files.
+You will need to create the `knexinstallationmanager.js` and `knexfile.js` files.
 
 ### Hosts
 

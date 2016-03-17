@@ -6,5 +6,13 @@ module.exports = function(err, req, res, next) {
   }
 
   res.status(500);
-  res.render('shared/500.html', {layout : false, error : err.stack})
+  res.format({
+    html : function() {
+      res.render('shared/500.html', {layout : false, error : err.stack})
+    },
+    json : function() {
+      res.json(err)
+    }
+  })
+
 }

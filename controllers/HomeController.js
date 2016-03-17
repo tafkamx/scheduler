@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 
 var HomeController = Class('HomeController').inherits(BaseController)({
   beforeActions : [
@@ -11,7 +11,7 @@ var HomeController = Class('HomeController').inherits(BaseController)({
   prototype : {
     _authenticate : function(req, res, next) {
       if (!req.user) {
-        return res.redirect(urlFor.installationAdminLogin());
+        return res.redirect(urlFor.installationManagerLogin());
       }
 
       next();

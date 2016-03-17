@@ -17,19 +17,19 @@ var installationOne = 'installation-one';
 var installationTwo = 'installation-two';
 var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
 
-var installationOneURL = 'http://default.' + installationOne + '.' + websiteUrl;
-var installationTwoURL = 'http://default.' + installationTwo + '.' + websiteUrl;
+var installationOneUrl = 'http://default.' + installationOne + '.' + websiteUrl;
+var installationTwoUrl = 'http://default.' + installationTwo + '.' + websiteUrl;
 
 var agent1 = sa.agent();
 var agent2 = sa.agent();
 
-describe('Sessions Controller', function() {
+describe('SessionsController', function() {
   before(function(done) {
     Knex = require('knex');
 
     knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
     knexOneConfig = _.clone(knexConfig, true);
-     knexTwoConfig = _.clone(knexConfig, true);
+    knexTwoConfig = _.clone(knexConfig, true);
 
     knexOneConfig[CONFIG.environment].connection.database = installationOne.toLowerCase() + '-' + CONFIG.environment;
 
@@ -66,7 +66,7 @@ describe('Sessions Controller', function() {
   });
 
   it('Should fail login because the account has not been activated', function(done) {
-    sa.agent().post(installationOneURL + '/login')
+    sa.agent().post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -77,7 +77,7 @@ describe('Sessions Controller', function() {
   });
 
   it('Should login and activate with the users token', function(done) {
-    sa.agent().get(installationOneURL + '/login?email=false&token=' + user1.token)
+    sa.agent().get(installationOneUrl + '/login?email=false&token=' + user1.token)
     .end(function(err, res) {
       expect(err).to.be.equal(null);
       expect(res.status).to.be.equal(200);
@@ -88,7 +88,7 @@ describe('Sessions Controller', function() {
   });
 
   it('Should login with the email/password', function(done) {
-    sa.agent().post(installationOneURL + '/login')
+    sa.agent().post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -100,13 +100,13 @@ describe('Sessions Controller', function() {
 
   it('Should logout', function(done) {
     var agent = sa.agent();
-    agent.post(installationOneURL + '/login')
+    agent.post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
         assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
-        agent.get(installationOneURL + '/logout')
+        agent.get(installationOneUrl + '/logout')
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
@@ -119,12 +119,12 @@ describe('Sessions Controller', function() {
 
   it('Should not let a logged in user login', function(done) {
     var agent = sa.agent();
-    agent.post(installationOneURL + '/login')
+    agent.post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
         assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
 
-        agent.get(installationOneURL + '/login')
+        agent.get(installationOneUrl + '/login')
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
@@ -138,7 +138,7 @@ describe('Sessions Controller', function() {
   it('Should not be logged-in in other installations', function(done) {
     var agent = sa.agent();
 
-    agent.post(installationOneURL + '/login')
+    agent.post(installationOneUrl + '/login')
       .send({
         email : user1.email,
         password : user1.password
@@ -148,7 +148,7 @@ describe('Sessions Controller', function() {
         expect(res.status).to.be.equal(200);
         assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
 
-        agent.get(installationTwoURL + '/login')
+        agent.get(installationTwoUrl + '/login')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
@@ -161,9 +161,7 @@ describe('Sessions Controller', function() {
   it('Should be able to login to more than one installation', function(done) {
     var agent = sa.agent();
 
-    var Cookies;
-
-    agent.post(installationOneURL + '/login')
+    agent.post(installationOneUrl + '/login')
       .send({
         email : user1.email,
         password : user1.password
@@ -172,7 +170,7 @@ describe('Sessions Controller', function() {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
 
-        agent.post(installationTwoURL + '/login')
+        agent.post(installationTwoUrl + '/login')
           .send({
             email : user2.email,
             password : user2.password
@@ -181,9 +179,9 @@ describe('Sessions Controller', function() {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
             done();
-          })
+          });
 
-      })
+      });
   });
 
   after(function(done) {
