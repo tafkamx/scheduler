@@ -10,6 +10,9 @@
         <td><%= installation.id %></td>
         <td><%= installation.name %></td>
         <td><a href="http://default.<%= installation.name %>.<%= CONFIG[CONFIG.environment].defaultDomainName %><%= helpers.urlFor.login() %>">Login to installation</a></td>
+        <td><a href="<%= helpers.urlFor.editInstallationManagerInstallation(installation.id) %>">Edit</a></td>
     </tr>
     <% }) %>
 </table>
+
+<a href="<%= helpers.urlFor.newInstallationManagerInstallation() %>">New Installation</a>

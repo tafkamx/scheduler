@@ -7,6 +7,8 @@ var _ = require('lodash');
 module.exports = function(req, res, next) {
   if (CONFIG[CONFIG.environment].sessions !== false && CONFIG.environment !== 'test') {
     res.locals.csrfToken = req.csrfToken();
+  } else {
+    res.locals.csrfToken = '';
   }
 
   req.role = 'Visitor';
