@@ -6,7 +6,7 @@ var adminUser = new InstallationManager.User({
   password : '12345678'
 });
 
-describe('InstallationManager.Sessions Controller', function() {
+describe('InstallationManager.SessionsController', function() {
   before(function(done) {
     adminUser.save().then(function(res) {
       done();

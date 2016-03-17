@@ -3,7 +3,7 @@ var installation = 'installation-one';
 var user, knex, Knex, knexConfig;
 
 var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
-var installationURL = 'http://default.' + installation + '.' + websiteUrl;
+var installationUrl = 'http://default.' + installation + '.' + websiteUrl;
 
 var agent = sa.agent();
 
@@ -34,7 +34,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/', function(done) {
-    agent.get(installationURL + '/Users')
+    agent.get(installationUrl + '/Users')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -44,7 +44,7 @@ describe('UsersController', function() {
   });
 
   it('Should get the Users Array from /Users', function(done) {
-    agent.get(installationURL + '/Users')
+    agent.get(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -57,7 +57,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/:id', function(done) {
-    agent.get(installationURL + '/Users/' + user.id)
+    agent.get(installationUrl + '/Users/' + user.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -67,7 +67,7 @@ describe('UsersController', function() {
   });
 
   it('Should return 404 when User.id doesnt exists in /Users/:id', function(done) {
-    agent.get(installationURL + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(installationUrl + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -77,7 +77,7 @@ describe('UsersController', function() {
   });
 
   it('Should get /Users/:id', function(done) {
-    agent.get(installationURL + '/Users/' + user.id)
+    agent.get(installationUrl + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -91,7 +91,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail to get if id doesnt exists /Users/:id', function(done) {
-    agent.get(installationURL + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(installationUrl + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -101,7 +101,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/new', function(done) {
-    agent.get(installationURL + '/Users/new')
+    agent.get(installationUrl + '/Users/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -111,7 +111,7 @@ describe('UsersController', function() {
   });
 
   it('Should create a new User', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test1@example.com',
@@ -128,7 +128,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if the email exists', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test1@example.com',
@@ -144,7 +144,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if the email is no email', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test2example.com',
@@ -160,7 +160,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if the email is empty', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : '',
@@ -176,7 +176,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if the email is > 255', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
@@ -192,7 +192,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if the password is < 8', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .set('Accept', 'application/json')
       .send({
         email : 'test3@example.com',
@@ -208,7 +208,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/:id/edit', function(done) {
-    agent.get(installationURL + '/Users/' + user.id + '/edit')
+    agent.get(installationUrl + '/Users/' + user.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -218,7 +218,7 @@ describe('UsersController', function() {
   });
 
   it('Should get the user object /Users/:id/edit', function(done) {
-    agent.get(installationURL + '/Users/' + user.id + '/edit')
+    agent.get(installationUrl + '/Users/' + user.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -231,7 +231,7 @@ describe('UsersController', function() {
   });
 
   it('Should update user attributes', function(done) {
-    agent.put(installationURL + '/Users/' + user.id)
+    agent.put(installationUrl + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
         email : 'email@example.com',
@@ -250,7 +250,7 @@ describe('UsersController', function() {
   });
 
   it('Should update user attributes if its the same email', function(done) {
-    agent.put(installationURL + '/Users/' + user.id)
+    agent.put(installationUrl + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcdefghi'
@@ -268,7 +268,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail update if password doesnt validate', function(done) {
-    agent.put(installationURL + '/Users/' + user.id)
+    agent.put(installationUrl + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .send({
         password : 'abcd'
@@ -285,12 +285,12 @@ describe('UsersController', function() {
   });
 
   it('Should destroy a record', function(done) {
-    agent.post(installationURL + '/Users')
+    agent.post(installationUrl + '/Users')
       .send({
         email : 'temp@example.com',
         password : '12345678'
       }).end(function(err, res) {
-        agent.post(installationURL + '/Users/' + res.body.id)
+        agent.post(installationUrl + '/Users/' + res.body.id)
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -302,7 +302,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
-    agent.post(installationURL + '/Users/' + user.id + '1')
+    agent.post(installationUrl + '/Users/' + user.id + '1')
     .send({'_method' : 'DELETE'})
 
       .set('Accept', 'application/json')

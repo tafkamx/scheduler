@@ -139,7 +139,7 @@ describe('InstallationManager.InstallationsController', function() {
       })
   });
 
-  it('Should fail to create an Installation if the nameis empty', function(done) {
+  it('Should fail to create an Installation if the name is empty', function(done) {
     var data = {
       name : ''
     };
