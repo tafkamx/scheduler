@@ -108,17 +108,25 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
     createDatabase : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
+      var name = [this.name, CONFIG.environment].join('-');
+
       var knex = new Knex(conf[CONFIG.environment]);
 
-      return knex.raw('CREATE DATABASE "' + this.name + '-' + CONFIG.environment + '";')
+      logger.info('Creating ' + name + ' database');
+
+      return knex.raw('CREATE DATABASE "' + name + '";')
     },
 
     migrate : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
-      conf[CONFIG.environment].connection.database = this.name + '-' + CONFIG.environment;
+      var name = [this.name, CONFIG.environment].join('-');
+
+      conf[CONFIG.environment].connection.database = name;
 
       var knex = new Knex(conf[CONFIG.environment]);
+
+      logger.info('Migrating ' + name + ' database');
 
       return knex.migrate.latest();
     }

@@ -158,10 +158,8 @@ describe('SessionsController', function() {
       });
   });
 
-  xit('Should be able to login to more than one installation', function(done) {
+  it('Should be able to login to more than one installation', function(done) {
     var agent = sa.agent();
-
-    var Cookies;
 
     agent.post(installationOneUrl + '/login')
       .send({
@@ -169,7 +167,6 @@ describe('SessionsController', function() {
         password : user1.password
       })
       .end(function(err, res) {
-        console.log(err);
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
 
@@ -179,13 +176,12 @@ describe('SessionsController', function() {
             password : user2.password
           })
           .end(function(err, res) {
-            // console.log(err);
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
             done();
-          })
+          });
 
-      })
+      });
   });
 
   after(function(done) {
