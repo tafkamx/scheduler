@@ -4,7 +4,7 @@ module.exports = {
   development: {
     client: 'postgresql',
     connection: {
-      database: 'patos-installation-admin'
+      database: 'patos-installation-manager'
     },
     pool: {
       min: 2,
@@ -12,13 +12,13 @@ module.exports = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory : 'migrations-installation-admin'
+      directory : 'migrations-installation-manager'
     }
   },
   test : {
     client: 'postgresql',
     connection: {
-      database: 'patos-installation-admin-test'
+      database: 'patos-installation-manager-test'
     },
     pool: {
       min: 2,
@@ -26,7 +26,7 @@ module.exports = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory : 'migrations-installation-admin'
+      directory : 'migrations-installation-manager'
     }
   }
 };
