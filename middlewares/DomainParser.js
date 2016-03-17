@@ -5,7 +5,7 @@ var path = require('path');
 var parser = function(req, res, next) {
   var host = req.headers.host;
 
-  if (host === 'localhost:3000') {
+  if (host === 'localhost:3000' || host === CONFIG[CONFIG.environment].defaultDomainName) {
     return next();
   }
 
@@ -55,7 +55,7 @@ var parser = function(req, res, next) {
     }
 
     next();
-  });
+  }).catch(next);
 }
 
 module.exports = parser;
