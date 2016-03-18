@@ -10,16 +10,14 @@ module.exports = function(err, req, res, next) {
       logger.info('Destroyed Knex instance');
     });
   }
-  
+
   res.status(500);
   res.format({
     html : function() {
       res.render('shared/500.html', {layout : false, error : err.stack})
     },
     json : function() {
-      res.emit('destroyKnex', req)
       res.json(err)
     }
   })
-
 }
