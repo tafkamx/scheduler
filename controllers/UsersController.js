@@ -18,7 +18,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
   prototype : {
     _loadUser : function(req, res, next) {
       User.query(req.knex).where({id : req.params.id}).then(function(result) {
-
         if (result.length === 0) {
           throw new NotFoundError('User ' + req.params.id + ' not found');
         }
@@ -41,9 +40,11 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
         res.format({
           html : function() {
+            neonode.app.emit('destroyKnex', req);
             res.render('Users/index.html');
           },
           json : function() {
+            neonode.app.emit('destroyKnex', req);
             res.json(results);
           }
         });
@@ -56,15 +57,18 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
       res.format({
         html : function() {
+          neonode.app.emit('destroyKnex', req);
           res.render('Users/show.html');
         },
         json : function() {
+          neonode.app.emit('destroyKnex', req);
           res.json(res.locals.user);
         }
       });
     },
 
     new : function(req, res, next) {
+      neonode.app.emit('destroyKnex', req);
       res.render('Users/new.html');
     },
 
@@ -78,6 +82,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
             delete user.token;
             delete user.password;
 
+            neonode.app.emit('destroyKnex', req);
             res.json(user);
           }).catch(next);
         }
@@ -90,9 +95,11 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
       res.format({
         html : function() {
+          neonode.app.emit('destroyKnex', req);
           res.render('Users/edit.html');
         },
         json : function() {
+          neonode.app.emit('destroyKnex', req);
           res.json(res.locals.user);
         }
       });
@@ -107,6 +114,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
             delete res.locals.user.token;
             delete res.locals.user.password;
 
+            neonode.app.emit('destroyKnex', req);
             res.json(res.locals.user);
           }).catch(next);
         }
@@ -117,6 +125,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       res.format({
         json : function() {
           req.user.destroy(req.knex).then(function() {
+            neonode.app.emit('destroyKnex', req);
             res.json({deleted: true});
           }).catch(next);
         }

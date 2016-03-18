@@ -5,6 +5,12 @@ module.exports = function(err, req, res, next) {
     return res.status(404).render('shared/404.html', {message : err.message, layout : false});
   }
 
+  if (req.knex) {
+    req.knex.destroy(function () {
+      logger.info('Destroyed Knex instance');
+    });
+  }
+
   res.status(500);
   res.format({
     html : function() {
@@ -14,5 +20,4 @@ module.exports = function(err, req, res, next) {
       res.json(err)
     }
   })
-
 }
