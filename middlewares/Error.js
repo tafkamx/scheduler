@@ -1,14 +1,14 @@
 module.exports = function(err, req, res, next) {
   logger.error(err.stack);
 
-  if (err.name && err.name === 'NotFoundError') {
-    return res.status(404).render('shared/404.html', {message : err.message, layout : false});
-  }
-
   if (req.knex) {
     req.knex.destroy(function () {
       logger.info('Destroyed Knex instance');
     });
+  }
+
+  if (err.name && err.name === 'NotFoundError') {
+    return res.status(404).render('shared/404.html', {message : err.message, layout : false});
   }
 
   res.status(500);
