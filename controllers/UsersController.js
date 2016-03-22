@@ -25,6 +25,9 @@ var UsersController = Class('UsersController').inherits(BaseController)({
         res.locals.user = result[0];
         req.user = result[0];
 
+        delete res.locals.user.encryptedPassword;
+        delete res.locals.user.token;
+
         next();
       }).catch(next);
     },
@@ -52,9 +55,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     show : function (req, res, next) {
-      delete res.locals.user.encryptedPassword;
-      delete res.locals.user.token;
-
       res.format({
         html : function() {
           neonode.app.emit('destroyKnex', req);
@@ -90,9 +90,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     edit : function (req, res, next) {
-      delete res.locals.user.encryptedPassword;
-      delete res.locals.user.token;
-
       res.format({
         html : function() {
           neonode.app.emit('destroyKnex', req);
@@ -108,7 +105,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     update : function (req, res, next) {
       res.format({
         json : function() {
-          res.locals.user.updateAttributes(req.body).save(req.knex).then(function(val) {
+          req.user.updateAttributes(req.body).save(req.knex).then(function(val) {
 
             delete res.locals.user.encryptedPassword;
             delete res.locals.user.token;

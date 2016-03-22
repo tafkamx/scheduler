@@ -5,7 +5,7 @@ var path = require('path');
 var User = Class('User').inherits(DynamicModel)({
   tableName : 'Users',
   validations : {
-    'email' : [
+    email : [
       'email',
       {
         rule : function(val) {
@@ -28,7 +28,7 @@ var User = Class('User').inherits(DynamicModel)({
       'required',
       'maxLength:255'
     ],
-    'password' : [
+    password : [
       'minLength:8'
     ]
   },
