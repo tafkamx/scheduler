@@ -42,7 +42,7 @@ describe('BranchesController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         done();
-      })
+      });
   });
 
   it('Should get the Branches Array from /Branches', function(done) {
@@ -114,67 +114,87 @@ describe('BranchesController', function() {
       });
   });
 
-  it('Should create a new Branch', function(done) {
-    agent
-      .post(installationUrl + '/Branches')
-      .set('Accept', 'application/json')
-      .send({
-        name: 'branch-two'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.eql(200);
-        expect(res.body.name).to.be.equal('branch-two');
-        done();
-      })
-  });
+  describe('#create', function () {
 
-  it('Should fail if the name exists', function(done) {
-    agent
-      .post(installationUrl + '/Branches')
-      .set('Accept', 'application/json')
-      .send({
-        name: 'branch-two'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.name[0]).to.be.equal('The name already exists.');
-        done();
-      });
-  });
+    it('Should create a new Branch', function(done) {
+      agent
+        .post(installationUrl + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'branch-two'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.eql(200);
+          expect(res.body.name).to.be.equal('branch-two');
+          done();
+        })
+    });
 
-  it('Should fail if the name is empty', function(done) {
-    agent
-      .post(installationUrl + '/Branches')
-      .set('Accept', 'application/json')
-      .send({
-        name: ''
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.name[0]).to.be.equal('The name is required');
-        done();
-      })
-  });
+    it('Should fail if the name exists', function(done) {
+      agent
+        .post(installationUrl + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'branch-two'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name already exists.');
+          done();
+        });
+    });
 
-  it('Should fail if the name is > 255', function(done) {
-    agent
-      .post(installationUrl + '/Branches')
-      .set('Accept', 'application/json')
-      .send({
-        name: 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.name[0]).to.be.equal('The name must not exceed 255 characters long');
-        done();
-      });
+    it('Should fail if the name is empty', function(done) {
+      agent
+        .post(installationUrl + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: ''
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name is required');
+          done();
+        });
+    });
+
+    it('Should fail if the name is > 255', function(done) {
+      agent
+        .post(installationUrl + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfsasdfasdfasdf'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name must not exceed 255 characters long');
+          done();
+        });
+    });
+
+    it('Should fail if the name contains non-alpha-numeric characters', function (done) {
+      agent
+        .post(installationUrl + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'abcd123$'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
+          done();
+        });
+    });
+
   });
 
   it('Should render /Branches/:id/edit', function(done) {
@@ -185,7 +205,7 @@ describe('BranchesController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         done();
-      })
+      });
   });
 
   it('Should get the branch object /Branches/:id/edit', function(done) {
@@ -199,7 +219,7 @@ describe('BranchesController', function() {
         expect(res.body.encryptedPassword).to.be.undefined;
         expect(res.body.token).to.be.undefined;
         done();
-      })
+      });
   });
 
   it('Should update branch attributes', function(done) {
@@ -250,7 +270,7 @@ describe('BranchesController', function() {
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
         done();
-      })
+      });
   });
 
   after(function(done) {
