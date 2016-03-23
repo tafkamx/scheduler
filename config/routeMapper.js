@@ -6,7 +6,10 @@ routeMapper
   .get('/logout', { to : 'Sessions#destroy', as : 'logout'})
   .post('/login', { to : 'Sessions#create', as : 'login'})
 
-  .resources(['Users'])
+  .resources([
+    'Users',
+    'Branches'
+  ])
 
   .namespace('InstallationManager', function() {
     routeMapper
