@@ -3,14 +3,14 @@ var urlFor = CONFIG.router.helpers;
 
 InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
-  beforeActions : [
+  beforeActions: [
     {
-      before : [neonode.controllers.Home._authenticate],
-      actions : ['index', 'show', 'create', 'edit', 'update', 'destroy']
+      before: [neonode.controllers['InstallationManager.Home']._authenticate],
+      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     },
     {
-      before : ['_loadInstallation'],
-      actions : ['show', 'edit', 'update', 'destroy']
+      before: ['_loadInstallation'],
+      actions: ['show', 'edit', 'update', 'destroy']
     }
   ],
 
