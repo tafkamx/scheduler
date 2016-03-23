@@ -1,10 +1,7 @@
-var path = require('path');
-
 var Branch = Class('Branch').inherits(DynamicModel)({
   tableName : 'Branches',
   validations : {
     name: [
-      'string',
       {
         rule : function(val) {
           var query = Branch.query(this.target._knex)
@@ -36,8 +33,7 @@ var Branch = Class('Branch').inherits(DynamicModel)({
 
   relations: {},
 
-  prototype: {
-  }
+  prototype: {}
 });
 
 module.exports = Branch;

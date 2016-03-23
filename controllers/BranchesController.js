@@ -40,7 +40,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
           res.format({
             html: function () {
               neonode.app.emit('destroyKnex', req);
-              res.render('Branch/index.html');
+              res.render('Branches/index.html');
             },
             json: function () {
               neonode.app.emit('destroyKnex', req);
@@ -55,7 +55,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       res.format({
         html: function () {
           neonode.app.emit('destroyKnex', req);
-          res.render('Branch/show.html');
+          res.render('Branches/show.html');
         },
         json: function () {
           neonode.app.emit('destroyKnex', req);
@@ -66,7 +66,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
 
     new: function (req, res, next) {
       neonode.app.emit('destroyKnex', req);
-      res.render('Branch/new.html');
+      res.render('Branches/new.html');
     },
 
     create: function (req, res, next) {
@@ -74,7 +74,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
         json: function () {
           var branch = new Branch(req.body);
 
-          user
+          branch
             .save(req.knex)
             .then(function () {
               neonode.app.emit('destroyKnex', req);
@@ -89,7 +89,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       res.format({
         html: function () {
           neonode.app.emit('destroyKnex', req);
-          res.render('Branch/edit.html');
+          res.render('Branches/edit.html');
         },
         json: function () {
           neonode.app.emit('destroyKnex', req);
@@ -101,7 +101,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     update: function (req, res, next) {
       res.format({
         json: function () {
-          req.user
+          req.branch
             .updateAttributes(req.body)
             .save(req.knex)
             .then(function (val) {
@@ -116,7 +116,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     destroy: function (req, res, next) {
       res.format({
         json: function () {
-          req.user
+          req.branch
             .destroy(req.knex)
             .then(function () {
               neonode.app.emit('destroyKnex', req);
