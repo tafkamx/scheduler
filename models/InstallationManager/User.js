@@ -6,7 +6,7 @@ var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 InstallationManager.User = Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Users',
   validations : {
-    'email' : [
+    email : [
       'email',
       {
         rule : function(val) {
@@ -29,7 +29,7 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
       'required',
       'maxLength:255'
     ],
-    'password' : [
+    password : [
       'minLength:8'
     ]
   },

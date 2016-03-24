@@ -25,7 +25,7 @@ describe('InstallationManager.InstallationsController', function() {
               done();
             }).catch(done);
           });
-      })
+      });
     });
   });
 
@@ -36,7 +36,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         done();
-      })
+      });
   });
 
   it('Should get the Installations Array from /InstallationManager/Installations/', function(done) {
@@ -47,7 +47,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(res.status).to.be.eql(200);
         expect(res.body.length).to.be.eql(1);
         done();
-      })
+      });
   });
 
   it('Should render /InstallationManager/Installations/:id', function(done) {
@@ -68,7 +68,6 @@ describe('InstallationManager.InstallationsController', function() {
         expect(res.status).to.be.eql(404);
         done();
       });
-
   });
 
   it('Should get /InstallationManager/Installations/:id', function(done) {
@@ -100,7 +99,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         done();
-      })
+      });
   });
 
   it('Should create a new Installation', function(done) {
@@ -119,7 +118,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(res.body.domain).to.be.equal(data.domain);
 
         done();
-      })
+      });
   });
 
   it('Should fail to create an Installation if the name contains spaces', function(done) {
@@ -136,7 +135,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body).to.exists;
         expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
         done();
-      })
+      });
   });
 
   it('Should fail to create an Installation if the name is empty', function(done) {
@@ -153,7 +152,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body).to.exists;
         expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
-      })
+      });
   });
 
   it('Should fail to create an Installation if the name is undefined', function(done) {
@@ -170,7 +169,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body).to.exists;
         expect(err.response.body.name[0]).to.be.equal('The name is required');
         done();
-      })
+      });
   });
 
   it('Should fail to create an Installation if the name exists', function(done) {
@@ -189,7 +188,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body.name[0]).to.be.equal('name already exists.');
         expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
         done();
-      })
+      });
   });
 
   it('Should fail to create an Installation if the domain is not a valid domain with tld', function(done) {
@@ -207,7 +206,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body).to.exists;
         expect(err.response.body.domain[0]).to.be.equal('Invalid domain.');
         done();
-      })
+      });
   });
 
 
@@ -226,7 +225,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err.response.body.name[0]).to.be.equal('The name must not exceed 128 characters long');
         expect(err.response.body.domain[0]).to.be.equal('The domain must not exceed 255 characters long');
         done();
-      })
+      });
   });
 
   it('Should render /InstallationManager/Installations/:id/edit', function(done) {
@@ -236,7 +235,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         done();
-      })
+      });
   });
 
   it('Should get the installation object /InstallationManager/Installations/:id/edit', function(done) {
@@ -247,7 +246,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(res.status).to.be.eql(200);
         expect(res.body.id).to.be.equal(installation.id);
         done();
-      })
+      });
   });
 
   it('Should update installation attributes', function(done) {
@@ -284,7 +283,7 @@ describe('InstallationManager.InstallationsController', function() {
         expect(res.body.id).to.be.equal(installation.id);
         expect(res.body.name).to.be.equal(data.name);
         done();
-      })
+      });
   });
 
   it('Should fail update if name exists or domain exists', function(done) {
@@ -306,7 +305,7 @@ describe('InstallationManager.InstallationsController', function() {
           expect(err.response.body.name[0]).to.be.equal('name already exists.');
           expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
           done();
-        })
+        });
     });
 
   });
@@ -324,7 +323,7 @@ describe('InstallationManager.InstallationsController', function() {
             expect(err).to.be.eql(null);
             expect(res.body.deleted).to.be.equal(true);
             done();
-          })
+          });
       });
   });
 

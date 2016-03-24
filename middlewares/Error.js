@@ -7,17 +7,35 @@ module.exports = function(err, req, res, next) {
     });
   }
 
-  if (err.name && err.name === 'NotFoundError') {
-    return res.status(404).render('shared/404.html', {message : err.message, layout : false});
+  if (err.name) {
+    switch (err.name) {
+      case 'NotFoundError':
+        return res.status(404).render('shared/404.html', {
+          message: err.message,
+          layout: false
+        });
+        break;
+      case 'ForbiddenError':
+        return res.status(403).render('shared/500.html', {
+          layout: false,
+          error: err.stack
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   res.status(500);
   res.format({
-    html : function() {
-      res.render('shared/500.html', {layout : false, error : err.stack})
+    html: function () {
+      res.render('shared/500.html', {
+        layout: false,
+        error: err.stack
+      });
     },
-    json : function() {
-      res.json(err)
+    json: function () {
+      res.json(err);
     }
-  })
+  });
 }
