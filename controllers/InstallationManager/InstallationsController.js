@@ -1,16 +1,26 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 
+var aclCanGenerator = function (actions, resource) {
+  return actions.map(function (action) {
+    return Sc.ACL.can(action, resource);
+  });
+};
+
 InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions: [
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
-      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
+      actions: ['index', 'show', 'new', 'edit']
     },
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before: aclCanGenerator(['index', 'show', 'new', 'create', 'edit', 'update', 'destroy'], 'installation-manager'),
+      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     }
   ],
 

@@ -5,9 +5,8 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
 
   beforeActions : [
     {
-      before : [neonode.controllers.Home._authenticate],
-      actions : ['index', 'show', 'create', 'edit', 'update', 'destroy']
-
+      before: [neonode.controllers['InstallationManager.Home']._authenticate],
+      actions: ['index', 'show', 'new', 'edit']
     },
     {
       before : ['_loadUser'],
