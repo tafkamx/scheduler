@@ -3,6 +3,8 @@ var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpe
 
 InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'InstallationsController').inherits(BaseController)({
 
+  INSTALLATIONS_PER_PAGE : 50,
+
   beforeActions : [
     {
       before : [neonode.controllers.Home._authenticate],
@@ -31,15 +33,19 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     },
 
     index : function index(req, res, next) {
-      Installation.query().then(function(results) {
-        res.format({
-          html : function() {
-            res.render('InstallationAdmin/Installations/index.html', {installations : results});
-          },
-          json : function() {
-            res.json(results);
-          }
-        });
+      var controller = this;
+
+      InstallationManager.Installation.query()
+        .offset(req.query.offset || 0)
+        .limit(controller.constructor.INSTALLATIONS_PER_PAGE).then(function(results) {
+          res.format({
+            html : function() {
+              res.render('InstallationAdmin/Installations/index.html', {installations : results});
+            },
+            json : function() {
+              res.json(results);
+            }
+          });
       }).catch(next);
     },
 
