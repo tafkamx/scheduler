@@ -4,6 +4,7 @@ var path = require('path');
 
 var User = Class('User').inherits(DynamicModel)({
   tableName : 'Users',
+
   validations : {
     email : [
       'email',
@@ -15,7 +16,7 @@ var User = Class('User').inherits(DynamicModel)({
             });
 
           if (this.target.id) {
-            query.andWhere('id', '<>', this.target.id);
+            query.andWhere('id', '!=', this.target.id);
           }
           return query.then(function(result) {
             if (result.length > 0) {
@@ -28,11 +29,14 @@ var User = Class('User').inherits(DynamicModel)({
       'required',
       'maxLength:255'
     ],
+
     password : [
       'minLength:8'
     ]
   },
+
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
+
   relations : {},
 
   prototype : {

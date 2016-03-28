@@ -76,7 +76,7 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
 
   attributes : ['id', 'name', 'domain', 'createdAt', 'updatedAt'],
 
-  migrateAll : function migrateAll() {
+  migrateAll : function () {
     return this.query().then(function(result) {
       return Promise.each(result, function(installation) {
         return installation.migrate();
