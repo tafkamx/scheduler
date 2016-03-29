@@ -1,19 +1,24 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 
+var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'aclBeforeActionsGenerator.js'));
+
 var BranchesController = Class('BranchesController').inherits(BaseController)({
 
   beforeActions: [
-    // {
-    //   before : [neonode.controllers.Home._authenticate],
-    //   actions : ['index', 'create', 'edit', 'update', 'destroy']
-    //
-    // },
     {
       before: ['_loadBranch'],
       actions: ['show', 'edit', 'update', 'destroy']
     }
-  ],
+  ].concat(aclBeforeActionsGenerator([
+    'index',
+    'show',
+    'new',
+    'create',
+    'edit',
+    'update',
+    'destroy'
+  ], 'branches')),
 
   prototype: {
     _loadBranch: function(req, res, next) {

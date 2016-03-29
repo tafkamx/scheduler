@@ -13,7 +13,6 @@ routeMapper.routes.forEach(function(route) {
   var action     = route.action;
   var verbs      = route.verb;
 
-
   verbs.forEach(function(verb) {
     logger.info(verb + ': ' + route.path + ' ' + controller + '#' + action);
 
