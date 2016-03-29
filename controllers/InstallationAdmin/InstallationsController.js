@@ -35,9 +35,8 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
     index : function index(req, res, next) {
       var controller = this;
 
-      InstallationManager.Installation.query()
-        .offset(req.query.offset || 0)
-        .limit(controller.constructor.INSTALLATIONS_PER_PAGE).then(function(results) {
+      InstallationManager.Installation.buildFromRestParams(req.query)
+        .then(function(results) {
           res.format({
             html : function() {
               res.render('InstallationAdmin/Installations/index.html', {installations : results});
@@ -46,7 +45,7 @@ InstallationAdmin.InstallationsController = Class(InstallationAdmin, 'Installati
               res.json(results);
             }
           });
-      }).catch(next);
+        }).catch(next);
     },
 
     show : function show(req, res, next) {
