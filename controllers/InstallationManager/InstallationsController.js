@@ -1,5 +1,6 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
+var bcrypt = require('bcrypt-node');
 
 var aclCanGenerator = function (actions, resource) {
   return actions.map(function (action) {
@@ -74,12 +75,32 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     },
 
     create: function (req, res, next) {
+      var installationForm = {
+          name: req.body.name,
+          domain: req.body.domain
+        },
+        franchisorForm = {
+          email: req.body.franchisorEmail
+        };
+
       res.format({
         json: function () {
-          var installation = new InstallationManager.Installation(req.body);
+          var installation = new InstallationManager.Installation(installationForm),
+            installationKnex;
 
           installation
             .save()
+            .then(function () {
+              installationKnex = installation.getDatabase();
+
+              var franchisor = new User({
+                email: franchisorForm.email,
+                isAdmin: true,
+                password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
+              });
+
+              return franchisor.save(installationKnex);
+            })
             .then(function () {
               res.json(installation);
             })
@@ -108,7 +129,9 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
             .then(function(val) {
               res.json(req.installation);
             })
-            .catch(next);
+            .catch(function (err) {
+              next(err)
+            });
         }
       });
     },
@@ -126,6 +149,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
       });
     }
   }
+
 });
 
 module.exports = new InstallationManager.InstallationsController();

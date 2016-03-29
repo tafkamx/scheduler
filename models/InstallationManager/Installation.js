@@ -20,22 +20,22 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
       },
       {
         rule : function(val) {
-          var query = InstallationManager.Installation.query().where({
-            name : val
-          });
+          var query = InstallationManager.Installation.query()
+            .where('name', val);
 
           if (this.target.id) {
             query.andWhere('id', '<>', this.target.id);
           }
 
-          return query.then(function(result) {
-            if (result.length > 0) {
-              throw new Error('name already exists.');
-            }
-          });
+          return query
+            .then(function(result) {
+              if (result.length > 0) {
+                throw new Error('name already exists.');
+              }
+            });
         },
 
-        message : 'name already exists'
+        message : 'name already exists.'
       }
     ],
     domain : [
@@ -129,6 +129,18 @@ InstallationManager.Installation = Class(InstallationManager, 'Installation').in
       logger.info('Migrating ' + name + ' database');
 
       return knex.migrate.latest();
+    },
+
+    getDatabase: function () {
+      var conf = require(path.join(process.cwd(), 'knexfile.js'));
+
+      var name = [this.name, CONFIG.environment].join('-');
+
+      conf[CONFIG.environment].connection.database = name;
+
+      var knex = new Knex(conf[CONFIG.environment]);
+
+      return knex;
     }
   }
 });

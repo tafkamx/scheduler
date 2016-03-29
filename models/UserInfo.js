@@ -32,6 +32,7 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
 
   attributes: [
     'id',
+    'userId',
     'isAdmin',
     'createdAt',
     'updatedAt'

@@ -14,19 +14,27 @@ var agent = sa.agent();
 describe('InstallationManager.InstallationsController', function() {
 
   before(function(done) {
-    adminUser.save().then(function() {
-      return adminUser;
-    }).then(function(res) {
-      res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationManager/login')
-          .send({ email: adminUser.email, password: adminUser.password })
-          .end(function(err, res) {
-            installation.save().then(function() {
-              done();
-            }).catch(done);
-          });
+    adminUser.save()
+      .then(function() {
+        adminUser
+          .activate()
+          .save()
+          .then(function() {
+            agent.post(baseURL + '/InstallationManager/login')
+              .send({
+                email: adminUser.email,
+                password: adminUser.password
+              })
+              .end(function(err, res) {
+                installation
+                  .save()
+                  .then(function() {
+                    done();
+                  })
+                  .catch(done);
+              });
+        });
       });
-    });
   });
 
   it('Should render /InstallationManager/Installations/', function(done) {
@@ -105,14 +113,14 @@ describe('InstallationManager.InstallationsController', function() {
   it('Should create a new Installation', function(done) {
     var data = {
       name : 'installation-two',
-      domain : 'empathia.academy'
+      domain : 'empathia.academy',
+      franchisorEmail: 'test@example.com'
     };
 
     agent.post(baseURL + '/InstallationManager/Installations')
       .set('Accept', 'application/json')
       .send(data)
       .end(function(err, res) {
-        expect(err).to.be.equal(null);
         expect(res.status).to.be.eql(200);
         expect(res.body.name).to.be.equal(data.name);
         expect(res.body.domain).to.be.equal(data.domain);
@@ -185,13 +193,15 @@ describe('InstallationManager.InstallationsController', function() {
         expect(err).to.be.instanceof(Error);
         expect(res.status).to.be.eql(500);
         expect(err.response.body).to.exists;
+        expect(err.response.body.name).to.exists;
         expect(err.response.body.name[0]).to.be.equal('name already exists.');
+        expect(err.response.body.domain).to.exists;
         expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
         done();
       });
   });
 
-  it('Should fail to create an Installation if the domain is not a valid domain with tld', function(done) {
+  it('Should fail to create an Installation if the domain is not a valid domain with TLD', function(done) {
     var data = {
       name : 'my-installation',
       domain : 'myinstallation'
@@ -208,7 +218,6 @@ describe('InstallationManager.InstallationsController', function() {
         done();
       });
   });
-
 
   it('Should fail if the name is > 128 or domain is > 255', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations')
@@ -269,7 +278,7 @@ describe('InstallationManager.InstallationsController', function() {
 
   it('Should update installation attributes if send the same domain', function(done) {
     var data = {
-      name : 'Installation-ONE',
+      name : 'installation-one',
       domain : 'delagarza.io'
     };
 
@@ -287,37 +296,39 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
   it('Should fail update if name exists or domain exists', function(done) {
-    InstallationManager.Installation.query().where({
-      name : 'installation-two'
-    }).then(function(result) {
-      var data = {
-        name : 'Installation-ONE',
-        domain : 'delagarza.io'
-      };
+    InstallationManager.Installation.query()
+      .where('name', 'installation-two')
+      .then(function(result) {
+        var data = {
+          name : 'installation-one',
+          domain : 'delagarza.io'
+        };
 
-      agent.put(baseURL + '/InstallationManager/Installations/' + result[0].id)
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('name already exists.');
-          expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
-          done();
-        });
-    });
-
+        agent.put(baseURL + '/InstallationManager/Installations/' + result[0].id)
+          .set('Accept', 'application/json')
+          .send(data)
+          .end(function(err, res) {
+            expect(err).to.be.instanceof(Error);
+            expect(res.status).to.be.eql(500);
+            expect(err.response.body).to.exists;
+            expect(err.response.body.name[0]).to.be.equal('name already exists.');
+            expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
+            done();
+          });
+      })
+      .catch(done);
   });
 
 
   it('Should destroy a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations/')
       .send({
-        name : 'three'
-      }).end(function(err, res) {
+        name: 'three',
+        franchisorEmail: 'test@example.com'
+      })
+      .end(function(err, res) {
         agent.post(baseURL + '/InstallationManager/Installations/' + res.body.id)
-        .send({'_method' : 'DELETE'})
+          .send({ _method: 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
             expect(err).to.be.eql(null);
@@ -329,15 +340,13 @@ describe('InstallationManager.InstallationsController', function() {
 
   it('Should fail if id doesnt exist when destroying a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Installations/' + installation.id + '1')
-    .send({'_method' : 'DELETE'})
-
+      .send({ _method: 'DELETE'})
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
         done();
       })
   });
-
 
   after(function(done) {
     Promise.all([
