@@ -13,15 +13,11 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
   beforeActions: [
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
-      actions: ['index', 'show', 'new', 'edit']
+      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     },
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
-    },
-    {
-      before: aclCanGenerator(['index', 'show', 'new', 'create', 'edit', 'update', 'destroy'], 'installation-manager'),
-      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     }
   ],
 
