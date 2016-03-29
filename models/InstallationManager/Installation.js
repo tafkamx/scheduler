@@ -2,7 +2,7 @@ var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
 
-var Installation = Class('Installation').inherits(InstallationAdminModel)({
+InstallationManager.Installation = Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
   validations : {
     name : [
@@ -20,7 +20,7 @@ var Installation = Class('Installation').inherits(InstallationAdminModel)({
       },
       {
         rule : function(val) {
-          var query = Installation.query().where({
+          var query = InstallationManager.Installation.query().where({
             name : val
           });
 
@@ -53,7 +53,7 @@ var Installation = Class('Installation').inherits(InstallationAdminModel)({
       {
         rule : function(val) {
           if (val) {
-            var query = Installation.query().where({
+            var query = InstallationManager.Installation.query().where({
               domain : val
             });
 
@@ -90,7 +90,7 @@ var Installation = Class('Installation').inherits(InstallationAdminModel)({
     domain : null,
 
     init : function(config) {
-      InstallationAdminModel.prototype.init.call(this, config);
+      InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
@@ -105,24 +105,32 @@ var Installation = Class('Installation').inherits(InstallationAdminModel)({
       return this;
     },
 
-    createDatabase : function createDatabase() {
+    createDatabase : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
+
+      var name = [this.name, CONFIG.environment].join('-');
 
       var knex = new Knex(conf[CONFIG.environment]);
 
-      return knex.raw('CREATE DATABASE "' + this.name + '-' + CONFIG.environment + '";')
+      logger.info('Creating ' + name + ' database');
+
+      return knex.raw('CREATE DATABASE "' + name + '";')
     },
 
-    migrate : function migrate() {
+    migrate : function () {
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
-      conf[CONFIG.environment].connection.database = this.name + '-' + CONFIG.environment;
+      var name = [this.name, CONFIG.environment].join('-');
+
+      conf[CONFIG.environment].connection.database = name;
 
       var knex = new Knex(conf[CONFIG.environment]);
+
+      logger.info('Migrating ' + name + ' database');
 
       return knex.migrate.latest();
     }
   }
 });
 
-module.exports = Installation;
+module.exports = InstallationManager.Installation;

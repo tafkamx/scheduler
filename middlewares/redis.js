@@ -1,6 +1,3 @@
-// *************************************************************************
-//                          Redis
-// *************************************************************************
 if (CONFIG[CONFIG.environment].sessions !== false) {
 
   var redis = require('redis');
@@ -10,8 +7,6 @@ if (CONFIG[CONFIG.environment].sessions !== false) {
   var session = require('express-session');
 
   var RedisStore = require('connect-redis')(session);
-
-  var redisStoreInstance = new RedisStore();
 
   var uuid = require('uuid');
 
@@ -24,7 +19,7 @@ if (CONFIG[CONFIG.environment].sessions !== false) {
       resave : false,
       saveUninitialized : true,
       key : req.installationId || CONFIG[CONFIG.environment].sessions.key,
-      store: redisStoreInstance,
+      store: new RedisStore(),
       secret: CONFIG[CONFIG.environment].sessions.secret,
       // cookie: { secure: true }
     });

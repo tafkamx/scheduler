@@ -1,11 +1,11 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
-// var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
+// var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 var User = Class('User').inherits(DynamicModel)({
   tableName : 'Users',
   validations : {
-    'email' : [
+    email : [
       'email',
       {
         rule : function(val) {
@@ -28,7 +28,7 @@ var User = Class('User').inherits(DynamicModel)({
       'required',
       'maxLength:255'
     ],
-    'password' : [
+    password : [
       'minLength:8'
     ]
   },
@@ -57,7 +57,7 @@ var User = Class('User').inherits(DynamicModel)({
       });
 
       // this.on('afterCreate', function(next) {
-      //   AdminUserMailer.sendActivationLink(model, next);
+      //   UserMailer.sendActivationLink(model, next);
       // });
     },
 

@@ -1,30 +1,30 @@
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 
-InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersController').inherits(BaseController)({
+InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
   beforeActions : [
     {
-      before : [neonode.controllers.Home._authenticate],
-      actions : ['index', 'show', 'create', 'edit', 'update', 'destroy']
-
+      before: [neonode.controllers['InstallationManager.Home']._authenticate],
+      actions: ['index', 'show', 'new', 'edit']
     },
     {
-      before : ['_loadAdminUser'],
+      before : ['_loadUser'],
       actions : ['show', 'edit', 'update', 'destroy']
     }
   ],
 
   prototype : {
-    _loadAdminUser : function(req, res, next) {
-      AdminUser.query().where({id : req.params.id}).then(function(result) {
+    _loadUser : function(req, res, next) {
+      InstallationManager.User.query().where({id : req.params.id}).then(function(result) {
 
         if (result.length === 0) {
-          throw new NotFoundError('AdminUser ' + req.params.id + ' not found');
+          throw new NotFoundError('User ' + req.params.id + ' not found');
         }
 
         res.locals.adminUser = result[0];
         req.adminUser = result[0];
+
         next();
       }).catch(function(err) {
         next(err)
@@ -32,7 +32,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
     },
 
     index : function index(req, res, next) {
-      AdminUser.query().then(function(results) {
+      InstallationManager.User.query().then(function(results) {
         results.forEach(function(result) {
           delete result.encryptedPassword;
           delete result.token;
@@ -42,7 +42,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
         res.format({
           html : function() {
-            res.render('InstallationAdmin/AdminUsers/index.html');
+            res.render('InstallationManager/Users/index.html');
           },
           json : function() {
             res.json(results);
@@ -57,7 +57,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/show.html');
+          res.render('InstallationManager/Users/show.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -66,13 +66,13 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
     },
 
     new : function(req, res, next) {
-      res.render('InstallationAdmin/AdminUsers/new.html');
+      res.render('InstallationManager/Users/new.html');
     },
 
     create : function create(req, res, next) {
       res.format({
         json : function() {
-          var adminUser = new AdminUser(req.body);
+          var adminUser = new InstallationManager.User(req.body);
 
           adminUser.save().then(function() {
             delete adminUser.encryptedPassword;
@@ -90,7 +90,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
 
       res.format({
         html : function() {
-          res.render('InstallationAdmin/AdminUsers/edit.html');
+          res.render('InstallationManager/Users/edit.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -114,7 +114,7 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
     destroy : function destroy(req, res, next) {
       res.format({
         json : function() {
-          res.locals.adminUser.destroy().then(function() {
+          req.adminUser.destroy().then(function() {
             res.json({deleted: true});
           }).catch(next);
         }
@@ -123,4 +123,4 @@ InstallationAdmin.AdminUsersController = Class(InstallationAdmin, 'AdminUsersCon
   }
 });
 
-module.exports = new InstallationAdmin.AdminUsersController();
+module.exports = new InstallationManager.UsersController();

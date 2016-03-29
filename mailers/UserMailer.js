@@ -1,8 +1,8 @@
 var path = require('path');
-var urlFor = require(path.join(process.cwd(), 'config', 'routeMapper.js')).helpers;
+var urlFor = CONFIG.router.helpers;
 var _ = require('lodash');
 
-var AdminUserMailer = Class('AdminUserMailer').inherits(BaseMailer)({
+var UserMailer = Class('UserMailer').inherits(BaseMailer)({
   defaultOptions : {
     mandrillOptions : {
       async: false,
@@ -11,7 +11,7 @@ var AdminUserMailer = Class('AdminUserMailer').inherits(BaseMailer)({
     }
   },
   sendActivationLink : function sendActivationLink(adminUser) {
-    var template = path.join(process.cwd(), 'views', 'mailers', 'AdminUser', 'activationLink.html');
+    var template = path.join(process.cwd(), 'views', 'mailers', 'User', 'activationLink.html');
 
     var templateOptions = {
       adminUser : adminUser,
@@ -33,4 +33,4 @@ var AdminUserMailer = Class('AdminUserMailer').inherits(BaseMailer)({
   }
 });
 
-module.exports = AdminUserMailer;
+module.exports = UserMailer;
