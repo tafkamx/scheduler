@@ -116,7 +116,7 @@ describe('InstallationManager.InstallationsController', function() {
       var data = {
         name : 'installation-two',
         domain : 'empathia.academy',
-        franchisorEmail: 'test@example.com'
+        franchisorEmail: 'franchisor@example.com'
       };
 
       var knex,

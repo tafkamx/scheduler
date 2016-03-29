@@ -1,4 +1,4 @@
-var installation = 'installation-one';
+var installation = 'installation-two';
 
 var branch, knex, Knex, knexConfig;
 
@@ -11,27 +11,45 @@ var path = require('path');
 
 describe('BranchesController', function() {
   before(function(done) {
-    setTimeout(function() {
-      Knex = require('knex');
+    Knex = require('knex');
 
-      knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
+    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
 
-      knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
 
-      knex = new Knex(knexConfig[CONFIG.environment]);
+    knex = new Knex(knexConfig[CONFIG.environment]);
 
-      branch = new Branch({
-        name: 'branch-one'
-      });
-
-      branch
-        .save(knex)
-        .then(function () {
-          return done();
+    Promise.resolve()
+      .then(function () {
+        branch = new Branch({
+          name: 'branch-one'
         });
 
-    }, 1000);
+        return branch.save(knex)
+      })
+      .then(function () {
+        return UserInfo.query(knex)
+          .where('is_admin', true)
+          .then(function (result) {
+            return User.query(knex)
+              .where('id', result[0].userId);
+          })
+          .then(function (result) {
+            return new Promise(function (resolve, reject) {
+              agent.get(installationUrl + '/login?email=false&token=' + result[0].token)
+                .end(function (err, res) {
+                  expect(err).to.equal(null);
+                  expect(res.status).to.equal(200);
 
+                  return resolve();
+                });
+            });
+          });
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
   });
 
   it('Should render /Branches/', function(done) {
