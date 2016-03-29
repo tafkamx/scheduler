@@ -24,6 +24,10 @@ var middlewares = [
     path : 'middlewares/DomainParser.js'
   },
   {
+    name: 'Destroy Knex',
+    path: 'middlewares/destroyKnex.js'
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
