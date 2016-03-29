@@ -14,7 +14,11 @@ module.exports = function(req, res, next) {
   req.role = 'Visitor';
 
   if (req.user) {
-    req.role = 'Admin';
+    if (req.url.match(/^(\/InstallationManager)/) !== null) {
+      req.role = 'Admin';
+    } else {
+      req.role = 'User';
+    }
   }
 
   if (_.isUndefined(res.locals.helpers)) {
