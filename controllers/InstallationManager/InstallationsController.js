@@ -2,12 +2,6 @@ var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var bcrypt = require('bcrypt-node');
 
-var aclCanGenerator = function (actions, resource) {
-  return actions.map(function (action) {
-    return Sc.ACL.can(action, resource);
-  });
-};
-
 InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions: [
