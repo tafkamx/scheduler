@@ -85,7 +85,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
 
               var franchisor = new User({
                 email: franchisorForm.email,
-                isAdmin: true,
+                role: 'admin',
                 password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
               });
 

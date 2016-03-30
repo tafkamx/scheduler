@@ -40,12 +40,14 @@ describe('SessionsController', function() {
 
     user1 = new User({
       email : 'installation.one.user@example.com',
-      password : '12345678'
+      password : '12345678',
+      role: 'admin'
     });
 
     user2 = new User({
       email : 'installation.two.user@example.com',
-      password : '12345678'
+      password : '12345678',
+      role: 'admin'
     });
 
     Promise.all([

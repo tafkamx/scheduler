@@ -33,7 +33,7 @@ var User = Class('User').inherits(DynamicModel)({
 
     password : ['minLength:8'],
 
-    isAdmin: ['boolean']
+    role: ['maxLength:255']
   },
 
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
@@ -44,7 +44,7 @@ var User = Class('User').inherits(DynamicModel)({
     email : null,
     encryptedPassword : null,
     token : null,
-    isAdmin: false,
+    role: null,
 
     init : function(config) {
       DynamicModel.prototype.init.call(this, config);
@@ -71,7 +71,7 @@ var User = Class('User').inherits(DynamicModel)({
       this.on('afterCreate', function (next) {
         var info = new UserInfo({
           userId: model.id,
-          isAdmin: model.isAdmin
+          role: model.role
         });
 
         info

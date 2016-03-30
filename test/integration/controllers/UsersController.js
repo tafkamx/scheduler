@@ -11,26 +11,23 @@ var path = require('path');
 
 describe('UsersController', function() {
   before(function(done) {
-    setTimeout(function() {
-      Knex = require('knex');
+    Knex = require('knex');
 
-      knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
+    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
 
-      knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
 
-      knex = new Knex(knexConfig[CONFIG.environment]);
+    knex = new Knex(knexConfig[CONFIG.environment]);
 
-      user = new User({
-        email : 'test.installation.one@example.com',
-        password : '12345678'
-      });
+    user = new User({
+      email : 'test.installation.one@example.com',
+      password : '12345678',
+      role: 'admin'
+    });
 
-      user.save(knex).then(function() {
-        done();
-      });
-
-    }, 1000);
-
+    user.save(knex).then(function() {
+      done();
+    }).catch(done);
   });
 
   it('Should render /Users/', function(done) {
@@ -115,7 +112,8 @@ describe('UsersController', function() {
       .set('Accept', 'application/json')
       .send({
         email : 'test1@example.com',
-        password : '12345678'
+        password : '12345678',
+        role: 'staff'
       })
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -288,10 +286,11 @@ describe('UsersController', function() {
     agent.post(installationUrl + '/Users')
       .send({
         email : 'temp@example.com',
-        password : '12345678'
+        password : '12345678',
+        role: 'student'
       }).end(function(err, res) {
         agent.post(installationUrl + '/Users/' + res.body.id)
-        .send({'_method' : 'DELETE'})
+          .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
             expect(err).to.be.eql(null);

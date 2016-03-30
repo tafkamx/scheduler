@@ -27,19 +27,19 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
       }
     ],
 
-    isAdmin: ['required', 'boolean']
+    role: ['required', 'maxLength:255']
   },
 
   attributes: [
     'id',
     'userId',
-    'isAdmin',
+    'role',
     'createdAt',
     'updatedAt'
   ],
 
   prototype: {
-    isAdmin: false
+    role: null
   }
 });
 

@@ -159,7 +159,7 @@ describe('InstallationManager.InstallationsController', function() {
         })
         .then(function () {
           expect(user.id).to.equal(userInfo.userId);
-          expect(userInfo.isAdmin).to.equal(true);
+          expect(userInfo.role).to.equal('admin');
 
           return Promise.resolve();
         })
