@@ -25,15 +25,13 @@ var User = Class('User').inherits(DynamicModel)({
             }
           })
         },
-        message : 'The email already exists'
+        message : 'The email already exists.'
       },
       'required',
       'maxLength:255'
     ],
 
-    password : ['minLength:8'],
-
-    role: ['maxLength:255']
+    password : ['minLength:8']
   },
 
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],

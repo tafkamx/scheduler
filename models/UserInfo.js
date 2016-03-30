@@ -27,7 +27,18 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
       }
     ],
 
-    role: ['required', 'maxLength:255']
+    role: [
+      'required',
+      'maxLength:255',
+      {
+        rule: function (val) {
+          if (val.match(/(admin|staff|teacher|student)/) === null) {
+            throw new Error('role must be one of admin, staff, teacher or student.');
+          }
+        },
+        message: 'role must be one of admin, staff, teacher or student.'
+      }
+    ]
   },
 
   attributes: [
