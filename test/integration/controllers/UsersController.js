@@ -107,102 +107,148 @@ describe('UsersController', function() {
       });
   });
 
-  it('Should create a new User', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : 'test1@example.com',
-        password : '12345678',
-        role: 'staff'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.eql(200);
-        expect(res.body.email).to.be.equal('test1@example.com');
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
-        done();
-      })
-  });
+  describe('#create', function () {
 
-  it('Should fail if the email exists', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : 'test1@example.com',
-        password : '12345678'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
-        done();
-      });
-  });
+    it('Should create a new User', function(done) {
+      var user,
+        userInfo;
 
-  it('Should fail if the email is no email', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : 'test2example.com',
-        password : '12345678'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.email[0]).to.be.equal('The email must be a valid email address');
-        done();
-      })
-  });
+      Promise.resolve()
+        .then(function () {
+          return new Promise(function (resolve) {
+            agent.post(installationUrl + '/Users')
+              .set('Accept', 'application/json')
+              .send({
+                email : 'test1@example.com',
+                password : '12345678',
+                role: 'staff'
+              })
+              .end(function(err, res) {
+                expect(err).to.be.equal(null);
+                expect(res.status).to.be.eql(200);
+                expect(res.body.email).to.be.equal('test1@example.com');
+                expect(res.body.encryptedPassword).to.be.undefined;
+                expect(res.body.token).to.be.undefined;
 
-  it('Should fail if the email is empty', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : '',
-        password : '12345678'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.email[0]).to.be.equal('The email is required');
-        done();
-      })
-  });
+                return resolve(res.body.id);
+              })
+          });
+        })
+        .then(function (id) {
+          return User.query(knex)
+            .where('id', id)
+            .then(function (result) {
+              expect(result.length).to.equal(1);
 
-  it('Should fail if the email is > 255', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
-        password : '12345678'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.email[0]).to.be.equal('The email must not exceed 255 characters long');
-        done();
-      });
-  });
+              user = result[0];
+            });
+        })
+        .then(function () {
+          return UserInfo.query(knex)
+            .where('user_id', user.id)
+            .then(function (result) {
+              expect(result.length).to.equal(1);
 
-  it('Should fail if the password is < 8', function(done) {
-    agent.post(installationUrl + '/Users')
-      .set('Accept', 'application/json')
-      .send({
-        email : 'test3@example.com',
-        password : '1234567'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-        done();
-      });
+              userInfo = result[0];
+            });
+        })
+        .then(function () {
+          expect(user.id).to.equal(userInfo.userId);
+          expect(userInfo.role).to.equal('staff');
+
+          return Promise.resolve();
+        })
+        .then(function () {
+          return done();
+        })
+        .catch(done);
+    });
+
+    it('Should fail if the email exists', function(done) {
+      agent.post(installationUrl + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test1@example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email already exists.');
+          done();
+        });
+    });
+
+    it('Should fail if the email is no email', function(done) {
+      agent.post(installationUrl + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test2example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email must be a valid email address');
+          done();
+        })
+    });
+
+    it('Should fail if the email is empty', function(done) {
+      agent.post(installationUrl + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : '',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email is required');
+          done();
+        })
+    });
+
+    it('Should fail if the email is > 255', function(done) {
+      agent.post(installationUrl + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email must not exceed 255 characters long');
+          done();
+        });
+    });
+
+    it('Should fail if the password is < 8', function(done) {
+      agent.post(installationUrl + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test3@example.com',
+          password : '1234567',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
+          done();
+        });
+    });
+
   });
 
   it('Should render /Users/:id/edit', function(done) {
@@ -228,87 +274,95 @@ describe('UsersController', function() {
       })
   });
 
-  it('Should update user attributes', function(done) {
-    agent.put(installationUrl + '/Users/' + user.id)
-      .set('Accept', 'application/json')
-      .send({
-        email : 'email@example.com',
-        password : '123456789'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors).to.be.undefined;
-        expect(res.status).to.be.eql(200);
-        expect(res.body.id).to.be.equal(user.id);
-        expect(res.body.email).to.be.equal('email@example.com');
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
-        done();
-      });
+  describe('#update', function () {
+
+    it('Should update user attributes', function(done) {
+      agent.put(installationUrl + '/Users/' + user.id)
+        .set('Accept', 'application/json')
+        .send({
+          email : 'email@example.com',
+          password : '123456789'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.eql(null);
+          expect(res.body.errors).to.be.undefined;
+          expect(res.status).to.be.eql(200);
+          expect(res.body.id).to.be.equal(user.id);
+          expect(res.body.email).to.be.equal('email@example.com');
+          expect(res.body.encryptedPassword).to.be.undefined;
+          expect(res.body.token).to.be.undefined;
+          done();
+        });
+    });
+
+    it('Should update user attributes if its the same email', function(done) {
+      agent.put(installationUrl + '/Users/' + user.id)
+        .set('Accept', 'application/json')
+        .send({
+          password : 'abcdefghi'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.eql(null);
+          expect(res.body.errors).to.be.undefined;
+          expect(res.status).to.be.eql(200);
+          expect(res.body.id).to.be.equal(user.id);
+          expect(res.body.email).to.be.equal('email@example.com');
+          expect(res.body.encryptedPassword).to.be.undefined;
+          expect(res.body.token).to.be.undefined;
+          done();
+        })
+    });
+
+    it('Should fail update if password doesnt validate', function(done) {
+      agent.put(installationUrl + '/Users/' + user.id)
+        .set('Accept', 'application/json')
+        .send({
+          password : 'abcd'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
+          expect(res.body.encryptedPassword).to.be.undefined;
+          expect(res.body.token).to.be.undefined;
+          done();
+        })
+    });
+
   });
 
-  it('Should update user attributes if its the same email', function(done) {
-    agent.put(installationUrl + '/Users/' + user.id)
-      .set('Accept', 'application/json')
-      .send({
-        password : 'abcdefghi'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors).to.be.undefined;
-        expect(res.status).to.be.eql(200);
-        expect(res.body.id).to.be.equal(user.id);
-        expect(res.body.email).to.be.equal('email@example.com');
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
-        done();
-      })
-  });
+  describe('#destroy', function () {
 
-  it('Should fail update if password doesnt validate', function(done) {
-    agent.put(installationUrl + '/Users/' + user.id)
-      .set('Accept', 'application/json')
-      .send({
-        password : 'abcd'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
-        done();
-      })
-  });
+    it('Should destroy a record', function(done) {
+      agent.post(installationUrl + '/Users')
+        .send({
+          email : 'temp@example.com',
+          password : '12345678',
+          role: 'student'
+        }).end(function(err, res) {
+          agent.post(installationUrl + '/Users/' + res.body.id)
+            .send({'_method' : 'DELETE'})
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+              expect(err).to.be.eql(null);
+              expect(res.body.deleted).to.be.equal(true);
+              done();
+            })
+        });
+    });
 
-  it('Should destroy a record', function(done) {
-    agent.post(installationUrl + '/Users')
-      .send({
-        email : 'temp@example.com',
-        password : '12345678',
-        role: 'student'
-      }).end(function(err, res) {
-        agent.post(installationUrl + '/Users/' + res.body.id)
-          .send({'_method' : 'DELETE'})
-          .set('Accept', 'application/json')
-          .end(function(err, res) {
-            expect(err).to.be.eql(null);
-            expect(res.body.deleted).to.be.equal(true);
-            done();
-          })
-      });
-  });
+    it('Should fail if id doesnt exist when destroy a record', function(done) {
+      agent.post(installationUrl + '/Users/' + user.id + '1')
+      .send({'_method' : 'DELETE'})
 
-  it('Should fail if id doesnt exist when destroy a record', function(done) {
-    agent.post(installationUrl + '/Users/' + user.id + '1')
-    .send({'_method' : 'DELETE'})
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          done();
+        })
+    });
 
-      .set('Accept', 'application/json')
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        done();
-      })
   });
 
   after(function(done) {

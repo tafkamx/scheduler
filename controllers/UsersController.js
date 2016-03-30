@@ -72,7 +72,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       res.render('Users/new.html');
     },
 
-    create : function create(req, res, next) {
+    create : function (req, res, next) {
       res.format({
         json : function() {
           var user = new User(req.body);
