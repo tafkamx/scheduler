@@ -352,6 +352,40 @@ describe('UsersController', function() {
         });
     });
 
+    it('Should destroy UsersInfo record if User is destroyed', function(done) {
+      agent.post(installationUrl + '/Users')
+        .send({
+          email: 'temp@example.com',
+          password: '12345678',
+          role: 'student'
+        })
+        .end(function(err, res) {
+          Promise.resolve()
+            .then(function () {
+              return new Promise(function (resolve) {
+                agent.post(installationUrl + '/Users/' + res.body.id)
+                  .send({ _method: 'DELETE' })
+                  .set('Accept', 'application/json')
+                  .end(function(err, res) {
+                    expect(err).to.be.eql(null);
+                    expect(res.body.deleted).to.be.equal(true);
+
+                    resolve();
+                  });
+              });
+            })
+            .then(function () {
+              return UserInfo.query(knex)
+                .where('user_id', res.id)
+                .then(function (result) {
+                  expect(result.length).to.equal(0);
+                });
+            })
+            .then(done)
+            .catch(done);
+        });
+    });
+
     it('Should fail if id doesnt exist when destroy a record', function(done) {
       agent.post(installationUrl + '/Users/' + user.id + '1')
       .send({'_method' : 'DELETE'})
