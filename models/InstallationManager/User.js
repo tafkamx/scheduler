@@ -1,16 +1,16 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
 
-var AdminUserMailer = require(path.join(process.cwd(), 'mailers', 'AdminUserMailer'));
+var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
-var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
+InstallationManager.User = Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Users',
   validations : {
-    'email' : [
+    email : [
       'email',
       {
         rule : function(val) {
-          var query = AdminUser.query()
+          var query = InstallationManager.User.query()
             .where({
               email : val
             });
@@ -29,7 +29,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
       'required',
       'maxLength:255'
     ],
-    'password' : [
+    password : [
       'minLength:8'
     ]
   },
@@ -41,7 +41,7 @@ var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
     encryptedPassword : null,
     token : null,
     init : function(config) {
-      InstallationAdminModel.prototype.init.call(this, config);
+      InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
 
@@ -58,10 +58,10 @@ var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
       });
 
       this.on('afterCreate', function(next) {
-        AdminUserMailer.sendActivationLink(model).then(function() {
+        UserMailer.sendActivationLink(model).then(function() {
           next();
         }).catch(function(err) {
-          throw new Error(err);
+          throw err;
         });
       });
     },
@@ -74,4 +74,4 @@ var AdminUser = Class('AdminUser').inherits(InstallationAdminModel)({
   }
 });
 
-module.exports = AdminUser;
+module.exports = InstallationManager.User;

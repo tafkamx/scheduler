@@ -63,4 +63,4 @@ dist
 
 config.js
 knexfile.js
-knexinstallationadmin.js
+knexinstallationmanager.js
