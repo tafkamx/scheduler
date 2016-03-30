@@ -57,6 +57,48 @@ describe('UserInfo', function () {
   });
 
   describe('Constraints', function () {
+
+    describe('user_id', function () {
+
+      it('Should delete UserInfo record when User record is deleted', function (doneTest) {
+        var user,
+          userId;
+
+        return Promise.resolve()
+          .then(function () {
+            user = new User({
+              email: 'user-test-2@example.com',
+              password: '12345678',
+              role: 'student'
+            });
+
+            return user.save(knex);
+          })
+          .then(function () {
+            userId = user.id;
+
+            return UserInfo.query(knex)
+              .where('user_id', user.id)
+              .then(function (result) {
+                expect(result.length).to.equal(1);
+              });
+          })
+          .then(function () {
+            return user.destroy();
+          })
+          .then(function () {
+            return UserInfo.query(knex)
+              .where('id', userId)
+              .then(function (result) {
+                expect(result.length).to.equal(0);
+              });
+          })
+          .then(doneTest)
+          .catch(doneTest);
+      });
+
+    });
+
   });
 
   after(function (done) {

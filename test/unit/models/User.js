@@ -56,9 +56,6 @@ describe('User', function () {
 
   });
 
-  describe('Constraints', function () {
-  });
-
   after(function (done) {
     Promise.all([
       User.query(knex).delete(),
