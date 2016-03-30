@@ -1,7 +1,7 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 
-var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'aclBeforeActionsGenerator.js'));
+var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));
 
 var BranchesController = Class('BranchesController').inherits(BaseController)({
 
