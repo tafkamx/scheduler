@@ -25,12 +25,10 @@ module.exports = function(req, res, next) {
         .then(function () {
           if (req.url.match(/^(\/InstallationManager)/) !== null) {
             role = 'Admin';
-          } else {
-            role = 'User';
           }
         })
         .then(function () {
-          if (role !== 'User') {
+          if (role === 'Admin') {
             return;
           }
 
