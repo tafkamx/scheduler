@@ -32,11 +32,11 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
       'maxLength:255',
       {
         rule: function (val) {
-          if (val.match(/(admin|staff|teacher|student)/) === null) {
-            throw new Error('role must be one of admin, staff, teacher or student.');
+          if (val.match(/(franchisor|staff|teacher|student)/) === null) {
+            throw new Error('role must be one of franchisor, staff, teacher or student.');
           }
         },
-        message: 'role must be one of admin, staff, teacher or student.'
+        message: 'role must be one of franchisor, staff, teacher or student.'
       }
     ]
   },

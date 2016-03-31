@@ -16,15 +16,31 @@ module.exports = function(req, res, next) {
     .then(function () {
       var role = 'Visitor';
 
-      if (req.user) {
-        if (req.url.match(/^(\/InstallationManager)/) !== null) {
-          role = 'Admin';
-        } else {
-          role = 'User';
-        }
+      if (!req.user) {
+        req.role = 'Visitor';
+        return;
       }
 
-      req.role = role;
+      return Promise.resolve()
+        .then(function () {
+          if (req.url.match(/^(\/InstallationManager)/) !== null) {
+            role = 'Admin';
+          } else {
+            role = 'User';
+          }
+        })
+        .then(function () {
+          if (role !== 'User') {
+            return;
+          }
+
+          var userRole = req.user.info.role;
+
+          role = userRole[0].toUpperCase() + userRole.slice(1);
+        })
+        .then(function () {
+          req.role = role;
+        });
     })
     .then(function () {
       if (_.isUndefined(res.locals.helpers)) {
