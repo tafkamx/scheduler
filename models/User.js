@@ -36,8 +36,6 @@ var User = Class('User').inherits(DynamicModel)({
 
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
 
-  relations : {},
-
   prototype : {
     email : null,
     encryptedPassword : null,

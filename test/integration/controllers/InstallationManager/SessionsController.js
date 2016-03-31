@@ -29,7 +29,6 @@ describe('InstallationManager.SessionsController', function() {
   it('Should login and activate with the users token', function(done) {
     sa.agent().get(baseURL + '/InstallationManager/login?email=false&token=' + adminUser.token)
       .end(function(err, res) {
-        console.log(err)
         expect(err).to.equal(null);
         expect(res.text.search('"success": "PatOS Installation Admin."')).to.not.equal(-1);
         done();

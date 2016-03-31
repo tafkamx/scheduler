@@ -16,30 +16,34 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
             });
 
           if (this.target.id) {
-            query.andWhere('id', '<>', this.target.id);
+            query.andWhere('id', '!=', this.target.id);
           }
+
           return query.then(function(result) {
             if (result.length > 0) {
               throw new Error('The email already exists.');
             }
           })
         },
-        message : 'The email already exists'
+        message : 'The email already exists.'
       },
       'required',
       'maxLength:255'
     ],
+
     password : [
       'minLength:8'
     ]
   },
+
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
-  relations : {},
 
   prototype : {
     email : null,
     encryptedPassword : null,
     token : null,
+    role: 'admin',
+
     init : function(config) {
       InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
@@ -55,6 +59,21 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
           model.encryptedPassword = bcrypt.hashSync(model.password, bcrypt.genSaltSync(10), null);
         }
         next();
+      });
+
+      // UserInfo instance
+      this.on('afterCreate', function (next) {
+        var info = new InstallationManager.UserInfo({
+          userId: model.id,
+          role: model.role
+        });
+
+        info
+          .save()
+          .then(function () {
+            next();
+          })
+          .catch(next);
       });
 
       this.on('afterCreate', function(next) {

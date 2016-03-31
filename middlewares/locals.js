@@ -36,7 +36,7 @@ module.exports = function(req, res, next) {
 
           var userRole = req.user.info.role;
 
-          role = userRole[0].toUpperCase() + userRole.slice(1);
+          role = userRole[0].toUpperCase() + userRole.slice(1).toLowerCase();
         })
         .then(function () {
           req.role = role;
