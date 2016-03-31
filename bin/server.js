@@ -6,14 +6,6 @@ var mandrillTransport = require('nodemailer-mandrill-transport');
 
 var neonode = require(path.join(process.cwd(), '/lib/core'));
 
-neonode.app.on('destroyKnex', function (req) {
-  if (req.knex) {
-    req.knex.destroy(function () {
-      logger.info('Destroyed Knex instance');
-    });
-  }
-});
-
 // mailer
 
 if (CONFIG.environment === 'test') {
