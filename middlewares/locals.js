@@ -5,27 +5,52 @@ var urlFor = CONFIG.router.helpers;
 var _ = require('lodash');
 
 module.exports = function(req, res, next) {
-  if (CONFIG[CONFIG.environment].sessions !== false && CONFIG.environment !== 'test') {
-    res.locals.csrfToken = req.csrfToken();
-  } else {
-    res.locals.csrfToken = '';
-  }
+  return Promise.resolve()
+    .then(function () {
+      if (CONFIG[CONFIG.environment].sessions !== false && CONFIG.environment !== 'test') {
+        res.locals.csrfToken = req.csrfToken();
+      } else {
+        res.locals.csrfToken = '';
+      }
+    })
+    .then(function () {
+      var role = 'Visitor';
 
-  req.role = 'Visitor';
+      if (!req.user) {
+        req.role = 'Visitor';
+        return;
+      }
 
-  if (req.user) {
-    req.role = 'Admin';
-  }
+      return Promise.resolve()
+        .then(function () {
+          if (req.url.match(/^(\/InstallationManager)/) !== null) {
+            role = 'Admin';
+          }
+        })
+        .then(function () {
+          if (role === 'Admin') {
+            return;
+          }
 
-  if (_.isUndefined(res.locals.helpers)) {
-    res.locals.helpers = {};
-  }
+          var userRole = req.user.info.role;
 
-  var helpers = {
-    urlFor: urlFor
-  };
+          role = userRole[0].toUpperCase() + userRole.slice(1).toLowerCase();
+        })
+        .then(function () {
+          req.role = role;
+        });
+    })
+    .then(function () {
+      if (_.isUndefined(res.locals.helpers)) {
+        res.locals.helpers = {};
+      }
 
-  _.assign(res.locals.helpers, helpers);
+      var helpers = {
+        urlFor: urlFor
+      };
 
-  next();
+      _.assign(res.locals.helpers, helpers);
+    })
+    .then(next)
+    .catch(next);
 }

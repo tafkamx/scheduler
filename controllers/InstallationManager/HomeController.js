@@ -13,7 +13,14 @@ InstallationManager.HomeController = Class(InstallationManager, 'HomeController'
   prototype: {
     _authenticate: function (req, res, next) {
       if (!req.user) {
-        return res.redirect(urlFor.installationManagerLogin());
+        return res.format({
+          html: function () {
+            return res.redirect(urlFor.installationManagerLogin());
+          },
+          json: function () {
+            return res.status(403).end();
+          }
+        });
       }
 
       next();
