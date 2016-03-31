@@ -18,3 +18,5 @@ require(path.join(__dirname, '/unit/mailers/UserMailer'));
 // models
 require(path.join(__dirname, '/unit/models/User'));
 require(path.join(__dirname, '/unit/models/UserInfo'));
+require(path.join(__dirname, '/unit/models/InstallationManager/User'));
+require(path.join(__dirname, '/unit/models/InstallationManager/UserInfo'));
