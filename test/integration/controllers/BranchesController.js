@@ -29,7 +29,7 @@ describe('BranchesController', function() {
       })
       .then(function () {
         return UserInfo.query(knex)
-          .where('role', 'admin')
+          .where('role', 'franchisor')
           .then(function (result) {
             return User.query(knex)
               .where('id', result[0].userId);

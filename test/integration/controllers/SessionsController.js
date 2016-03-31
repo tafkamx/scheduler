@@ -1,4 +1,4 @@
-var assert = require('chai').assert;
+var expect = require('chai').expect;
 var path = require('path');
 
 var Knex,
@@ -41,13 +41,13 @@ describe('SessionsController', function() {
     user1 = new User({
       email : 'installation.one.user@example.com',
       password : '12345678',
-      role: 'admin'
+      role: 'franchisor'
     });
 
     user2 = new User({
       email : 'installation.two.user@example.com',
       password : '12345678',
-      role: 'admin'
+      role: 'franchisor'
     });
 
     Promise.all([
@@ -73,7 +73,7 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        assert(res.text.search('User not activated') !== -1, 'User not activated');
+        expect(res.text.search('User not activated')).to.not.equal(-1);
         done();
       });
   });
@@ -83,7 +83,7 @@ describe('SessionsController', function() {
     .end(function(err, res) {
       expect(err).to.be.equal(null);
       expect(res.status).to.be.equal(200);
-      assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
+      expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
       done();
     })
 
@@ -95,7 +95,7 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
+        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
         done();
       });
   });
@@ -107,12 +107,12 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
+        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
         agent.get(installationOneUrl + '/logout')
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
-          assert(res.text.search('"success": "Signed off"') !== -1, 'Signed off');
+          expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
           done();
         })
 
@@ -124,13 +124,13 @@ describe('SessionsController', function() {
     agent.post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
-        assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
+        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
 
         agent.get(installationOneUrl + '/login')
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
-          assert(res.text.search('"info": "You are already logged in"') !== -1, 'Already logged in');
+          expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
           done();
         })
 
@@ -148,13 +148,13 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        assert(res.text.search('"success": "Welcome to PatOS Installation."') !== -1, 'Logged in');
+        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
 
         agent.get(installationTwoUrl + '/login')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
-            assert(res.text.search('"info": "You are already logged in"') === -1, 'Not logged in');
+            expect(res.text.search('"info": "You are already logged in"') === -1);
             done();
           });
       });

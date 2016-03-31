@@ -22,7 +22,7 @@ describe('UsersController', function() {
     user = new User({
       email : 'test.installation.one@example.com',
       password : '12345678',
-      role: 'admin'
+      role: 'franchisor'
     });
 
     user.save(knex).then(function() {
