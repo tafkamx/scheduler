@@ -75,7 +75,13 @@ var User = Class('User').inherits(DynamicModel)({
       });
 
       this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model, next);
+        UserMailer.sendActivationLink(model)
+          .then(function () {
+            next();
+          })
+          .catch(function (err) {
+            throw err;
+          });
       });
     },
 

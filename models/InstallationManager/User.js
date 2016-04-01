@@ -77,11 +77,13 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
       });
 
       this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model).then(function() {
-          next();
-        }).catch(function(err) {
-          throw err;
-        });
+        UserMailer.sendActivationLink(model)
+          .then(function () {
+            next();
+          })
+          .catch(function (err) {
+            throw err;
+          });
       });
     },
 
