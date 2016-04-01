@@ -1,6 +1,6 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
-// var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
+var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 var User = Class('User').inherits(DynamicModel)({
   tableName : 'Users',
@@ -59,10 +59,6 @@ var User = Class('User').inherits(DynamicModel)({
         next();
       });
 
-      // this.on('afterCreate', function(next) {
-      //   UserMailer.sendActivationLink(model, next);
-      // });
-
       // UserInfo instance
       this.on('afterCreate', function (next) {
         var info = new UserInfo({
@@ -76,6 +72,16 @@ var User = Class('User').inherits(DynamicModel)({
             next();
           })
           .catch(next);
+      });
+
+      this.on('afterCreate', function(next) {
+        UserMailer.sendActivationLink(model)
+          .then(function () {
+            next();
+          })
+          .catch(function (err) {
+            throw err;
+          });
       });
     },
 
