@@ -19,15 +19,33 @@ describe('UsersController', function() {
 
     knex = new Knex(knexConfig[CONFIG.environment]);
 
-    user = new User({
-      email : 'test.installation.one@example.com',
-      password : '12345678',
-      role: 'franchisor'
-    });
+    Promise.resolve()
+      .then(function () {
+        user = new User({
+          email : 'test.installation.one@example.com',
+          password : '12345678',
+          role: 'franchisor'
+        });
 
-    user.save(knex).then(function() {
-      done();
-    }).catch(done);
+        return user.save(knex);
+      })
+      .then(function (userId) {
+        return User.query(knex)
+          .where('id', userId[0])
+          .then(function (result) {
+            return new Promise(function (resolve, reject) {
+              agent.get(installationUrl + '/login?email=false&token=' + result[0].token)
+                .end(function (err, res) {
+                  expect(err).to.equal(null);
+                  expect(res.status).to.equal(200);
+
+                  return resolve();
+                });
+            });
+          });
+      })
+      .then(done)
+      .catch(done);
   });
 
   it('Should render /Users/', function(done) {

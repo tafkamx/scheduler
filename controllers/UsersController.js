@@ -1,5 +1,4 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
 
 var UsersController = Class('UsersController').inherits(BaseController)({
 
@@ -17,39 +16,44 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
   prototype : {
     _loadUser : function(req, res, next) {
-      User.query(req.knex).where({id : req.params.id}).then(function(result) {
-        if (result.length === 0) {
-          throw new NotFoundError('User ' + req.params.id + ' not found');
-        }
+      User.query(req.knex)
+        .where('id', req.params.id)
+        .then(function(result) {
+          if (result.length === 0) {
+            throw new NotFoundError('User ' + req.params.id + ' not found');
+          }
 
-        res.locals.user = result[0];
-        req.user = result[0];
+          res.locals.user = result[0];
+          req.user = result[0];
 
-        delete res.locals.user.encryptedPassword;
-        delete res.locals.user.token;
+          delete res.locals.user.encryptedPassword;
+          delete res.locals.user.token;
 
-        next();
-      }).catch(next);
+          next();
+        })
+        .catch(next);
     },
 
     index : function (req, res, next) {
-      User.query(req.knex).then(function(results) {
-        results.forEach(function(result) {
-          delete result.encryptedPassword;
-          delete result.token;
-        });
+      User.query(req.knex)
+        .then(function(results) {
+          results.forEach(function(result) {
+            delete result.encryptedPassword;
+            delete result.token;
+          });
 
-        res.locals.users = results;
+          res.locals.users = results;
 
-        res.format({
-          html : function() {
-            res.render('Users/index.html');
-          },
-          json : function() {
-            res.json(results);
-          }
-        });
-      }).catch(next);
+          res.format({
+            html : function() {
+              res.render('Users/index.html');
+            },
+            json : function() {
+              res.json(results);
+            }
+          });
+        })
+        .catch(next);
     },
 
     show : function (req, res, next) {
@@ -72,13 +76,16 @@ var UsersController = Class('UsersController').inherits(BaseController)({
         json : function() {
           var user = new User(req.body);
 
-          user.save(req.knex).then(function() {
-            delete user.encryptedPassword;
-            delete user.token;
-            delete user.password;
+          user
+            .save(req.knex)
+            .then(function() {
+              delete user.encryptedPassword;
+              delete user.token;
+              delete user.password;
 
-            res.json(user);
-          }).catch(next);
+              res.json(user);
+            })
+            .catch(next);
         }
       });
     },
@@ -97,14 +104,19 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     update : function (req, res, next) {
       res.format({
         json : function() {
-          req.user.updateAttributes(req.body).save(req.knex).then(function(val) {
+          req.user
+            .updateAttributes(req.body)
+            .save(req.knex)
+            .then(function(val) {
+              res.locals.user = new User(req.user);
 
-            delete res.locals.user.encryptedPassword;
-            delete res.locals.user.token;
-            delete res.locals.user.password;
+              delete res.locals.user.encryptedPassword;
+              delete res.locals.user.token;
+              delete res.locals.user.password;
 
-            res.json(res.locals.user);
-          }).catch(next);
+              res.json(res.locals.user);
+            })
+            .catch(next);
         }
       });
     },
