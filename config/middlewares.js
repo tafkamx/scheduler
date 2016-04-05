@@ -52,6 +52,10 @@ var middlewares = [
     path : 'middlewares/locals.js'
   },
   {
+    name: 'Role',
+    path: 'middlewares/role.js'
+  },
+  {
     name : 'Flash Messages',
     path : 'middlewares/flashMessages.js'
   },

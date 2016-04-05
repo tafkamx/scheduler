@@ -14,33 +14,6 @@ module.exports = function(req, res, next) {
       }
     })
     .then(function () {
-      var role = 'Visitor';
-
-      if (!req.user) {
-        req.role = 'Visitor';
-        return;
-      }
-
-      return Promise.resolve()
-        .then(function () {
-          if (req.url.match(/^(\/InstallationManager)/) !== null) {
-            role = 'Admin';
-          }
-        })
-        .then(function () {
-          if (role === 'Admin') {
-            return;
-          }
-
-          var userRole = req.user.info.role;
-
-          role = userRole[0].toUpperCase() + userRole.slice(1).toLowerCase();
-        })
-        .then(function () {
-          req.role = role;
-        });
-    })
-    .then(function () {
       if (_.isUndefined(res.locals.helpers)) {
         res.locals.helpers = {};
       }
