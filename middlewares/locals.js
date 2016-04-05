@@ -51,6 +51,9 @@ module.exports = function(req, res, next) {
 
       _.assign(res.locals.helpers, helpers);
     })
+    .then(function() {
+      console.log(req.user);
+    })
     .then(next)
     .catch(next);
 }
