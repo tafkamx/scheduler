@@ -22,6 +22,11 @@ routeMapper
         'Users',
         'Installations'
       ])
+
+      .resources('Users', function () {
+        routeMapper
+          .post('/checkPassword', { to: 'Users#checkPassword' })
+      })
   });
 
 module.exports = routeMapper;

@@ -1,15 +1,16 @@
 var path = require('path');
+var bcrypt = require('bcrypt-node');
 
 InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
   beforeActions : [
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
-      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
+      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy', 'checkPassword']
     },
     {
       before : ['_loadUser'],
-      actions : ['show', 'edit', 'update', 'destroy']
+      actions : ['show', 'edit', 'update', 'destroy', 'checkPassword']
     }
   ],
 
@@ -18,8 +19,10 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
       InstallationManager.User.query()
         .where('id', req.params.id)
         .then(function(result) {
+          var id = req.params.id || req.params.userId;
+
           if (result.length === 0) {
-            throw new NotFoundError('User ' + req.params.id + ' not found');
+            throw new NotFoundError('User ' + id + ' not found');
           }
 
           res.locals.adminUser = result[0];
@@ -129,6 +132,29 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
               res.json({ deleted: true });
             })
             .catch(next);
+        }
+      });
+    },
+
+    /*
+     * POST /InstallationManager/Users/:userId/checkPassword
+     * -> {
+     *   password: <String>
+     * }
+     * <- {
+     *   isValid: <Boolean>
+     * }
+     */
+    checkPassword: function (req, res, next) {
+      res.format({
+        json: function () {
+          bcrypt.compare(req.body.password, req.adminUser.encryptedPassword, function (err, isValid) {
+            if (err) { return next(err); }
+
+            return res.json({
+              isValid: isValid
+            });
+          });
         }
       });
     }

@@ -298,7 +298,7 @@ describe('InstallationManager.UsersController', function() {
         password : '12345678'
       }).end(function(err, res) {
         agent.post(baseURL + '/InstallationManager/Users/' + res.body.id)
-        .send({'_method' : 'DELETE'})
+          .send({ _method: 'DELETE' })
           .set('Accept', 'application/json')
           .end(function(err, res) {
             expect(err).to.be.eql(null);
@@ -310,8 +310,7 @@ describe('InstallationManager.UsersController', function() {
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Users/' + adminUser.id + '1')
-    .send({'_method' : 'DELETE'})
-
+      .send({ _method: 'DELETE' })
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -319,6 +318,32 @@ describe('InstallationManager.UsersController', function() {
       })
   });
 
+  describe('#checkPassword', function () {
+
+    it('Should return isValid true if password is correct', function (doneTest) {
+      agent.post(baseURL + CONFIG.router.helpers.installationManagerUserCheckPassword(adminUser.id))
+        .send({ password: '12345678' })
+        .end(function (err, res) {
+          console.log(err)
+          expect(err).to.equal(null);
+          expect(res.body.isValid).to.equal(true);
+
+          return doneTest();
+        });
+    });
+
+    it('Should return isValid false if password is incorrect', function (doneTest) {
+      agent.post(baseURL + CONFIG.router.helpers.installationManagerUserCheckPassword(adminUser.id))
+        .send({ password: 'asdfghjk' })
+        .end(function (err, res) {
+          expect(err).to.equal(null);
+          expect(res.body.isValid).to.equal(true);
+
+          return doneTest();
+        });
+    });
+
+  });
 
   after(function(done) {
     InstallationManager.User.query().delete().then(function() {
