@@ -39,9 +39,7 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
 
   prototype : {
-    email : null,
-    encryptedPassword : null,
-    token : null,
+    password: null,
     role: 'admin',
 
     init : function(config) {
@@ -81,9 +79,7 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
           .then(function () {
             next();
           })
-          .catch(function (err) {
-            throw err;
-          });
+          .catch(next);
       });
     },
 

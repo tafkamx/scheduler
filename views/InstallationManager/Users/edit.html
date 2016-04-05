@@ -1,1 +1,37 @@
 <pre><%= JSON.stringify(adminUser, null, 2) %></pre>
+
+<h2>Update email</h2>
+
+<div class="edit-email"></div>
+
+<p>SOMETHING GOES HERE FOR FUCKS' SAKE</p>
+
+<form class="edit-form" action="<%= helpers.urlFor.installationManagerUser(adminUser.id) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="email">Email</label> <input type="text" name="email" value="<%= adminUser.email %>">
+
+    <input type="submit" value="Submit">
+</form>
+
+<h2>Update password</h2>
+
+<form class="edit-form" action="<%= helpers.urlFor.installationManagerUser(adminUser.id) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="password">New Password</label> <input type="password" name="password">
+
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    var App = new PATOS.App().setup();
+
+    var emailForm = new PATOS.InstallationManager.UserEditEmailForm({
+      user: <%= JSON.stringify(adminUser) %>
+    });
+
+    emailForm.render(document.querySelector('.edit-email'))
+</script>
