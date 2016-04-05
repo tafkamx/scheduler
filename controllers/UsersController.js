@@ -26,9 +26,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
           res.locals.user = result[0];
           req.user = result[0];
 
-          delete res.locals.user.encryptedPassword;
-          delete res.locals.user.token;
-
           next();
         })
         .catch(next);
@@ -37,11 +34,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     index : function (req, res, next) {
       User.query(req.knex)
         .then(function(results) {
-          results.forEach(function(result) {
-            delete result.encryptedPassword;
-            delete result.token;
-          });
-
           res.locals.users = results;
 
           res.format({
@@ -79,10 +71,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
           user
             .save(req.knex)
             .then(function() {
-              delete user.encryptedPassword;
-              delete user.token;
-              delete user.password;
-
               res.json(user);
             })
             .catch(next);
@@ -109,10 +97,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
             .save(req.knex)
             .then(function(val) {
               res.locals.user = new User(req.user);
-
-              delete res.locals.user.encryptedPassword;
-              delete res.locals.user.token;
-              delete res.locals.user.password;
 
               res.json(res.locals.user);
             })

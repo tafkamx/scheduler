@@ -25,9 +25,6 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
           res.locals.adminUser = result[0];
           req.adminUser = result[0];
 
-          delete res.locals.adminUser.encryptedPassword;
-          delete res.locals.adminUser.token;
-
           next();
         })
         .catch(next);
@@ -36,11 +33,6 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
     index : function (req, res, next) {
       InstallationManager.User.query()
         .then(function(results) {
-          results.forEach(function(result) {
-            delete result.encryptedPassword;
-            delete result.token;
-          });
-
           res.locals.adminUsers = results;
 
           res.format({
@@ -78,10 +70,6 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
           adminUser
             .save()
             .then(function() {
-              delete adminUser.encryptedPassword;
-              delete adminUser.token;
-              delete adminUser.password;
-
               res.json(adminUser);
             })
             .catch(next);
@@ -108,10 +96,6 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
             .save()
             .then(function(val) {
               res.locals.adminUser = new InstallationManager.User(req.adminUser);
-
-              delete res.locals.adminUser.encryptedPassword;
-              delete res.locals.adminUser.token;
-              delete res.locals.adminUser.password;
 
               res.json(res.locals.adminUser);
             })
