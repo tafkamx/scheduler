@@ -18,7 +18,7 @@ var parser = function(req, res, next) {
 
   var query = InstallationManager.Installation.query();
 
-  if (d.domain === CONFIG[CONFIG.environment].defaultDomainName.replace(/\:\d+$/, '')) {
+  if (CONFIG[CONFIG.environment].defaultDomainName.search(d.domain) !== -1) {
     var installationName;
 
     if (subdomain.length === 2) {
