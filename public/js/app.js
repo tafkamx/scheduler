@@ -1,6 +1,6 @@
 'use strict';
 
-PATOS.App = Class(PATOS, 'App')({
+Class(PAT, 'App')({
 
   prototype: {
 
@@ -11,5 +11,3 @@ PATOS.App = Class(PATOS, 'App')({
   }
 
 });
-
-module.exports = PATOS.App;

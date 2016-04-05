@@ -1,6 +1,6 @@
 'use strict';
 
-PATOS.InstallationManager.UserEditEmailForm = Class(PATOS.InstallationManager, 'UserEditEmailForm').includes(Widget)({
+Class(PAT.InstallationManager, 'UserEditEmailForm').inherits(Widget)({
 
   HTML: '<form action="/">a form is here</form>',
 
@@ -11,5 +11,3 @@ PATOS.InstallationManager.UserEditEmailForm = Class(PATOS.InstallationManager, '
   }
 
 });
-
-module.exports = PATOS.InstallationManager.UserEditEmailForm;

@@ -4,8 +4,6 @@
 
 <div class="edit-email"></div>
 
-<p>SOMETHING GOES HERE FOR FUCKS' SAKE</p>
-
 <form class="edit-form" action="<%= helpers.urlFor.installationManagerUser(adminUser.id) %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
@@ -27,9 +25,9 @@
 </form>
 
 <script>
-    var App = new PATOS.App().setup();
+    var App = new PAT.App().setup();
 
-    var emailForm = new PATOS.InstallationManager.UserEditEmailForm({
+    var emailForm = new PAT.InstallationManager.UserEditEmailForm({
       user: <%= JSON.stringify(adminUser) %>
     });
 

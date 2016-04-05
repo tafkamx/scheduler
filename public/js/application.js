@@ -9,7 +9,7 @@ window.$ = jQuery;
 // JS > Our stack, namespace, lib
 require('neon');
 require('neon/stdlib');
-window.PATOS = {
+window.PAT = {
   InstallationManager: {}
 };
 require('./vendor/Widget.js');
