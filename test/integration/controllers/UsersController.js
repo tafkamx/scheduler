@@ -65,8 +65,6 @@ describe('UsersController', function() {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
         expect(res.body.length).to.be.equal(1);
-        expect(res.body[0].encryptedPassword).to.be.undefined;
-        expect(res.body[0].token).to.be.undefined;
         done();
       });
   });
@@ -99,8 +97,6 @@ describe('UsersController', function() {
         expect(res.status).to.be.eql(200);
         expect(res.body).to.be.an.object;
         expect(res.body.email).to.be.equal(user.email);
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
         done();
       });
   });
@@ -145,8 +141,6 @@ describe('UsersController', function() {
                 expect(err).to.be.equal(null);
                 expect(res.status).to.be.eql(200);
                 expect(res.body.email).to.be.equal('test1@example.com');
-                expect(res.body.encryptedPassword).to.be.undefined;
-                expect(res.body.token).to.be.undefined;
 
                 return resolve(res.body.id);
               })
@@ -286,8 +280,6 @@ describe('UsersController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         expect(res.body.id).to.be.equal(user.id);
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
         done();
       })
   });
@@ -307,8 +299,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(200);
           expect(res.body.id).to.be.equal(user.id);
           expect(res.body.email).to.be.equal('email@example.com');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         });
     });
@@ -325,8 +315,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(200);
           expect(res.body.id).to.be.equal(user.id);
           expect(res.body.email).to.be.equal('email@example.com');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         })
     });
@@ -342,8 +330,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(500);
           expect(err.response.body).to.exists;
           expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         })
     });

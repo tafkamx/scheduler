@@ -24,7 +24,6 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
             throw new NotFoundError('Installation ' + req.params.id + ' not found');
           }
 
-          req.installation = result[0];
           res.locals.installation = result[0];
 
           next();
@@ -55,7 +54,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
           res.render('InstallationManager/Installations/show.html');
         },
         json: function () {
-          res.json(req.installation);
+          res.json(res.locals.installation);
         }
       });
     },
@@ -105,7 +104,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
           res.render('InstallationManager/Installations/edit.html');
         },
         json: function () {
-          res.json(req.installation);
+          res.json(res.locals.installation);
         }
       });
     },
@@ -113,11 +112,11 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     update: function (req, res, next) {
       res.format({
         json: function() {
-          req.installation
+          res.locals.installation
             .updateAttributes(req.body)
             .save()
             .then(function(val) {
-              res.json(req.installation);
+              res.json(res.locals.installation);
             })
             .catch(function (err) {
               next(err)
@@ -129,7 +128,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     destroy: function (req, res, next) {
       res.format({
         json: function () {
-          req.installation
+          res.locals.installation
             .destroy()
             .then(function () {
               res.json({ deleted: true });

@@ -23,7 +23,6 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
           }
 
           res.locals.adminUser = result[0];
-          req.adminUser = result[0];
 
           next();
         })
@@ -91,12 +90,10 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
     update : function (req, res, next) {
       res.format({
         json : function() {
-          req.adminUser
+          res.locals.adminUser
             .updateAttributes(req.body)
             .save()
             .then(function(val) {
-              res.locals.adminUser = new InstallationManager.User(req.adminUser);
-
               res.json(res.locals.adminUser);
             })
             .catch(next);
@@ -107,7 +104,7 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
     destroy : function (req, res, next) {
       res.format({
         json : function() {
-          req.adminUser
+          res.locals.adminUser
             .destroy()
             .then(function() {
               res.json({ deleted: true });

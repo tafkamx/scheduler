@@ -3,11 +3,6 @@ var path = require('path');
 var UsersController = Class('UsersController').inherits(BaseController)({
 
   beforeActions : [
-    // {
-    //   before : [neonode.controllers.Home._authenticate],
-    //   actions : ['index', 'create', 'edit', 'update', 'destroy']
-    //
-    // },
     {
       before : ['_loadUser'],
       actions : ['show', 'edit', 'update', 'destroy']
@@ -24,7 +19,6 @@ var UsersController = Class('UsersController').inherits(BaseController)({
           }
 
           res.locals.user = result[0];
-          req.user = result[0];
 
           next();
         })
@@ -92,12 +86,10 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     update : function (req, res, next) {
       res.format({
         json : function() {
-          req.user
+          res.locals.user
             .updateAttributes(req.body)
             .save(req.knex)
             .then(function(val) {
-              res.locals.user = new User(req.user);
-
               res.json(res.locals.user);
             })
             .catch(next);
@@ -108,9 +100,12 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     destroy : function (req, res, next) {
       res.format({
         json : function() {
-          req.user.destroy(req.knex).then(function() {
-            res.json({deleted: true});
-          }).catch(next);
+          res.locals.user
+            .destroy(req.knex)
+            .then(function() {
+              res.json({ deleted: true });
+            })
+            .catch(next);
         }
       });
     }
