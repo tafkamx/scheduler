@@ -46,7 +46,14 @@ module.exports = function(req, res, next) {
       }
 
       var helpers = {
-        urlFor: urlFor
+        urlFor: urlFor,
+        guestInstallToken: function(install) { // Wrapper for `loginTokenize.generateInstallToken()`
+          var loginTokenize = require(path.join(process.cwd(), 'lib', 'utils', 'login-tokenize.js'));
+          return loginTokenize.generateInstallToken(req, install);
+        },
+        guestBranchToken: function(install, branch) {
+          return helpers.guestInstallToken(install + '-' + branch);
+        }
       };
 
       _.assign(res.locals.helpers, helpers);
