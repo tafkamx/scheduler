@@ -28,7 +28,7 @@
     var App = new PAT.App().setup();
 
     var emailForm = new PAT.InstallationManager.UserEditEmailForm({
-      user: <%= JSON.stringify(adminUser) %>
+      user: <%= JSON.stringify(helpers.filters.users(adminUser)) %>
     });
 
     emailForm.render(document.querySelector('.edit-email'))

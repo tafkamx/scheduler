@@ -19,7 +19,10 @@ module.exports = function(req, res, next) {
       }
 
       var helpers = {
-        urlFor: urlFor
+        urlFor: urlFor,
+        filters: {
+          users: require(path.join(process.cwd(), 'public', 'js', 'filters', 'users.js'))
+        }
       };
 
       _.assign(res.locals.helpers, helpers);
