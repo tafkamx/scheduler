@@ -4,7 +4,8 @@ var _ = require('lodash');
 
 var templates = {
   sendActivationLink: path.join(process.cwd(), 'views', 'mailers', 'User', 'activationLink.html'),
-  sendChangedPasswordNotification: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedPasswordNotification.html')
+  sendChangedPasswordNotification: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedPasswordNotification.html'),
+  sendChangedEmail: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedEmailNotification.html'),
 };
 
 var UserMailer = Class('UserMailer').inherits(BaseMailer)({
@@ -51,6 +52,27 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
     _.assign(options, this.defaultOptions);
 
     return this._send(options);
+  },
+
+  sendChangedEmailEmails: function (user) {
+    var templateOptions = {
+      user: user
+    };
+
+    var options = {
+      from: 'from@patos.net',
+      to: user._oldEmail,
+      subject: 'PatOS: Your email was changed.',
+      html: this._compileTemplate(templates.sendChangedEmail, templateOptions)
+    };
+
+    _.assign(options, this.defaultOptions);
+
+    return this
+      ._send(options)
+      .then(function () {
+        return UserMailer.sendActivationLink(user);
+      })
   }
 });
 

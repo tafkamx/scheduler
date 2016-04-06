@@ -4,8 +4,9 @@ var path = require('path');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 InstallationManager.User = Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
-  tableName : 'Users',
-  validations : {
+  tableName: 'Users',
+
+  validations: {
     email : [
       'email',
       {
@@ -41,37 +42,28 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
   prototype : {
     password: null,
     role: 'admin',
+    _oldEmail: null,
 
     init : function(config) {
       InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
 
       var model = this;
+      model._oldEmail = model.email;
 
-      // Encrypt password
+      // Encrypt 'password' and assign to model as encryptedPassword
       this.on('beforeSave', function(next) {
         if (model.password) {
           model.encryptedPassword = bcrypt.hashSync(model.password, bcrypt.genSaltSync(10), null);
         }
+
         next();
       });
 
       // Add token for confirmation
       this.on('beforeCreate', function(next) {
         model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+
         next();
-      });
-
-      // Handler for when password was updated
-      this.on('beforeUpdate', function (next) {
-        if (!model.password) {
-          return next();
-        }
-
-        UserMailer.sendChangedPasswordNotification(model)
-          .then(function () {
-            next();
-          })
-          .catch(next);
       });
 
       // UserInfo instance
@@ -98,9 +90,37 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
           .catch(next);
       });
 
+      // Handler for when password was updated
+      this.on('afterUpdate', function (next) {
+        if (!model.password) {
+          return next();
+        }
+
+        UserMailer.sendChangedPasswordNotification(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
+      // Send changed email update when the email changes
+      this.on('afterUpdate', function (next) {
+        if (model._oldEmail === model.email) {
+          return next();
+        }
+
+        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+
+        UserMailer.sendChangedEmailEmails(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
       this.on('afterSave', function (next) {
-        delete model.password;
-        return next();
+        model._oldEmail = model.email;
+        next();
       });
     },
 
