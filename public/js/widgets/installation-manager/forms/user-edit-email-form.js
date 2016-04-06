@@ -4,7 +4,7 @@ Class(PAT.InstallationManager, 'UserEditEmailForm').inherits(Widget)({
 
   HTML: '\
     <form action="" method="POST">\
-      <input type="hidden" name="_csrf" value="{csrf}">\
+      <input type="hidden" name="_csrf" value="">\
       <input type="hidden" name="_method" value="PUT">\
       <label for="email">Email</label> <input type="text" name="email" value="">\
       <input type="submit" value="Submit">\
