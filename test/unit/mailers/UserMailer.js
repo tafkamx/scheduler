@@ -2,7 +2,7 @@ var path = require('path');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 var user = new InstallationManager.User({
-  email : 'sergio@delagarza.io',
+  email : 'test@example.com',
   password : '12345678'
 });
 

@@ -43,8 +43,8 @@ var manager = function(req, res, next) {
       setGuestUser(userData);
       logger.info('Successfully logged in guest user ' + userData.userId);
     })
-    .then(function() {
-      if(req.isGuestUser) return;
+    .then(function() { // Cookie checks
+      if(req.isGuestUser) return; // If we've already set this User as a guest above, we can stop here.
       if(!req.cookies['guest-user-access-' + req.branch + '-' + req.installationId]) return;
       var nonces = require(path.join(process.cwd(), 'lib', 'utils', 'nonces.js'));
 
