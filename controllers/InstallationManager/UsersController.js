@@ -94,6 +94,15 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
             .updateAttributes(req.body)
             .save()
             .then(function(val) {
+              var flashMsg;
+
+              if (req.body.password) {
+                flashMsg = 'Password updated.'
+              } else if (req.body.email) {
+                flashMsg = 'Email updated. Please check your email to activate the new email, you will not be able to login again until you do this.'
+              }
+
+              req.flash('success', flashMsg);
               res.json(res.locals.adminUser);
             })
             .catch(next);

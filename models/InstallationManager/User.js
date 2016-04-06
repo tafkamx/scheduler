@@ -47,16 +47,31 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
 
       var model = this;
 
-      this.on('beforeCreate', function(next) {
-        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
-        next();
-      });
-
+      // Encrypt password
       this.on('beforeSave', function(next) {
         if (model.password) {
           model.encryptedPassword = bcrypt.hashSync(model.password, bcrypt.genSaltSync(10), null);
         }
         next();
+      });
+
+      // Add token for confirmation
+      this.on('beforeCreate', function(next) {
+        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+        next();
+      });
+
+      // Handler for when password was updated
+      this.on('beforeUpdate', function (next) {
+        if (!model.password) {
+          return next();
+        }
+
+        UserMailer.sendChangedPasswordNotification(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
       });
 
       // UserInfo instance
@@ -74,12 +89,18 @@ InstallationManager.User = Class(InstallationManager, 'User').inherits(Installat
           .catch(next);
       });
 
+      // Send activation email after creation
       this.on('afterCreate', function(next) {
         UserMailer.sendActivationLink(model)
           .then(function () {
             next();
           })
           .catch(next);
+      });
+
+      this.on('afterSave', function (next) {
+        delete model.password;
+        return next();
       });
     },
 
