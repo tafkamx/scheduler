@@ -8,7 +8,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
     new : function(req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect('/');
+        return res.redirect(urlFor.installationManagerRoot());
       }
 
       if (!req.query.token) {
@@ -37,7 +37,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
             }
 
             req.flash('success', 'PatOS Installation Admin.');
-            return res.redirect(urlFor.root());
+            return res.redirect(urlFor.installationManagerRoot());
           });
         }).catch(next);
 
@@ -48,7 +48,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
     create : function(req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect('/');
+        return res.redirect(urlFor.installationManagerRoot());
       }
 
       passport.authenticate('InstallationManager', function(err, user, info) {
@@ -64,7 +64,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
           }
 
           req.flash('success', 'PatOS Installation Admin.');
-          return res.redirect(urlFor.root());
+          return res.redirect(urlFor.installationManagerRoot());
         });
       })(req, res, next);
     },
