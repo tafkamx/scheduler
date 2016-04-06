@@ -72,6 +72,8 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
     destroy : function(req, res, next) {
       req.logout();
       req.flash('success', 'Signed off');
+
+      res.clearCookie('guest-user-access-' + req.branch + '-' + req.installationId)// Logs off Guest Users, too.
       return res.redirect(urlFor.login());
     }
 
