@@ -27,9 +27,8 @@ Class(PAT.InstallationManager, 'UserEditEmailForm').inherits(Widget)({
       var that = this;
 
       that.element.attr('action', that.data.url);
-
-      that.element.children('input[name=_csrf]').attr('value', that.data.csrfToken)
-      that.element.children('input[name=email]').attr('value', that.data.user.email)
+      that.element.children('input[name=_csrf]').attr('value', that.data.csrfToken);
+      that.element.children('input[name=email]').attr('value', that.data.user.email);
     }
 
   }
