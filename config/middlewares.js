@@ -49,7 +49,7 @@ var middlewares = [
   },
   {
     name : 'Guest Users',
-    path : 'middlewares/GuestUsers.js'
+    path : 'middlewares/guestUsers.js'
   },
   {
     name : 'Locals',
