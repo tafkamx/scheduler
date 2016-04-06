@@ -1,1 +1,34 @@
 <pre><%= JSON.stringify(user, null, 2) %></pre>
+
+<h2>Update email</h2>
+
+<div class="edit-email"></div>
+
+<h2>Update password</h2>
+
+<div class="edit-password"></div>
+
+<script>
+    var App = new PAT.App().setup();
+
+    var user = <%= JSON.stringify(helpers.filters.users(user)) %>;
+
+    var emailForm = new PAT.InstallationManager.UserEditEmailForm({
+      data: {
+        url: '<%= helpers.urlFor.user(user.id) %>',
+        user: user,
+        csrfToken: '<%= csrfToken %>'
+      }
+    });
+
+    emailForm.render(document.querySelector('.edit-email'));
+
+    var passwordForm = new PAT.InstallationManager.UserEditPasswordForm({
+      data: {
+        url: '<%= helpers.urlFor.user(user.id) %>',
+        csrfToken: '<%= csrfToken %>'
+      }
+    });
+
+    passwordForm.render(document.querySelector('.edit-password'));
+</script>

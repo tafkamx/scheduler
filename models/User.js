@@ -37,25 +37,29 @@ var User = Class('User').inherits(DynamicModel)({
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
 
   prototype : {
-    email : null,
-    encryptedPassword : null,
-    token : null,
+    password: null,
     role: null,
+    _oldEmail: null,
 
     init : function(config) {
       DynamicModel.prototype.init.call(this, config);
 
       var model = this;
+      model._oldEmail = model.email;
 
-      this.on('beforeCreate', function(next) {
-        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
-        next();
-      });
-
+      // Encrypt 'password' and assign to model as encryptedPassword
       this.on('beforeSave', function(next) {
         if (model.password) {
           model.encryptedPassword = bcrypt.hashSync(model.password, bcrypt.genSaltSync(10), null);
         }
+
+        next();
+      });
+
+      // Add token for confirmation
+      this.on('beforeCreate', function(next) {
+        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+
         next();
       });
 
@@ -74,14 +78,37 @@ var User = Class('User').inherits(DynamicModel)({
           .catch(next);
       });
 
-      this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model)
+      // Handler for when password was updated
+      this.on('afterUpdate', function (next) {
+        if (!model.password) {
+          return next();
+        }
+
+        UserMailer.sendChangedPasswordNotification(model)
           .then(function () {
             next();
           })
-          .catch(function (err) {
-            throw err;
-          });
+          .catch(next);
+      });
+
+      // Send changed email update when the email changes
+      this.on('afterUpdate', function (next) {
+        if (model._oldEmail === model.email) {
+          return next();
+        }
+
+        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+
+        UserMailer.sendChangedEmailEmails(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
+      this.on('afterSave', function (next) {
+        model._oldEmail = model.email;
+        next();
       });
     },
 
