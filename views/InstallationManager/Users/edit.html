@@ -4,16 +4,9 @@
 
 <div class="edit-email"></div>
 
-<form class="edit-form" action="<%= helpers.urlFor.installationManagerUser(adminUser.id) %>" method="POST">
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <input type="hidden" name="_method" value="PUT">
-
-    <label for="email">Email</label> <input type="text" name="email" value="<%= adminUser.email %>">
-
-    <input type="submit" value="Submit">
-</form>
-
 <h2>Update password</h2>
+
+<div class="edit-password"></div>
 
 <form class="edit-form" action="<%= helpers.urlFor.installationManagerUser(adminUser.id) %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -27,9 +20,21 @@
 <script>
     var App = new PAT.App().setup();
 
+    var adminUser = <%= JSON.stringify(helpers.filters.users(adminUser)) %>;
+
     var emailForm = new PAT.InstallationManager.UserEditEmailForm({
-      user: <%= JSON.stringify(helpers.filters.users(adminUser)) %>
+      data: {
+        url: '<%= helpers.urlFor.installationManagerUser(adminUser.id) %>',
+        user: adminUser,
+        csrfToken: '<%= csrfToken %>'
+      }
     });
 
     emailForm.render(document.querySelector('.edit-email'))
+
+    var passwordForm = new PAT.InstallationManager.UserEditPasswordForm({
+      user: adminUser
+    });
+
+    passwordForm.render(document.querySelector('.edit-password'))
 </script>
