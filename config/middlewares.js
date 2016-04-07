@@ -48,6 +48,10 @@ var middlewares = [
     path : 'middlewares/PassportSession.js'
   },
   {
+    name : 'Guest Users',
+    path : 'middlewares/GuestUsers.js'
+  },
+  {
     name : 'Locals',
     path : 'middlewares/locals.js'
   },

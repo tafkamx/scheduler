@@ -46,7 +46,15 @@ module.exports = function(req, res, next) {
       }
 
       var helpers = {
-        urlFor: urlFor
+        req: req,
+        urlFor: urlFor,
+        guestInstallToken: function(install) { // Wrapper for `loginTokenize.generateInstallToken()`. Only requires installation name
+          var loginTokenize = require(path.join(process.cwd(), 'lib', 'utils', 'login-tokenize.js'));
+          return loginTokenize.generateInstallToken(req, install);
+        },
+        guestBranchToken: function(branch) { // Wrapper for `helpers.guestInstallToken`. Requires branch name
+          return helpers.guestInstallToken(req.installationName + '-' + branch);
+        }
       };
 
       _.assign(res.locals.helpers, helpers);

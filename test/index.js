@@ -20,3 +20,6 @@ require(path.join(__dirname, '/unit/models/User'));
 require(path.join(__dirname, '/unit/models/UserInfo'));
 require(path.join(__dirname, '/unit/models/InstallationManager/User'));
 require(path.join(__dirname, '/unit/models/InstallationManager/UserInfo'));
+// utils
+require(path.join(__dirname, '/unit/utils/nonces.js'));
+require(path.join(__dirname, '/unit/utils/login-tokenize.js'));
