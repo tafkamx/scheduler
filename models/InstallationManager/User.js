@@ -2,7 +2,7 @@ var bcrypt = require('bcrypt-node');
 var path = require('path');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
-InstallationManager.User = Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
+Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
   tableName: 'Users',
 
   validations: {

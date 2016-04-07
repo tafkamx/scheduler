@@ -1,6 +1,6 @@
 var path = require('path');
 
-InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
+Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
   beforeActions : [
     {

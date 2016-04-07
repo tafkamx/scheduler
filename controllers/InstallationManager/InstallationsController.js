@@ -2,7 +2,7 @@ var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var bcrypt = require('bcrypt-node');
 
-InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
+Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions: [
     {
