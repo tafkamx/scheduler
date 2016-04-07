@@ -73,6 +73,31 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
       req.logout();
       req.flash('success', 'Signed off');
       return res.redirect(urlFor.installationManagerLogin());
+    },
+
+    resetShow: function (req, res, next) {
+      if (req.user) {
+        req.flash('info', 'You are already logged in');
+        return res.redirect(urlFor.installationManagerRoot());
+      }
+
+      return res.render('InstallationManager/sessions/reset.html');
+    },
+
+    resetCreate: function (req, res, next) {
+      if (req.user) {
+        return res.status(403).end();
+      }
+
+      return res.status(200).end();
+    },
+
+    resetUpdate: function (req, res, next) {
+      if (req.user) {
+        return res.status(403).end();
+      }
+
+      return res.status(200).end();
     }
 
   }

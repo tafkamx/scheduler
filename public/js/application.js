@@ -20,3 +20,5 @@ require('./app.js')
 // JS > Forms
 require('./widgets/installation-manager/forms/user-edit-email-form.js');
 require('./widgets/installation-manager/forms/user-edit-password-form.js');
+require('./widgets/installation-manager/forms/sessions-reset-password-password-form.js');
+require('./widgets/installation-manager/forms/sessions-reset-password-email-form.js');
