@@ -36,7 +36,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
               return next(err);
             }
 
-            req.flash('success', 'Welcome to PatOS Installation.');
+            req.flash('success', 'Welcome to PatOS Installation');
             return res.redirect(urlFor.root());
           });
         }).catch(next);
@@ -63,7 +63,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
             return next(err);
           }
 
-          req.flash('success', 'Welcome to PatOS Installation.');
+          req.flash('success', 'Welcome to PatOS Installation');
           return res.redirect(urlFor.root());
         });
       })(req, res, next);

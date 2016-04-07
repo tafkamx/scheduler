@@ -30,7 +30,7 @@ describe('InstallationManager.SessionsController', function() {
     sa.agent().get(baseURL + '/InstallationManager/login?email=false&token=' + adminUser.token)
       .end(function(err, res) {
         expect(err).to.equal(null);
-        expect(res.text.search('"success": "PatOS Installation Admin."')).to.not.equal(-1);
+        expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
         done();
       })
   });
@@ -43,7 +43,7 @@ describe('InstallationManager.SessionsController', function() {
       })
       .end(function(err, res) {
         expect(err).to.equal(null);
-        expect(res.text.search('"success": "PatOS Installation Admin."')).to.not.equal(-1);
+        expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
         done();
       });
   });
@@ -57,7 +57,7 @@ describe('InstallationManager.SessionsController', function() {
       })
       .end(function(err, res) {
         expect(err).to.equal(null);
-        expect(res.text.search('"success": "PatOS Installation Admin."')).to.not.equal(-1);
+        expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
 
         agent.get(baseURL + '/InstallationManager/logout')
         .end(function(err, res) {
@@ -78,7 +78,7 @@ describe('InstallationManager.SessionsController', function() {
       })
       .end(function(err, res) {
         expect(err).to.equal(null);
-        expect(res.text.search('"success": "PatOS Installation Admin."')).to.not.equal(-1);
+        expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
 
         agent.get(baseURL + '/InstallationManager/login')
           .end(function(err, res) {

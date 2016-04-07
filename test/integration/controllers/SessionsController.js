@@ -83,7 +83,7 @@ describe('SessionsController', function() {
     .end(function(err, res) {
       expect(err).to.be.equal(null);
       expect(res.status).to.be.equal(200);
-      expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
+      expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
       done();
     })
 
@@ -95,7 +95,7 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
         done();
       });
   });
@@ -107,7 +107,7 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
         agent.get(installationOneUrl + '/logout')
         .end(function(err, res) {
           expect(err).to.be.equal(null);
@@ -124,7 +124,7 @@ describe('SessionsController', function() {
     agent.post(installationOneUrl + '/login')
       .send({ email: user1.email, password: user1.password})
       .end(function(err, res) {
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
         agent.get(installationOneUrl + '/login')
         .end(function(err, res) {
@@ -148,7 +148,7 @@ describe('SessionsController', function() {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
         agent.get(installationTwoUrl + '/login')
           .end(function(err, res) {

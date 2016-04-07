@@ -12,7 +12,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
       }
 
       if (!req.query.token) {
-        return res.render('InstallationManager/sessions/new.html',  { urlFor : urlFor });
+        return res.render('InstallationManager/sessions/new.html');
       }
 
       passport.authenticate('InstallationManagerTokenStrategy', function(err, user, info) {
@@ -36,7 +36,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
               return next(err);
             }
 
-            req.flash('success', 'PatOS Installation Admin.');
+            req.flash('success', 'PatOS Installation Admin');
             return res.redirect(urlFor.installationManagerRoot());
           });
         }).catch(next);
@@ -63,7 +63,7 @@ InstallationManager.SessionsController = Class(InstallationManager, 'SessionsCon
             return next(err);
           }
 
-          req.flash('success', 'PatOS Installation Admin.');
+          req.flash('success', 'PatOS Installation Admin');
           return res.redirect(urlFor.installationManagerRoot());
         });
       })(req, res, next);
