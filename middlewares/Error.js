@@ -1,4 +1,5 @@
 module.exports = function(err, req, res, next) {
+  logger.error(err);
   logger.error(err.stack);
 
   if (req.knex) {
@@ -31,7 +32,7 @@ module.exports = function(err, req, res, next) {
     html: function () {
       res.render('shared/500.html', {
         layout: false,
-        error: err.stack
+        error: err + '\n\n' + err.stack
       });
     },
     json: function () {
