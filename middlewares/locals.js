@@ -22,6 +22,14 @@ module.exports = function(req, res, next) {
         urlFor: urlFor,
         filters: {
           users: require(path.join(process.cwd(), 'public', 'js', 'filters', 'users.js'))
+        },
+        req: req,
+        guestInstallToken: function(install) { // Wrapper for `loginTokenize.generateInstallToken()`. Only requires installation name
+          var loginTokenize = require(path.join(process.cwd(), 'lib', 'utils', 'login-tokenize.js'));
+          return loginTokenize.generateInstallToken(req, install);
+        },
+        guestBranchToken: function(branch) { // Wrapper for `helpers.guestInstallToken`. Requires branch name
+          return helpers.guestInstallToken(req.installationName + '-' + branch);
         }
       };
 
