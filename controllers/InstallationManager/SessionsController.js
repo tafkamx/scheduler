@@ -2,6 +2,7 @@ var path = require('path');
 var passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerStrategy.js'));
 passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationManagerTokenStrategy.js'))(passport);
 var urlFor = CONFIG.router.helpers;
+var moment = require('moment');
 
 Class(InstallationManager, 'SessionsController').inherits(BaseController)({
   prototype : {
@@ -89,7 +90,27 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
         return res.status(403).end();
       }
 
-      return res.status(200).end();
+      Promise.resolve()
+        .then(function () {
+          return InstallationManager.User.query()
+            .where('email', req.body.email);
+        })
+        .then(function (result) {
+          // NOTE: This can very easily be exploited in a brute force attack.
+          if (result.length === 0) {
+            return res.status(404).json({ message: 'Email not found' });
+          }
+
+          var token = new InstallationManager.ResetPasswordToken({
+            userId: result[0].id
+          });
+
+          return token.save();
+        })
+        .then(function () {
+          return res.status(200).json({ message: 'Reset password email sent' });
+        })
+        .catch(next);
     },
 
     resetUpdate: function (req, res, next) {
@@ -97,7 +118,40 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
         return res.status(403).end();
       }
 
-      return res.status(200).end();
+      var token;
+
+      Promise.resolve()
+        .then(function () {
+          return InstallationManager.ResetPasswordToken.query()
+            .where('token', req.body.token)
+            .include('user');
+        })
+        .then(function (result) {
+          if (result.length === 0) {
+            return res.status(404).json({ message: 'Invalid token' });
+          }
+
+          token = result[0];
+
+          // Invalidate so it can't be used again
+          return token.invalidate().save();
+        })
+        .then(function () {
+          // If the token has expired
+          if (moment().isAfter(token.expiresAt)) {
+            return res.status(404).json({ message: 'Invalid token' });
+          }
+        })
+        .then(function () {
+          // Save new password
+          token.user.password = req.body.password;
+
+          return token.user.save();
+        })
+        .then(function () {
+          return res.status(200).json({ message: 'Password has been reset' });
+        })
+        .catch(next);
     }
 
   }
