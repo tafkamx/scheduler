@@ -29,7 +29,7 @@ Class(PAT.InstallationManager, 'SessionsResetPasswordPasswordForm').inherits(Wid
 
       that.element.attr('action', that.data.url);
       that.element.children('input[name=_csrf]').attr('value', that.data.csrfToken);
-      that.element.children('input[name=_token]').attr('value', that.data.token);
+      that.element.children('input[name=token]').attr('value', that.data.token);
     }
 
   }
