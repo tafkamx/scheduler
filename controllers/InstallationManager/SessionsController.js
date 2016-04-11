@@ -96,7 +96,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
             .where('email', req.body.email);
         })
         .then(function (result) {
-          // NOTE: This can very easily be exploited in a brute force attack.
+          // NOTE: This can very easily be exploited in a brute force attack, to find emails.
           if (result.length === 0) {
             return res.status(404).json({ message: 'Email not found' });
           }
