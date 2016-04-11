@@ -78,6 +78,15 @@ var User = Class('User').inherits(DynamicModel)({
           .catch(next);
       });
 
+      // Send activation email after creation
+      this.on('afterCreate', function(next) {
+        UserMailer.sendActivationLink(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
       // Handler for when password was updated
       this.on('afterUpdate', function (next) {
         if (!model.password) {
