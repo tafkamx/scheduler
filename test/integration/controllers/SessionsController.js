@@ -67,123 +67,131 @@ describe('SessionsController', function() {
     }).catch(done);
   });
 
-  it('Should fail login because the account has not been activated', function(done) {
-    sa.agent().post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('User not activated')).to.not.equal(-1);
-        done();
-      });
-  });
+  describe('Login', function () {
 
-  it('Should login and activate with the users token', function(done) {
-    sa.agent().get(installationOneUrl + '/login?email=false&token=' + user1.token)
-    .end(function(err, res) {
-      expect(err).to.be.equal(null);
-      expect(res.status).to.be.equal(200);
-      expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
-      done();
-    })
+    it('Should fail login because the account has not been activated', function(done) {
+      sa.agent().post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('User not activated')).to.not.equal(-1);
+          done();
+        });
+    });
 
-  });
-
-  it('Should login with the email/password', function(done) {
-    sa.agent().post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
+    it('Should login and activate with the users token', function(done) {
+      sa.agent().get(installationOneUrl + '/login?email=false&token=' + user1.token)
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
         expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
         done();
-      });
-  });
-
-  it('Should logout', function(done) {
-    var agent = sa.agent();
-    agent.post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
-        agent.get(installationOneUrl + '/logout')
-        .end(function(err, res) {
-          expect(err).to.be.equal(null);
-          expect(res.status).to.be.equal(200);
-          expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
-          done();
-        })
-
-      });
-  });
-
-  it('Should not let a logged in user login', function(done) {
-    var agent = sa.agent();
-    agent.post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
-
-        agent.get(installationOneUrl + '/login')
-        .end(function(err, res) {
-          expect(err).to.be.equal(null);
-          expect(res.status).to.be.equal(200);
-          expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
-          done();
-        })
-
-      });
-  });
-
-  it('Should not be logged-in in other installations', function(done) {
-    var agent = sa.agent();
-
-    agent.post(installationOneUrl + '/login')
-      .send({
-        email : user1.email,
-        password : user1.password
       })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
-        agent.get(installationTwoUrl + '/login')
+    });
+
+    it('Should login with the email/password', function(done) {
+      sa.agent().post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+          done();
+        });
+    });
+
+    it('Should not let a logged in user login', function(done) {
+      var agent = sa.agent();
+      agent.post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+
+          agent.get(installationOneUrl + '/login')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
-            expect(res.text.search('"info": "You are already logged in"') === -1);
+            expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
             done();
-          });
-      });
-  });
-
-  it('Should be able to login to more than one installation', function(done) {
-    var agent = sa.agent();
-
-    agent.post(installationOneUrl + '/login')
-      .send({
-        email : user1.email,
-        password : user1.password
-      })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-
-        agent.post(installationTwoUrl + '/login')
-          .send({
-            email : user2.email,
-            password : user2.password
           })
+
+        });
+    });
+
+    it('Should not be logged-in in other installations', function(done) {
+      var agent = sa.agent();
+
+      agent.post(installationOneUrl + '/login')
+        .send({
+          email : user1.email,
+          password : user1.password
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+
+          agent.get(installationTwoUrl + '/login')
+            .end(function(err, res) {
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              expect(res.text.search('"info": "You are already logged in"') === -1);
+              done();
+            });
+        });
+    });
+
+    it('Should be able to login to more than one installation', function(done) {
+      var agent = sa.agent();
+
+      agent.post(installationOneUrl + '/login')
+        .send({
+          email : user1.email,
+          password : user1.password
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+
+          agent.post(installationTwoUrl + '/login')
+            .send({
+              email : user2.email,
+              password : user2.password
+            })
+            .end(function(err, res) {
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              done();
+            });
+
+        });
+    });
+
+  });
+
+  describe('Logout', function () {
+
+    it('Should logout', function(done) {
+      var agent = sa.agent();
+      agent.post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+          agent.get(installationOneUrl + '/logout')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
+            expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
             done();
-          });
+          })
 
-      });
+        });
+    });
+
   });
 
   after(function(done) {
