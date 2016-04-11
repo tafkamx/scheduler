@@ -33,6 +33,10 @@ module.exports = function(req, res, next) {
         }
       };
 
+      helpers.urlFor.host = function () {
+        return req.host;
+      };
+
       _.assign(res.locals.helpers, helpers);
     })
     .then(next)

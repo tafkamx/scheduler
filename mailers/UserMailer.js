@@ -6,7 +6,8 @@ var templates = {
   sendActivationLink: path.join(process.cwd(), 'views', 'mailers', 'User', 'activationLink.html'),
   sendChangedPasswordNotification: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedPasswordNotification.html'),
   sendChangedEmail: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedEmailNotification.html'),
-  sendResetPassword: path.join(process.cwd(), 'views', 'mailers', 'User', 'resetPassword.html')
+  sendResetPassword: path.join(process.cwd(), 'views', 'mailers', 'User', 'resetPassword.html'),
+  IMSendResetPassword: path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'resetPassword.html')
 };
 
 var UserMailer = Class('UserMailer').inherits(BaseMailer)({
@@ -74,6 +75,27 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       .then(function () {
         return UserMailer.sendActivationLink(user);
       })
+  },
+
+  IMSendResetPassword: function (user, token) {
+    var templateOptions = {
+      helpers: {
+        urlFor: urlFor
+      },
+      user: user,
+      token: token
+    };
+
+    var options = {
+      from: 'from@patos.net',
+      to: user.email,
+      subject: 'PatOS: Reset password.',
+      html: this._compileTemplate(templates.IMSendResetPassword, templateOptions)
+    };
+
+    _.assign(options, this.defaultOptions);
+
+    return this._send(options);
   },
 
   sendResetPassword: function (user, token) {
