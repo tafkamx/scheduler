@@ -45,51 +45,6 @@ describe('InstallationManager.UserInfo', function () {
 
   });
 
-  describe('Constraints', function () {
-
-    describe('user_id', function () {
-
-      it('Should delete UserInfo record when User record is deleted', function (doneTest) {
-        var user,
-          userId;
-
-        return Promise.resolve()
-          .then(function () {
-            user = new InstallationManager.User({
-              email: 'user-test-2@example.com',
-              password: '12345678',
-              role: 'admin'
-            });
-
-            return user.save();
-          })
-          .then(function () {
-            userId = user.id;
-
-            return InstallationManager.UserInfo.query()
-              .where('user_id', user.id)
-              .then(function (result) {
-                expect(result.length).to.equal(1);
-              });
-          })
-          .then(function () {
-            return user.destroy();
-          })
-          .then(function () {
-            return InstallationManager.UserInfo.query()
-              .where('id', userId)
-              .then(function (result) {
-                expect(result.length).to.equal(0);
-              });
-          })
-          .then(doneTest)
-          .catch(doneTest);
-      });
-
-    });
-
-  });
-
   after(function (done) {
     Promise.all([
       InstallationManager.User.query().delete(),
