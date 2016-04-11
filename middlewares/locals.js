@@ -34,7 +34,7 @@ module.exports = function(req, res, next) {
       };
 
       helpers.urlFor.host = function () {
-        return req.host;
+        return req.hostname;
       };
 
       _.assign(res.locals.helpers, helpers);
