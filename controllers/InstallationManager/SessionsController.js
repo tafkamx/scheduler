@@ -87,7 +87,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
 
     resetCreate: function (req, res, next) {
       if (req.user) {
-        return res.status(403).end();
+        return res.status(403).json({ message: 'You are already logged in' });
       }
 
       Promise.resolve()
@@ -115,7 +115,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
 
     resetUpdate: function (req, res, next) {
       if (req.user) {
-        return res.status(403).end();
+        return res.status(403).json({ message: 'You are already logged in' });
       }
 
       var token;
