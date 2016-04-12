@@ -42,6 +42,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
     password: null,
     role: 'admin',
     _oldEmail: null,
+    _skipPasswordEmail: false,
 
     init : function(config) {
       InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
@@ -91,9 +92,12 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
 
       // Handler for when password was updated
       this.on('afterUpdate', function (next) {
-        if (!model.password) {
+        if (model._skipPasswordEmail || !model.password) {
           return next();
         }
+
+        // in order to prevent the password changed notice several times
+        model._skipPasswordEmail = true;
 
         UserMailer.sendChangedPasswordNotification(model)
           .then(function () {

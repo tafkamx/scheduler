@@ -40,6 +40,7 @@ var User = Class('User').inherits(DynamicModel)({
     password: null,
     role: null,
     _oldEmail: null,
+    _skipPasswordEmail: false,
 
     init : function(config) {
       DynamicModel.prototype.init.call(this, config);
@@ -89,9 +90,12 @@ var User = Class('User').inherits(DynamicModel)({
 
       // Handler for when password was updated
       this.on('afterUpdate', function (next) {
-        if (!model.password) {
+        if (model._skipPasswordEmail || !model.password) {
           return next();
         }
+
+        // in order to prevent the password changed notice several times
+        model._skipPasswordEmail = true;
 
         UserMailer.sendChangedPasswordNotification(model)
           .then(function () {
