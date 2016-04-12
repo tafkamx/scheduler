@@ -51,24 +51,10 @@ describe('InstallationManager.ResetPasswordToken', function () {
           })
           .then(function () {
             return InstallationManager.ResetPasswordToken.query()
-          })
-          .then(function (result) {
-            console.log('!!!!!')
-            console.log(result[0].userId)
-            return InstallationManager.User.query()
-          })
-          .then(function (result) {
-            console.log('?????')
-            console.log(result[0].id)
-            return Promise.resolve()
-          })
-          .then(function () {
-            return InstallationManager.ResetPasswordToken.query()
               .where('user_id', globalUser.id)
               .include('user')
               .then(function (result) {
                 expect(result.length).to.equal(1);
-                console.log('###', result)
 
                 token = result[0];
 
