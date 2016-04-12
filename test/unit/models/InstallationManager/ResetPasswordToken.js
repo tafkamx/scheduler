@@ -10,7 +10,9 @@ var knex,
 
 var agent = sa.agent();
 
-describe('ResetPasswordToken', function () {
+var globalUser;
+
+describe('InstallationManager.ResetPasswordToken', function () {
 
   before(function (done) {
     knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
@@ -26,6 +28,7 @@ describe('ResetPasswordToken', function () {
 
     user.save()
       .then(function () {
+        globalUser = user;
         return done();
       })
       .catch(done);
@@ -39,21 +42,33 @@ describe('ResetPasswordToken', function () {
         var token;
 
         Promise.resolve()
-          .then(function () {
-            return InstallationManager.User.query();
-          })
           .then(function (result) {
             token = new InstallationManager.ResetPasswordToken({
-              userId: result[0].id,
+              userId: globalUser.id,
             })
 
             return token.save();
           })
           .then(function () {
             return InstallationManager.ResetPasswordToken.query()
+          })
+          .then(function (result) {
+            console.log('!!!!!')
+            console.log(result[0].userId)
+            return InstallationManager.User.query()
+          })
+          .then(function (result) {
+            console.log('?????')
+            console.log(result[0].id)
+            return Promise.resolve()
+          })
+          .then(function () {
+            return InstallationManager.ResetPasswordToken.query()
+              .where('user_id', globalUser.id)
               .include('user')
               .then(function (result) {
                 expect(result.length).to.equal(1);
+                console.log('###', result)
 
                 token = result[0];
 
