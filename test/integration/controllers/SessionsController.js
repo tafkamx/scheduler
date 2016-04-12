@@ -248,12 +248,12 @@ describe('SessionsController', function() {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            InstallationManager.ResetPasswordToken.query(knex1)
+            ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
-                return InstallationManager.ResetPasswordToken.query(knex1).delete();
+                return ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -319,7 +319,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query(knex1)
+            ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -344,7 +344,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query(knex1).delete();
+                return ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -389,7 +389,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query(knex1)
+            ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -414,7 +414,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query(knex1).delete();
+                return ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -434,7 +434,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query(knex1)
+            ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -464,7 +464,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query(knex1).delete();
+                return ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
