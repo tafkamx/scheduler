@@ -4,11 +4,6 @@ var urlFor = CONFIG.router.helpers;
 var UsersController = Class('UsersController').inherits(BaseController)({
 
   beforeActions : [
-    // {
-    //   before : [neonode.controllers.Home._authenticate],
-    //   actions : ['index', 'create', 'edit', 'update', 'destroy']
-    //
-    // },
     {
       before : ['_loadUser'],
       actions : ['show', 'edit', 'update', 'destroy']
@@ -64,7 +59,11 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     new : function(req, res, next) {
-      res.render('Users/new.html');
+      return res.format({
+        html: function () {
+          res.render('Users/new.html');
+        }
+      });
     },
 
     create : function (req, res, next) {
