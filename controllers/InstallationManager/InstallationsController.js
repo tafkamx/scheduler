@@ -60,7 +60,11 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     },
 
     new: function(req, res, next) {
-      res.render('InstallationManager/Installations/new.html');
+      return res.format({
+        html: function () {
+          res.render('InstallationManager/Installations/new.html');
+        }
+      });
     },
 
     create: function (req, res, next) {

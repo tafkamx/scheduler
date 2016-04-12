@@ -65,7 +65,11 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     },
 
     new: function (req, res, next) {
-      res.render('Branches/new.html');
+      return res.format({
+        html: function () {
+          res.render('Branches/new.html');
+        }
+      });
     },
 
     create: function (req, res, next) {

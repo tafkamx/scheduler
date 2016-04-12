@@ -54,7 +54,11 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     new : function(req, res, next) {
-      res.render('Users/new.html');
+      return res.format({
+        html: function () {
+          res.render('Users/new.html');
+        }
+      });
     },
 
     create : function (req, res, next) {

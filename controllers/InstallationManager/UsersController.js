@@ -58,7 +58,11 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     },
 
     new : function(req, res, next) {
-      res.render('InstallationManager/Users/new.html');
+      return res.format({
+        html: function () {
+          res.render('InstallationManager/Users/new.html');
+        }
+      });
     },
 
     create : function (req, res, next) {
