@@ -2,7 +2,7 @@ var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
 
-InstallationManager.Installation = Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
+Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
   validations : {
     name : [

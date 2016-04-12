@@ -19,15 +19,33 @@ describe('UsersController', function() {
 
     knex = new Knex(knexConfig[CONFIG.environment]);
 
-    user = new User({
-      email : 'test.installation.one@example.com',
-      password : '12345678',
-      role: 'franchisor'
-    });
+    Promise.resolve()
+      .then(function () {
+        user = new User({
+          email : 'test.installation.one@example.com',
+          password : '12345678',
+          role: 'franchisor'
+        });
 
-    user.save(knex).then(function() {
-      done();
-    }).catch(done);
+        return user.save(knex);
+      })
+      .then(function (userId) {
+        return User.query(knex)
+          .where('id', userId[0])
+          .then(function (result) {
+            return new Promise(function (resolve, reject) {
+              agent.get(installationUrl + '/login?email=false&token=' + result[0].token)
+                .end(function (err, res) {
+                  expect(err).to.equal(null);
+                  expect(res.status).to.equal(200);
+
+                  return resolve();
+                });
+            });
+          });
+      })
+      .then(done)
+      .catch(done);
   });
 
   it('Should render /Users/', function(done) {
@@ -47,8 +65,6 @@ describe('UsersController', function() {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
         expect(res.body.length).to.be.equal(1);
-        expect(res.body[0].encryptedPassword).to.be.undefined;
-        expect(res.body[0].token).to.be.undefined;
         done();
       });
   });
@@ -81,8 +97,6 @@ describe('UsersController', function() {
         expect(res.status).to.be.eql(200);
         expect(res.body).to.be.an.object;
         expect(res.body.email).to.be.equal(user.email);
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
         done();
       });
   });
@@ -127,8 +141,6 @@ describe('UsersController', function() {
                 expect(err).to.be.equal(null);
                 expect(res.status).to.be.eql(200);
                 expect(res.body.email).to.be.equal('test1@example.com');
-                expect(res.body.encryptedPassword).to.be.undefined;
-                expect(res.body.token).to.be.undefined;
 
                 return resolve(res.body.id);
               })
@@ -268,8 +280,6 @@ describe('UsersController', function() {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         expect(res.body.id).to.be.equal(user.id);
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
         done();
       })
   });
@@ -289,8 +299,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(200);
           expect(res.body.id).to.be.equal(user.id);
           expect(res.body.email).to.be.equal('email@example.com');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         });
     });
@@ -307,8 +315,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(200);
           expect(res.body.id).to.be.equal(user.id);
           expect(res.body.email).to.be.equal('email@example.com');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         })
     });
@@ -324,8 +330,6 @@ describe('UsersController', function() {
           expect(res.status).to.be.eql(500);
           expect(err.response.body).to.exists;
           expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-          expect(res.body.encryptedPassword).to.be.undefined;
-          expect(res.body.token).to.be.undefined;
           done();
         })
     });

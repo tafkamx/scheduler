@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var path = require('path');
+var moment = require('moment');
 
 var Knex,
   user1,
@@ -22,6 +23,8 @@ var installationTwoUrl = 'http://default.' + installationTwo + '.' + websiteUrl;
 
 var agent1 = sa.agent();
 var agent2 = sa.agent();
+
+var urlFor = CONFIG.router.helpers;
 
 describe('SessionsController', function() {
   before(function(done) {
@@ -67,123 +70,411 @@ describe('SessionsController', function() {
     }).catch(done);
   });
 
-  it('Should fail login because the account has not been activated', function(done) {
-    sa.agent().post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('User not activated')).to.not.equal(-1);
-        done();
-      });
-  });
+  describe('Login', function () {
 
-  it('Should login and activate with the users token', function(done) {
-    sa.agent().get(installationOneUrl + '/login?email=false&token=' + user1.token)
-    .end(function(err, res) {
-      expect(err).to.be.equal(null);
-      expect(res.status).to.be.equal(200);
-      expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
-      done();
-    })
-
-  });
-
-  it('Should login with the email/password', function(done) {
-    sa.agent().post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
-        done();
-      });
-  });
-
-  it('Should logout', function(done) {
-    var agent = sa.agent();
-    agent.post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
-        agent.get(installationOneUrl + '/logout')
+    it('Should fail login because the account has not been activated', function(done) {
+      sa.agent().post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
-          expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
+          expect(res.text.search('User not activated')).to.not.equal(-1);
           done();
-        })
+        });
+    });
 
-      });
-  });
-
-  it('Should not let a logged in user login', function(done) {
-    var agent = sa.agent();
-    agent.post(installationOneUrl + '/login')
-      .send({ email: user1.email, password: user1.password})
+    it('Should login and activate with the users token', function(done) {
+      sa.agent().get(installationOneUrl + '/login?email=false&token=' + user1.token)
       .end(function(err, res) {
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
-
-        agent.get(installationOneUrl + '/login')
-        .end(function(err, res) {
-          expect(err).to.be.equal(null);
-          expect(res.status).to.be.equal(200);
-          expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
-          done();
-        })
-
-      });
-  });
-
-  it('Should not be logged-in in other installations', function(done) {
-    var agent = sa.agent();
-
-    agent.post(installationOneUrl + '/login')
-      .send({
-        email : user1.email,
-        password : user1.password
+        expect(err).to.be.equal(null);
+        expect(res.status).to.be.equal(200);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+        done();
       })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-        expect(res.text.search('"success": "Welcome to PatOS Installation."')).to.not.equal(-1);
 
-        agent.get(installationTwoUrl + '/login')
+    });
+
+    it('Should login with the email/password', function(done) {
+      sa.agent().post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+          done();
+        });
+    });
+
+    it('Should not let a logged in user login', function(done) {
+      var agent = sa.agent();
+      agent.post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+
+          agent.get(installationOneUrl + '/login')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
-            expect(res.text.search('"info": "You are already logged in"') === -1);
+            expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
             done();
-          });
-      });
-  });
-
-  it('Should be able to login to more than one installation', function(done) {
-    var agent = sa.agent();
-
-    agent.post(installationOneUrl + '/login')
-      .send({
-        email : user1.email,
-        password : user1.password
-      })
-      .end(function(err, res) {
-        expect(err).to.be.equal(null);
-        expect(res.status).to.be.equal(200);
-
-        agent.post(installationTwoUrl + '/login')
-          .send({
-            email : user2.email,
-            password : user2.password
           })
+
+        });
+    });
+
+    it('Should not be logged-in in other installations', function(done) {
+      var agent = sa.agent();
+
+      agent.post(installationOneUrl + '/login')
+        .send({
+          email : user1.email,
+          password : user1.password
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+
+          agent.get(installationTwoUrl + '/login')
+            .end(function(err, res) {
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              expect(res.text.search('"info": "You are already logged in"')).to.equal(-1);
+              done();
+            });
+        });
+    });
+
+    it('Should be able to login to more than one installation', function(done) {
+      var agent = sa.agent();
+
+      agent.post(installationOneUrl + '/login')
+        .send({
+          email : user1.email,
+          password : user1.password
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+
+          agent.post(installationTwoUrl + '/login')
+            .send({
+              email : user2.email,
+              password : user2.password
+            })
+            .end(function(err, res) {
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              done();
+            });
+
+        });
+    });
+
+  });
+
+  describe('Logout', function () {
+
+    it('Should logout', function(done) {
+      var agent = sa.agent();
+      agent.post(installationOneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+          agent.get(installationOneUrl + '/logout')
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
+            expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
             done();
-          });
+          })
 
+        });
+    });
+
+  });
+
+  describe('Reset', function () {
+
+    describe('#resetShow', function () {
+
+      it('Should GET /resetPassword with status code 200', function (doneTest) {
+        sa.get(installationOneUrl + urlFor.reset())
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            return doneTest();
+          });
       });
+
+      it('Should redirect to / with status code 200 if already logged-in', function (doneTest) {
+        var agent = sa.agent();
+
+        agent.post(installationOneUrl + urlFor.login())
+          .send({
+            email: user1.email,
+            password: user1.password
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            agent.get(installationOneUrl + urlFor.reset())
+              .end(function (err, res) {
+                expect(err).to.be.equal(null);
+                expect(res.status).to.be.equal(200);
+                expect(res.redirects.length).to.equal(1);
+                expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
+
+                return doneTest();
+              });
+          });
+      });
+
+    });
+
+    describe('#resetCreate', function () {
+
+      it('Should return 200 and create a token', function (doneTest) {
+        sa.post(installationOneUrl + urlFor.reset())
+          .send({
+            email: user1.email
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            ResetPasswordToken.query(knex1)
+              .where('user_id', user1.id)
+              .then(function (result) {
+                expect(result.length).to.equal(1);
+
+                return ResetPasswordToken.query(knex1).delete();
+              })
+              .then(function () {
+                return doneTest();
+              })
+              .catch(doneTest);
+          });
+      });
+
+      it('Should return 403 and a message when already logged in', function (doneTest) {
+        var agent = sa.agent();
+
+        agent.post(installationOneUrl + urlFor.login())
+          .send({
+            email: user1.email,
+            password: user1.password
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            agent.post(installationOneUrl + urlFor.reset())
+              .send({
+                email: user1.email
+              })
+              .end(function (err, res) {
+                expect(err).to.not.equal(null);
+                expect(res.status).to.equal(403);
+                expect(res.body.message).to.exist;
+                expect(res.body.message).to.equal('You are already logged in');
+
+                return doneTest();
+              });
+          });
+      });
+
+      it('Should return 404 with unexistent email', function (doneTest) {
+        sa.post(installationOneUrl + urlFor.reset())
+          .send({
+            email: 'unexistent@email.com'
+          })
+          .end(function (err, res) {
+            expect(err).to.not.equal(null);
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.exist;
+            expect(res.body.message).to.equal('Email not found');
+
+            return doneTest();
+          });
+      });
+
+    });
+
+    describe('#resetUpdate', function () {
+
+      it('Should return 200 and change password if provided valid token', function (doneTest) {
+        sa.post(installationOneUrl + urlFor.reset())
+          .send({
+            email: user1.email
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            var token;
+
+            ResetPasswordToken.query(knex1)
+              .where('user_id', user1.id)
+              .then(function (result) {
+                expect(result.length).to.equal(1);
+
+                token = result[0];
+              })
+              .then(function () {
+                return new Promise(function (resolve, reject) {
+                  sa.put(installationOneUrl + urlFor.reset())
+                    .send({
+                      password: '12345678',
+                      token: token.token
+                    })
+                    .end(function (err, res) {
+                      expect(err).to.equal(null);
+                      expect(res.status).to.equal(200);
+                      expect(res.body.message).to.exist;
+                      expect(res.body.message).to.equal('Password has been reset');
+
+                      return resolve();
+                    });
+                });
+              })
+              .then(function () {
+                return ResetPasswordToken.query(knex1).delete();
+              })
+              .then(function () {
+                return doneTest();
+              })
+              .catch(doneTest);
+          });
+      });
+
+      it('Should return 403 and a message when already logged in', function (doneTest) {
+        var agent = sa.agent();
+
+        agent.post(installationOneUrl + urlFor.login())
+          .send({
+            email: user1.email,
+            password: user1.password
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            agent.put(installationOneUrl + urlFor.reset())
+              .send({})
+              .end(function (err, res) {
+                expect(err).to.not.equal(null);
+                expect(res.status).to.equal(403);
+                expect(res.body.message).to.exist;
+                expect(res.body.message).to.equal('You are already logged in');
+
+                return doneTest();
+              });
+          });
+      });
+
+      it('Should return 404 and a message with unexistent token', function (doneTest) {
+        sa.post(installationOneUrl + urlFor.reset())
+          .send({
+            email: user1.email
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            var token;
+
+            ResetPasswordToken.query(knex1)
+              .where('user_id', user1.id)
+              .then(function (result) {
+                expect(result.length).to.equal(1);
+
+                token = result[0];
+              })
+              .then(function () {
+                return new Promise(function (resolve, reject) {
+                  sa.put(installationOneUrl + urlFor.reset())
+                    .send({
+                      password: '12345678',
+                      token: 'invalid token'
+                    })
+                    .end(function (err, res) {
+                      expect(err).to.not.equal(null);
+                      expect(res.status).to.equal(404);
+                      expect(res.body.message).to.exist;
+                      expect(res.body.message).to.equal('Invalid token');
+
+                      return resolve();
+                    });
+                });
+              })
+              .then(function () {
+                return ResetPasswordToken.query(knex1).delete();
+              })
+              .then(function () {
+                return doneTest();
+              })
+              .catch(doneTest);
+          });
+      });
+
+      it('Should return 404 and a message with expired token', function (doneTest) {
+        sa.post(installationOneUrl + urlFor.reset())
+          .send({
+            email: user1.email
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            var token;
+
+            ResetPasswordToken.query(knex1)
+              .where('user_id', user1.id)
+              .then(function (result) {
+                expect(result.length).to.equal(1);
+
+                token = result[0];
+              })
+              .then(function () {
+                token.expiresAt = moment().subtract(1, 'days');
+
+                return token.save(knex1);
+              })
+              .then(function () {
+                return new Promise(function (resolve, reject) {
+                  sa.put(installationOneUrl + urlFor.reset())
+                    .send({
+                      password: '12345678',
+                      token: token.token
+                    })
+                    .end(function (err, res) {
+                      expect(err).to.not.equal(null);
+                      expect(res.status).to.equal(404);
+                      expect(res.body.message).to.exist;
+                      expect(res.body.message).to.equal('Invalid token');
+
+                      return resolve();
+                    });
+                });
+              })
+              .then(function () {
+                return ResetPasswordToken.query(knex1).delete();
+              })
+              .then(function () {
+                return doneTest();
+              })
+              .catch(doneTest);
+          });
+      });
+
+    });
+
   });
 
   after(function(done) {

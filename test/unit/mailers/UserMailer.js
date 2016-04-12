@@ -13,16 +13,56 @@ describe('UserMailer', function() {
     });
   });
 
-  it('Should sendActivationLink', function(done) {
+  it('Should success sendActivationLink', function(done) {
     return UserMailer.sendActivationLink(user).then(function(res) {
       expect(res.envelope.to[0]).to.be.equal(user.email);
       return done();
     });
   });
 
-  after(function(done) {
-    InstallationManager.User.query().delete().then(function() {
-      done();
+  it('Should success sendChangedPasswordNotification', function (doneTest) {
+    return UserMailer.sendChangedPasswordNotification(user).then(function(res) {
+      expect(res.envelope.to[0]).to.be.equal(user.email);
+      return doneTest();
     });
+  });
+
+  it('Should success sendChangedEmailEmails', function (doneTest) {
+    return UserMailer.sendChangedEmailEmails(user).then(function(res) {
+      expect(res.envelope.to[0]).to.be.equal(user.email);
+      return doneTest();
+    });
+  });
+
+  it('Should success IMSendResetPassword', function (doneTest) {
+    var token = {
+      token: '123456789'
+    };
+
+    return UserMailer.IMSendResetPassword(user, token).then(function(res) {
+      expect(res.envelope.to[0]).to.be.equal(user.email);
+      return doneTest();
+    });
+  });
+
+  it('Should success sendResetPassword', function (doneTest) {
+    var token = {
+      token: '123456789'
+    };
+
+    return UserMailer.sendResetPassword(user, token).then(function(res) {
+      expect(res.envelope.to[0]).to.be.equal(user.email);
+      return doneTest();
+    });
+  });
+
+  after(function(done) {
+    return Promise.all([
+      InstallationManager.User.query().delete()
+    ])
+      .then(function () {
+        return done();
+      })
+      .catch(done)
   });
 });

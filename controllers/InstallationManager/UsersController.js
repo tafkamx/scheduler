@@ -1,7 +1,6 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
 
-InstallationManager.UsersController = Class(InstallationManager, 'UsersController').inherits(BaseController)({
+Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
   beforeActions : [
     {
@@ -16,45 +15,38 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
 
   prototype : {
     _loadUser : function(req, res, next) {
-      InstallationManager.User.query().where({id : req.params.id}).then(function(result) {
-
-        if (result.length === 0) {
-          throw new NotFoundError('User ' + req.params.id + ' not found');
-        }
-
-        res.locals.adminUser = result[0];
-        req.adminUser = result[0];
-
-        next();
-      }).catch(function(err) {
-        next(err)
-      });
-    },
-
-    index : function index(req, res, next) {
-      InstallationManager.User.query().then(function(results) {
-        results.forEach(function(result) {
-          delete result.encryptedPassword;
-          delete result.token;
-        });
-
-        res.locals.adminUsers = results;
-
-        res.format({
-          html : function() {
-            res.render('InstallationManager/Users/index.html');
-          },
-          json : function() {
-            res.json(results);
+      InstallationManager.User.query()
+        .where('id', req.params.id)
+        .then(function(result) {
+          if (result.length === 0) {
+            throw new NotFoundError('User ' + req.params.id + ' not found');
           }
-        });
-      }).catch(next);
+
+          res.locals.adminUser = result[0];
+
+          next();
+        })
+        .catch(next);
     },
 
-    show : function show(req, res, next) {
-      delete res.locals.adminUser.encryptedPassword;
-      delete res.locals.adminUser.token;
+    index : function (req, res, next) {
+      InstallationManager.User.query()
+        .then(function(results) {
+          res.locals.adminUsers = results;
 
+          res.format({
+            html : function() {
+              res.render('InstallationManager/Users/index.html');
+            },
+            json : function() {
+              res.json(results);
+            }
+          });
+        })
+        .catch(next);
+    },
+
+    show : function (req, res, next) {
       res.format({
         html : function() {
           res.render('InstallationManager/Users/show.html');
@@ -69,25 +61,22 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
       res.render('InstallationManager/Users/new.html');
     },
 
-    create : function create(req, res, next) {
+    create : function (req, res, next) {
       res.format({
         json : function() {
           var adminUser = new InstallationManager.User(req.body);
 
-          adminUser.save().then(function() {
-            delete adminUser.encryptedPassword;
-            delete adminUser.token;
-
-            res.json(adminUser);
-          }).catch(next);
+          adminUser
+            .save()
+            .then(function() {
+              res.json(adminUser);
+            })
+            .catch(next);
         }
       });
     },
 
-    edit : function edit(req, res, next) {
-      delete res.locals.adminUser.encryptedPassword;
-      delete res.locals.adminUser.token;
-
+    edit : function (req, res, next) {
       res.format({
         html : function() {
           res.render('InstallationManager/Users/edit.html');
@@ -98,25 +87,29 @@ InstallationManager.UsersController = Class(InstallationManager, 'UsersControlle
       });
     },
 
-    update : function update(req, res, next) {
+    update : function (req, res, next) {
       res.format({
         json : function() {
-          res.locals.adminUser.updateAttributes(req.body).save().then(function(val) {
-            delete res.locals.adminUser.encryptedPassword;
-            delete res.locals.adminUser.token;
-
-            res.json(res.locals.adminUser);
-          }).catch(next);
+          res.locals.adminUser
+            .updateAttributes(req.body)
+            .save()
+            .then(function(val) {
+              res.json(res.locals.adminUser);
+            })
+            .catch(next);
         }
       });
     },
 
-    destroy : function destroy(req, res, next) {
+    destroy : function (req, res, next) {
       res.format({
         json : function() {
-          req.adminUser.destroy().then(function() {
-            res.json({deleted: true});
-          }).catch(next);
+          res.locals.adminUser
+            .destroy()
+            .then(function() {
+              res.json({ deleted: true });
+            })
+            .catch(next);
         }
       });
     }

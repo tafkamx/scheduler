@@ -1,6 +1,6 @@
 'use strict';
 
-InstallationManager.UserInfo = Class(InstallationManager, 'UserInfo').inherits(InstallationManager.InstallationManagerModel)({
+Class(InstallationManager, 'UserInfo').inherits(InstallationManager.InstallationManagerModel)({
   tableName: 'UsersInfo',
 
   validations: {

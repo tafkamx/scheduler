@@ -30,7 +30,6 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
           }
 
           res.locals.branch = result[0];
-          req.branch = result[0];
 
           next();
         })
@@ -98,7 +97,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     update: function (req, res, next) {
       res.format({
         json: function () {
-          req.branch
+          res.locals.branch
             .updateAttributes(req.body)
             .save(req.knex)
             .then(function (val) {
@@ -112,7 +111,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     destroy: function (req, res, next) {
       res.format({
         json: function () {
-          req.branch
+          res.locals.branch
             .destroy(req.knex)
             .then(function () {
               res.json({ deleted: true });
