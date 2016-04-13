@@ -3,9 +3,7 @@ module.exports = function(err, req, res, next) {
   logger.error(err.stack);
 
   if (req.knex) {
-    req.knex.destroy(function () {
-      logger.info('Destroyed Knex instance');
-    });
+    req.knex.destroy(function () {});
   }
 
   if (err.name) {
