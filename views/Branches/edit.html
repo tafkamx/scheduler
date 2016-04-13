@@ -1,1 +1,10 @@
 <pre><%= JSON.stringify(branch, null, 2) %></pre>
+
+<form class="edit-form" action="<%= helpers.urlFor.branch(branch.id) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="name">Name</label> <input type="text" name="name" value="<%= branch.name %>">
+
+    <input type="submit" value="Submit">
+</form>
