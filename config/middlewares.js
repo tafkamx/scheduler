@@ -24,6 +24,10 @@ var middlewares = [
     path : 'middlewares/DomainParser.js'
   },
   {
+    name: 'Destroy Knex',
+    path: 'middlewares/destroyKnex.js'
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
@@ -44,8 +48,16 @@ var middlewares = [
     path : 'middlewares/PassportSession.js'
   },
   {
+    name : 'Guest Users',
+    path : 'middlewares/GuestUsers.js'
+  },
+  {
     name : 'Locals',
     path : 'middlewares/locals.js'
+  },
+  {
+    name: 'Role',
+    path: 'middlewares/role.js'
   },
   {
     name : 'Flash Messages',

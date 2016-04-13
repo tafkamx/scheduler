@@ -5,7 +5,7 @@ var path = require('path');
 var parser = function(req, res, next) {
   var host = req.headers.host;
 
-  if (host === 'localhost:3000' || host === CONFIG[CONFIG.environment].defaultDomainName) {
+  if (host === 'localhost:' + CONFIG[CONFIG.environment].port || host === CONFIG[CONFIG.environment].defaultDomainName) {
     return next();
   }
 
@@ -18,7 +18,7 @@ var parser = function(req, res, next) {
 
   var query = InstallationManager.Installation.query();
 
-  if (d.domain === CONFIG[CONFIG.environment].defaultDomainName.replace(/\:\d+$/, '')) {
+  if (CONFIG[CONFIG.environment].defaultDomainName.search(d.domain) !== -1) {
     var installationName;
 
     if (subdomain.length === 2) {
@@ -47,6 +47,7 @@ var parser = function(req, res, next) {
 
     req.knex = knex;
     req.installationId = installation.id;
+    req.installationName = installation.name; // For reference within InstallationManager
 
     if (subdomain.lenght === 2) {
       req.branch = subdomain[0];

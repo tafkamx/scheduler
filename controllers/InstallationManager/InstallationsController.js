@@ -1,26 +1,17 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
+var bcrypt = require('bcrypt-node');
 
-var aclCanGenerator = function (actions, resource) {
-  return actions.map(function (action) {
-    return Sc.ACL.can(action, resource);
-  });
-};
-
-InstallationManager.InstallationsController = Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
+Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions: [
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
-      actions: ['index', 'show', 'new', 'edit']
+      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     },
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
-    },
-    {
-      before: aclCanGenerator(['index', 'show', 'new', 'create', 'edit', 'update', 'destroy'], 'installation-manager'),
-      actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
     }
   ],
 
@@ -33,7 +24,6 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
             throw new NotFoundError('Installation ' + req.params.id + ' not found');
           }
 
-          req.installation = result[0];
           res.locals.installation = result[0];
 
           next();
@@ -61,22 +51,46 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
           res.render('InstallationManager/Installations/show.html');
         },
         json: function () {
-          res.json(req.installation);
+          res.json(res.locals.installation);
         }
       });
     },
 
     new: function(req, res, next) {
-      res.render('InstallationManager/Installations/new.html');
+      return res.format({
+        html: function () {
+          res.render('InstallationManager/Installations/new.html');
+        }
+      });
     },
 
     create: function (req, res, next) {
+      var installationForm = {
+          name: req.body.name,
+          domain: req.body.domain
+        },
+        franchisorForm = {
+          email: req.body.franchisorEmail
+        };
+
       res.format({
         json: function () {
-          var installation = new InstallationManager.Installation(req.body);
+          var installation = new InstallationManager.Installation(installationForm),
+            installationKnex;
 
           installation
             .save()
+            .then(function () {
+              installationKnex = installation.getDatabase();
+
+              var franchisor = new User({
+                email: franchisorForm.email,
+                role: 'franchisor',
+                password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
+              });
+
+              return franchisor.save(installationKnex);
+            })
             .then(function () {
               res.json(installation);
             })
@@ -91,7 +105,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
           res.render('InstallationManager/Installations/edit.html');
         },
         json: function () {
-          res.json(req.installation);
+          res.json(res.locals.installation);
         }
       });
     },
@@ -99,13 +113,15 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     update: function (req, res, next) {
       res.format({
         json: function() {
-          req.installation
+          res.locals.installation
             .updateAttributes(req.body)
             .save()
             .then(function(val) {
-              res.json(req.installation);
+              res.json(res.locals.installation);
             })
-            .catch(next);
+            .catch(function (err) {
+              next(err)
+            });
         }
       });
     },
@@ -113,7 +129,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
     destroy: function (req, res, next) {
       res.format({
         json: function () {
-          req.installation
+          res.locals.installation
             .destroy()
             .then(function () {
               res.json({ deleted: true });
@@ -123,6 +139,7 @@ InstallationManager.InstallationsController = Class(InstallationManager, 'Instal
       });
     }
   }
+
 });
 
 module.exports = new InstallationManager.InstallationsController();

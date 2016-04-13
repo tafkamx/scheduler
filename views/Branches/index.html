@@ -1,1 +1,18 @@
 <pre><%= JSON.stringify(branches, null, 2) %></pre>
+
+<table>
+    <tr>
+        <th>Branch ID</th>
+        <th>Branch Name</th>
+    </tr>
+    <% branches.forEach(function (branch) { %>
+    <tr>
+        <td><%= branch.id %></td>
+        <td><%= branch.name %></td>
+        <td><a href="http://<%= branch.name %>.<%= helpers.req.installationName %>.<%= CONFIG[CONFIG.environment].defaultDomainName %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a></td>
+        <td><a href="<%= helpers.urlFor.editBranch(branch.id) %>">Edit</a></td>
+    </tr>
+    <% }) %>
+</table>
+
+<a href="<%= helpers.urlFor.newBranch() %>">New Branch</a>

@@ -1,21 +1,17 @@
 # [Neon.js][3] powered MVC Full-Stack development Anti-Framework.
 [![npm-image](https://img.shields.io/npm/v/generator-neonode.svg?style=flat-square)](https://www.npmjs.com/package/generator-neonode)
 
-## Usage
-
-
-## Dependencies
-
-
 ## Setup
 
 ### Config
 
-You will need to create the `config.js` file.
+You will need to create the `config/config.js` file.  You can copy the default
+one (filling in the missing bits) by copying the `config/config.sample.js` file.
 
 ### Knex files
 
-You will need to create the `knexinstallationmanager.js` and `knexfile.js` files.
+You will need to create the `knexinstallationmanager.js` and `knexfile.js`
+files.  These also have default files under `config/`.
 
 ### Hosts
 
@@ -44,36 +40,20 @@ $ npm start
 
 ## Database Migrations
 
-Neonode uses [Knex][1] to access databases and you can use it to generate queries and migrate the DB. Read [Knex Migrations][2]
-
-## Controllers Generator
-
-## Models
-
-## Middlewares
-
+TODO, because of the different migration folders.
 
 ## Credits
 
 Neonode is possible thanks to these wonderful libraries
 
-[Neon][3]
+- [Neon][3]
+- [Thulium][4]
+- [Lithium][5]
+- [Argon][6]
+- [Krypton][9]
+- [Fluorine][7]
+- [Cobalt][8]
 
-[Thulium][4]
-
-[Lithium][5]
-
-[Argon][6]
-
-[Krypton][9]
-
-[Fluorine][7]
-
-[Cobalt][8]
-
-
-[1]: http://knexjs.org/
-[2]: http://knexjs.org/#Migrations
 [3]: https://github.com/azendal/neon
 [4]: https://github.com/freshout-dev/thulium
 [5]: https://github.com/freshout-dev/lithium

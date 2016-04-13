@@ -3,15 +3,13 @@
 var path = require('path');
 var nodemailer = require('nodemailer');
 var mandrillTransport = require('nodemailer-mandrill-transport');
+var glob = require('glob');
 
-var neonode = require(path.join(process.cwd(), '/lib/core'));
+var neonode = require(path.join(process.cwd(), 'lib', 'core'));
 
-neonode.app.on('destroyKnex', function (req) {
-  if (req.knex) {
-    req.knex.destroy(function () {
-      logger.info('Destroyed Knex instance');
-    });
-  }
+// Load model relations
+glob.sync('lib/model-relations/**/*.js').forEach(function (file) {
+  require(path.join(process.cwd(), file));
 });
 
 // mailer

@@ -1,5 +1,8 @@
+'use strict';
+
 var Branch = Class('Branch').inherits(DynamicModel)({
   tableName: 'Branches',
+
   validations: {
     name: [
       {
@@ -28,7 +31,7 @@ var Branch = Class('Branch').inherits(DynamicModel)({
               }
             });
         },
-        message: 'The name already exists'
+        message: 'The name already exists.'
       },
       'required',
       'maxLength:255'

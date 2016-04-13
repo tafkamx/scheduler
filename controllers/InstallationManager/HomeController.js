@@ -1,7 +1,7 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 
-InstallationManager.HomeController = Class(InstallationManager, 'HomeController').inherits(BaseController)({
+Class(InstallationManager, 'HomeController').inherits(BaseController)({
 
   beforeActions: [
     {
@@ -13,15 +13,20 @@ InstallationManager.HomeController = Class(InstallationManager, 'HomeController'
   prototype: {
     _authenticate: function (req, res, next) {
       if (!req.user) {
-        neonode.app.emit('destroyKnex', req);
-        return res.redirect(urlFor.installationManagerLogin());
+        return res.format({
+          html: function () {
+            return res.redirect(urlFor.installationManagerLogin());
+          },
+          json: function () {
+            return res.status(403).end();
+          }
+        });
       }
 
       next();
     },
 
     index: function (req, res, next) {
-      neonode.app.emit('destroyKnex', req);
       res.render('InstallationManager/Home/index.html');
     }
   }
