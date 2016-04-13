@@ -20,7 +20,12 @@ var config = {
     // mailer
     mailer : {
       sendEmails : false,
-      mandrillKey : null
+      mailgun: {
+        auth: {
+          api_key: null,
+          domain: null,
+        },
+      },
     }
   },
 
@@ -40,7 +45,12 @@ var config = {
     // mailer
     mailer : {
       sendEmails : false,
-      mandrillKey : null
+      mailgun: {
+        auth: {
+          api_key: null,
+          domain: null,
+        },
+      },
     }
   }
 }
