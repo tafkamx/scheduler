@@ -11,13 +11,7 @@ var templates = {
 };
 
 var UserMailer = Class('UserMailer').inherits(BaseMailer)({
-  defaultOptions : {
-    mandrillOptions: {
-      async: false,
-      auto_text: true,
-      inline_css: true
-    }
-  },
+  defaultOptions: {},
 
   sendActivationLink: function (user) {
     var templateOptions = {
