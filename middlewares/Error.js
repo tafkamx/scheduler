@@ -30,7 +30,7 @@ module.exports = function(err, req, res, next) {
     html: function () {
       res.render('shared/500.html', {
         layout: false,
-        error: err + '\n\n' + err.stack
+        error: 'Error:\n\n' + JSON.stringify(err) + '\n\nStack:\n\n' + err.stack
       });
     },
     json: function () {
