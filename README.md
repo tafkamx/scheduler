@@ -22,14 +22,12 @@ Add the following to your `/etc/hosts` file:
 
 127.0.0.1 default.installation-one.test-installation.com
 127.0.0.1 installation-one.test-installation.com
-127.0.0.1 default.installation-one.test-installation.com
-127.0.0.1 installation-one.test-installation.com
 
 127.0.0.1 default.installation-two.test-installation.com
-127.0.0.1 default.installation-two.test-installation.com
 127.0.0.1 installation-two.test-installation.com
-127.0.0.1 installation-two.test-installation.com
+
 127.0.0.1 default.installation-three.test-installation.com
+127.0.0.1 installation-three.test-installation.com
 ```
 
 ## Run the server
