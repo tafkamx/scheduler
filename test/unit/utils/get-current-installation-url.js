@@ -1,11 +1,11 @@
 'use strict';
 
 var path = require('path');
-var getInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-installation-url.js'));
+var getCurrentInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-current-installation-url.js'));
 
 var port = CONFIG[CONFIG.environment].port;
 
-describe('get-installation-url', function () {
+describe('get-current-installation-url', function () {
 
   it('Should not skip port by default (in test)', function () {
     var req = {
@@ -13,7 +13,7 @@ describe('get-installation-url', function () {
       hostname: 'default.installation-one.test-installation.com'
     };
 
-    var result = getInstallationUrl(req);
+    var result = getCurrentInstallationUrl(req);
 
     expect(result).to.equal('http://default.installation-one.test-installation.com:' + port);
   });
@@ -24,7 +24,7 @@ describe('get-installation-url', function () {
       hostname: 'default.installation-one.test-installation.com'
     };
 
-    var result = getInstallationUrl(req, false);
+    var result = getCurrentInstallationUrl(req, false);
 
     expect(result).to.equal('http://default.installation-one.test-installation.com:' + port);
   });
@@ -35,7 +35,7 @@ describe('get-installation-url', function () {
       hostname: 'default.installation-one.test-installation.com'
     };
 
-    var result = getInstallationUrl(req, true);
+    var result = getCurrentInstallationUrl(req, true);
 
     expect(result).to.equal('http://default.installation-one.test-installation.com');
   });
