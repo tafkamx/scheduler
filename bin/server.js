@@ -2,7 +2,7 @@
 
 var path = require('path');
 var nodemailer = require('nodemailer');
-var mandrillTransport = require('nodemailer-mandrill-transport');
+var mailgun = require('nodemailer-mailgun-transport');
 var glob = require('glob');
 
 var neonode = require(path.join(process.cwd(), 'lib', 'core'));
@@ -14,18 +14,12 @@ glob.sync('lib/model-relations/**/*.js').forEach(function (file) {
 
 // mailer
 
-if (CONFIG.environment === 'test') {
-  var stubTransport = require('nodemailer-stub-transport');
-}
-
-var transport = mandrillTransport({
-  auth: {
-    apiKey: CONFIG[CONFIG.environment].mailer.mandrillKey
-  }
-});
+var transport;
 
 if (CONFIG.environment === 'test') {
-  transport = stubTransport();
+  transport = require('nodemailer-stub-transport')();
+} else {
+  transport = mailgun(CONFIG[CONFIG.environment].mailer.mailgun);
 }
 
 BaseMailer.transport(nodemailer.createTransport(transport));

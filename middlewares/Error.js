@@ -3,9 +3,7 @@ module.exports = function(err, req, res, next) {
   logger.error(err.stack);
 
   if (req.knex) {
-    req.knex.destroy(function () {
-      logger.info('Destroyed Knex instance');
-    });
+    req.knex.destroy(function () {});
   }
 
   if (err.name) {
@@ -32,7 +30,7 @@ module.exports = function(err, req, res, next) {
     html: function () {
       res.render('shared/500.html', {
         layout: false,
-        error: err + '\n\n' + err.stack
+        error: 'Error:\n\n' + JSON.stringify(err) + '\n\nStack:\n\n' + err.stack
       });
     },
     json: function () {

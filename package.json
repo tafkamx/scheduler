@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "keywords": [],
   "engines": {
-    "node": ">=0.10.33"
+    "node": ">=4.0"
   },
   "scripts": {
     "test": "NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:rollback ; NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec; psql -c 'DROP DATABASE \"installation-one-test\"'; psql -c 'DROP DATABASE \"installation-two-test\"'; psql -c 'DROP DATABASE \"three-test\"';",
@@ -43,7 +43,7 @@
     "mysql": "2.10.0",
     "neon": "2.0.0",
     "nodemailer": "1.11.0",
-    "nodemailer-mandrill-transport": "1.0.0",
+    "nodemailer-mailgun-transport": "1.0.1",
     "object-getprototypesof": "1.0.1",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
@@ -58,7 +58,7 @@
     "scandium-express": "0.0.3",
     "style-loader": "0.13.0",
     "thulium": "2.0.0",
-    "thulium-express": "1.0.3",
+    "thulium-express": "1.0.4",
     "url-loader": "0.5.7",
     "uuid": "2.0.1",
     "webpack": "1.12.10",
