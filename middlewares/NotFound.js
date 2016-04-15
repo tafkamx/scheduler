@@ -1,8 +1,6 @@
 module.exports = function(req, res) {
   if (req.knex) {
-    req.knex.destroy(function () {
-      logger.info('Destroyed Knex instance');
-    });
+    req.knex.destroy(function () {});
   }
 
   res.status(404);
