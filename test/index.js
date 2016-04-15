@@ -25,3 +25,4 @@ require(path.join(__dirname, '/unit/models/InstallationManager/ResetPasswordToke
 // utils
 require(path.join(__dirname, '/unit/utils/nonces.js'));
 require(path.join(__dirname, '/unit/utils/login-tokenize.js'));
+require(path.join(__dirname, '/unit/utils/get-installation-url.js'));
