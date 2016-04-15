@@ -12,6 +12,32 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before : [
+        function(req, res, next) {
+          var api = new RestAPI({
+            req: req,
+            res: res,
+            model : InstallationManager.Installation,
+            search : function() {
+              var api = this;
+              var qs = this.req.query;
+
+              if (qs.q) {
+                return api.queryBuilder.where('name', 'like', '%' + qs.q + '%')
+              }
+
+              return Promise.resolve();
+            }
+          });
+
+          api.exec().then(function() {
+            next()
+          }).catch(next);
+        }
+      ],
+      actions : ['index']
     }
   ],
 
@@ -32,17 +58,16 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     },
 
     index: function (req, res, next) {
-      InstallationManager.Installation.buildFromRestParams(req.query)
-        .then(function(results) {
-          res.format({
-            html : function() {
-              res.render('InstallationAdmin/Installations/index.html', {installations : results});
-            },
-            json : function() {
-              res.json(results);
-            }
-          });
-        }).catch(next);
+      req.currentQuery.then(function(results) {
+        res.format({
+          html : function() {
+            res.render('InstallationManager/Installations/index.html', {installations : results});
+          },
+          json : function() {
+            res.json(results);
+          }
+        });
+      }).catch(next);
     },
 
     show: function (req, res, next) {
