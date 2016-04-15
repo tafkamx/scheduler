@@ -1,5 +1,4 @@
 if (CONFIG[CONFIG.environment].sessions !== false) {
-
   var redis = require('redis');
 
   var redisClient = redis.createClient();
@@ -19,7 +18,9 @@ if (CONFIG[CONFIG.environment].sessions !== false) {
       resave : false,
       saveUninitialized : true,
       key : req.installationId || CONFIG[CONFIG.environment].sessions.key,
-      store: new RedisStore(),
+      store: new RedisStore({
+        client: redisClient,
+      }),
       secret: CONFIG[CONFIG.environment].sessions.secret,
       // cookie: { secure: true }
     });
