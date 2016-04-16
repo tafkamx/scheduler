@@ -27,3 +27,4 @@ require(path.join(__dirname, '/unit/utils/nonces.js'));
 require(path.join(__dirname, '/unit/utils/login-tokenize.js'));
 require(path.join(__dirname, '/unit/utils/get-current-installation-url.js'));
 require(path.join(__dirname, '/unit/utils/generate-installation-url.js'));
+require(path.join(__dirname, '/unit/utils/change-branch-in-installation-url.js'));
