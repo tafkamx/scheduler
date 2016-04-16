@@ -8,6 +8,9 @@ var changeBranchInInstallationUrl = require(path.join(process.cwd(), 'lib', 'uti
 var urlPort = 'http://default.installation-one.test-installation.com:3001',
   url = 'http://default.installation-one.test-installation.com';
 
+var noBranchUrlPort = 'http://installation-one.test-installation.com:3001',
+  noBranchUrl = 'http://installation-one.test-installation.com';
+
 describe('change-branch-in-installation-url', function () {
 
   it('Should change branch name in URL with port', function () {
@@ -19,6 +22,20 @@ describe('change-branch-in-installation-url', function () {
 
   it('Should change branch name in URL without port', function () {
     var result = changeBranchInInstallationUrl(url, 'something');
+
+    expect(_.isString(result)).to.equal(true);
+    expect(result).to.equal('http://something.installation-one.test-installation.com')
+  });
+
+  it('Should add a branch name to URL with port', function () {
+    var result = changeBranchInInstallationUrl(noBranchUrlPort, 'something');
+
+    expect(_.isString(result)).to.equal(true);
+    expect(result).to.equal('http://something.installation-one.test-installation.com:3001')
+  });
+
+  it('Should add a branch name to URL without port', function () {
+    var result = changeBranchInInstallationUrl(noBranchUrl, 'something');
 
     expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://something.installation-one.test-installation.com')
