@@ -1,6 +1,8 @@
 'use strict';
 
 var path = require('path');
+var _ = require('lodash');
+
 var getCurrentInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-current-installation-url.js'));
 
 var port = CONFIG[CONFIG.environment].port;
@@ -15,6 +17,7 @@ describe('get-current-installation-url', function () {
 
     var result = getCurrentInstallationUrl(req);
 
+    expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://default.installation-one.test-installation.com:' + port);
   });
 
@@ -26,6 +29,7 @@ describe('get-current-installation-url', function () {
 
     var result = getCurrentInstallationUrl(req, false);
 
+    expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://default.installation-one.test-installation.com:' + port);
   });
 
@@ -37,6 +41,7 @@ describe('get-current-installation-url', function () {
 
     var result = getCurrentInstallationUrl(req, true);
 
+    expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://default.installation-one.test-installation.com');
   });
 

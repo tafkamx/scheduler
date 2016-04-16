@@ -1,6 +1,8 @@
 'use strict';
 
 var path = require('path');
+var _ = require('lodash');
+
 var generateInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'generate-installation-url.js'));
 
 var port = CONFIG[CONFIG.environment].port;
@@ -17,6 +19,7 @@ describe('generate-installation-url', function () {
 
     var result = generateInstallationUrl(i.branch, i.installation, i.domain);
 
+    expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://gdl.school.greduan.com:' + port);
   });
 
@@ -28,6 +31,7 @@ describe('generate-installation-url', function () {
 
     var result = generateInstallationUrl(i.branch, i.installation);
 
+    expect(_.isString(result)).to.equal(true);
     expect(result).to.equal('http://gdl.school.' + defaultDomain);
   });
 
