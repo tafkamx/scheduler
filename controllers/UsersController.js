@@ -19,6 +19,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
           }
 
           res.locals.user = result[0];
+          user.mailers = req.mailers;
 
           next();
         })
@@ -65,6 +66,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
       res.format({
         json : function() {
           var user = new User(req.body);
+          user.mailers = req.mailers;
 
           user
             .save(req.knex)
