@@ -1,8 +1,9 @@
 var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
+var Promise = require('bluebird');
 
-Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
+Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel).includes(CustomEvent, CustomEventSupport)({
   tableName : 'Installations',
   validations : {
     name : [
@@ -95,11 +96,11 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
       var model = this;
 
       this.on('afterCreate', function(done) {
-        model.createDatabase().then(function(res) {
-          return model.migrate();
-        }).then(function(result) {
+        model.createDatabase().then(function() {
+          return model.migrate()
+        }).then(function() {
           done();
-        }).catch(done);
+        }).catch(done)
       });
 
       return this;
@@ -114,7 +115,9 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
       logger.info('Creating ' + name + ' database');
 
-      return knex.raw('CREATE DATABASE "' + name + '";')
+      return knex.raw('CREATE DATABASE "' + name + '";').then(function() {
+        return knex.destroy();
+      });
     },
 
     migrate : function () {
@@ -128,19 +131,9 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
       logger.info('Migrating ' + name + ' database');
 
-      return knex.migrate.latest();
-    },
-
-    getDatabase: function () {
-      var conf = require(path.join(process.cwd(), 'knexfile.js'));
-
-      var name = [this.name, CONFIG.environment].join('-');
-
-      conf[CONFIG.environment].connection.database = name;
-
-      var knex = new Knex(conf[CONFIG.environment]);
-
-      return knex;
+      return knex.migrate.latest().then(function() {
+        return knex.destroy();
+      });
     }
   }
 });
