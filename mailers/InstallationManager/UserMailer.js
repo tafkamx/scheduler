@@ -4,13 +4,13 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 
 var templates = {
-  sendActivationLink: path.join(process.cwd(), 'views', 'mailers', 'User', 'activationLink.html'),
-  sendChangedPasswordNotification: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedPasswordNotification.html'),
-  sendChangedEmail: path.join(process.cwd(), 'views', 'mailers', 'User', 'changedEmailNotification.html'),
-  sendResetPassword: path.join(process.cwd(), 'views', 'mailers', 'User', 'resetPassword.html'),
+  sendActivationLink: path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'User', 'activationLink.html'),
+  sendChangedPasswordNotification: path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'User', 'changedPasswordNotification.html'),
+  sendChangedEmail: path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'User', 'changedEmailNotification.html'),
+  sendResetPassword: path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'User', 'resetPassword.html'),
 };
 
-var UserMailer = Class('UserMailer').inherits(BaseMailer)({
+Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
 
   prototype: {
 
@@ -24,7 +24,7 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       var that = this;
 
       if (!this.installationUrl) {
-        throw new Error('installationUrl is a required field');
+        this.installationUrl = CONFIG.env().defaultDomainName;
       }
     },
 
@@ -44,6 +44,8 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
     },
 
     sendChangedEmailEmails: function (user) {
+      var that = this;
+
       var templateOptions = {
         user: user
       };
@@ -58,8 +60,8 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       return this
         ._send(options)
         .then(function () {
-          return UserMailer.sendActivationLink(user);
-        })
+          return that.sendActivationLink(user);
+        });
     },
 
     sendActivationLink: function (user) {
@@ -105,4 +107,4 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
 
 });
 
-module.exports = UserMailer;
+module.exports = InstallationManager.UserMailer;
