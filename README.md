@@ -20,6 +20,8 @@ Add the following to your `/etc/hosts` file:
 ```
 #### PatOS ####
 
+127.0.0.1 test-installation.com
+
 127.0.0.1 default.installation-one.test-installation.com
 127.0.0.1 installation-one.test-installation.com
 
