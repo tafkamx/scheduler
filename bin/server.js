@@ -12,8 +12,7 @@ glob.sync('lib/model-relations/**/*.js').forEach(function (file) {
   require(path.join(process.cwd(), file));
 });
 
-// mailer
-
+// Mailer transport
 var transport;
 
 if (CONFIG.environment === 'test') {
@@ -23,5 +22,10 @@ if (CONFIG.environment === 'test') {
 }
 
 BaseMailer.transport(nodemailer.createTransport(transport));
+
+// Load mailers
+glob.sync('mailers/**/*.js').forEach(function (file) {
+  require(path.join(process.cwd(), file));
+});
 
 neonode._serverStart();
