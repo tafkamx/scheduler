@@ -47,6 +47,14 @@ Class('ResetPasswordToken').inherits(DynamicModel)({
         next();
       });
 
+      this.on('beforeCreate', function (next) {
+        if (!model.mailers) {
+          return next(new Error('.mailers is required before saving'));
+        }
+
+        return next();
+      });
+
       // Add token for confirmation
       this.on('beforeCreate', function (next) {
         model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
@@ -59,7 +67,7 @@ Class('ResetPasswordToken').inherits(DynamicModel)({
         User.query(model._knex)
           .where('id', model.userId)
           .then(function (res) {
-            return UserMailer.sendResetPassword(res[0], model);
+            return model.mailers.user.sendResetPassword(res[0], model);
           })
           .then(function () {
             return next();

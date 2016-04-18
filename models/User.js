@@ -47,6 +47,14 @@ var User = Class('User').inherits(DynamicModel)({
       var model = this;
       model._oldEmail = model.email;
 
+      this.on('beforeSave', function (next) {
+        if (!model.mailers) {
+          return next(new Error('.mailers is required before saving'));
+        }
+
+        return next();
+      });
+
       // Encrypt 'password' and assign to model as encryptedPassword
       this.on('beforeSave', function(next) {
         if (model.password) {
@@ -80,7 +88,7 @@ var User = Class('User').inherits(DynamicModel)({
 
       // Send activation email after creation
       this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model)
+        model.mailers.user.sendActivationLink(model)
           .then(function () {
             next();
           })
@@ -96,7 +104,7 @@ var User = Class('User').inherits(DynamicModel)({
         // in order to prevent the password changed notice several times
         model._skipPasswordEmail = true;
 
-        UserMailer.sendChangedPasswordNotification(model)
+        model.mailers.user.sendChangedPasswordNotification(model)
           .then(function () {
             next();
           })
@@ -111,7 +119,7 @@ var User = Class('User').inherits(DynamicModel)({
 
         model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
 
-        UserMailer.sendChangedEmailEmails(model)
+        model.mailers.user.sendChangedEmailEmails(model)
           .then(function () {
             next();
           })

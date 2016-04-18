@@ -59,7 +59,7 @@ Class(InstallationManager, 'ResetPasswordToken').inherits(InstallationManager.In
         InstallationManager.User.query()
           .where('id', model.userId)
           .then(function (res) {
-            return UserMailer.sendResetPassword(res[0], model);
+            return InstallationManager.UserMailer.prototype.sendResetPassword(res[0], model);
           })
           .then(function () {
             return next();

@@ -82,7 +82,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
 
       // Send activation email after creation
       this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model)
+        InstallationManager.UserMailer.prototype.sendActivationLink(model)
           .then(function () {
             next();
           })
@@ -98,7 +98,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
         // in order to prevent the password changed notice several times
         model._skipPasswordEmail = true;
 
-        UserMailer.sendChangedPasswordNotification(model)
+        InstallationManager.UserMailer.prototype.sendChangedPasswordNotification(model)
           .then(function () {
             next();
           })
@@ -113,7 +113,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
 
         model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
 
-        UserMailer.sendChangedEmailEmails(model)
+        InstallationManager.UserMailer.prototype.sendChangedEmailEmails(model)
           .then(function () {
             next();
           })
