@@ -16,23 +16,14 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     {
       before : [
         function(req, res, next) {
-          var api = new RestAPI({
-            req: req,
-            res: res,
+          new RestAPI({
+            req : req,
+            res : res,
             model : InstallationManager.Installation,
-            search : function() {
-              var api = this;
-              var qs = this.req.query;
-
-              if (qs.q) {
-                return api.queryBuilder.where('name', 'like', '%' + qs.q + '%')
-              }
-
-              return Promise.resolve();
+            search : function(q) {
+              return this.queryBuilder.where('name', 'like', '%' + q + '%')
             }
-          });
-
-          api.exec().then(function() {
+          }).exec().then(function() {
             next()
           }).catch(next);
         }
