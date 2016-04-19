@@ -13,7 +13,7 @@ var commandExists = function(command) {
 console.log('PatOS requires redis and postgres (not installable through npm).');
 
 // === Checks for postgres
-if(!commandExists('postgres') || !commandExists('createdb') || !commandExists('psql')) {
+if(!commandExists('psql') || !commandExists('createdb') || !commandExists('psql')) {
   console.error('Unable to detect postgres server install. Make sure package is installed before continuing installation.');
   process.exit(1);
 } else {
