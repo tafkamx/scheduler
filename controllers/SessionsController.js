@@ -104,7 +104,8 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           }
 
           var token = new ResetPasswordToken({
-            userId: result[0].id
+            userId: result[0].id,
+            mailers: req.mailers,
           });
 
           return token.save(req.knex);

@@ -44,6 +44,8 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
     },
 
     sendChangedEmailEmails: function (user) {
+      var that = this;
+
       var templateOptions = {
         user: user
       };
@@ -58,7 +60,7 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       return this
         ._send(options)
         .then(function () {
-          return UserMailer.sendActivationLink(user);
+          return that.sendActivationLink(user);
         })
     },
 

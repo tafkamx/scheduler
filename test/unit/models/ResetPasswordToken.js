@@ -10,6 +10,8 @@ var knex,
 
 var agent = sa.agent();
 
+var mailers = { user: new UserMailer({ installationUrl: 'something' }) };
+
 describe('ResetPasswordToken', function () {
 
   before(function (done) {
@@ -21,7 +23,8 @@ describe('ResetPasswordToken', function () {
     var user = new User({
       email: 'user-test@example.com',
       password: '12345678',
-      role: 'student'
+      role: 'student',
+      mailers: mailers,
     });
 
     user.save(knex)
@@ -45,7 +48,8 @@ describe('ResetPasswordToken', function () {
           .then(function (result) {
             token = new ResetPasswordToken({
               userId: result[0].id,
-            })
+              mailers: mailers,
+            });
 
             return token.save(knex);
           })
@@ -88,7 +92,8 @@ describe('ResetPasswordToken', function () {
         .then(function (result) {
           token = new ResetPasswordToken({
             userId: result[0].id,
-          })
+            mailers: mailers,
+          });
 
           return token.save(knex);
         })

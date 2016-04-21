@@ -91,6 +91,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
                 role: 'franchisor',
                 password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
               });
+              franchisor.mailers = req.mailers;
 
               return franchisor.save(installationKnex);
             })

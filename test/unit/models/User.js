@@ -24,6 +24,8 @@ describe('User', function () {
       role: 'student'
     });
 
+    user.mailers = { user: new UserMailer({ installationUrl: 'something' }) };
+
     user.save(knex)
       .then(function () {
         return done();

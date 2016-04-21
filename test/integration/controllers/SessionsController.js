@@ -26,6 +26,8 @@ var agent2 = sa.agent();
 
 var urlFor = CONFIG.router.helpers;
 
+var mailers = { user: new UserMailer({ installationUrl: 'something' }) };
+
 describe('SessionsController', function() {
   before(function(done) {
     Knex = require('knex');
@@ -44,13 +46,15 @@ describe('SessionsController', function() {
     user1 = new User({
       email : 'installation.one.user@example.com',
       password : '12345678',
-      role: 'franchisor'
+      role: 'franchisor',
+      mailers: mailers,
     });
 
     user2 = new User({
       email : 'installation.two.user@example.com',
       password : '12345678',
-      role: 'franchisor'
+      role: 'franchisor',
+      mailers: mailers,
     });
 
     Promise.all([

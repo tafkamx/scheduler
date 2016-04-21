@@ -9,6 +9,8 @@ var agent = sa.agent();
 
 var path = require('path');
 
+var mailers = { user: new UserMailer({ installationUrl: 'something' }) };
+
 describe('UsersController', function() {
   before(function(done) {
     Knex = require('knex');
@@ -24,7 +26,8 @@ describe('UsersController', function() {
         user = new User({
           email : 'test.installation.one@example.com',
           password : '12345678',
-          role: 'franchisor'
+          role: 'franchisor',
+          mailers: mailers,
         });
 
         return user.save(knex);

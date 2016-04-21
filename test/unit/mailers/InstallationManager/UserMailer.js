@@ -1,16 +1,14 @@
 var path = require('path');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
+var UserMailer = require(path.join(process.cwd(), 'mailers', 'InstallationManager', 'UserMailer'));
 
-var userMailer = new UserMailer({
-  installationUrl: 'something',
-});
+var userMailer = new InstallationManager.UserMailer();
 
-var user = new User({
+var user = new InstallationManager.User({
   email : 'sergio@delagarza.io',
   password : '12345678',
 });
 
-describe('UserMailer', function() {
+describe('InstallationManager.UserMailer', function() {
 
   it('Should success sendActivationLink', function(done) {
     return userMailer.sendActivationLink(user).then(function(res) {
