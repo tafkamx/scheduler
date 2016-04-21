@@ -43,14 +43,20 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     show : function (req, res, next) {
-      res.format({
-        html : function() {
-          res.render('Users/show.html');
-        },
-        json : function() {
-          res.json(res.locals.user);
-        }
-      });
+      req.container.query('User')
+        .where('id', req.params.id)
+        .then(function (users) {
+          res.locals.user = users[0];
+
+          res.format({
+            html : function() {
+              res.render('Users/show.html');
+            },
+            json : function() {
+              res.json(res.locals.user);
+            }
+          });
+        });
     },
 
     new : function(req, res, next) {

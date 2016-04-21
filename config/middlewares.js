@@ -28,6 +28,10 @@ var middlewares = [
     path: 'middlewares/destroyKnex.js'
   },
   {
+    name: 'Installation Container',
+    path: 'middlewares/installation-container.js',
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
