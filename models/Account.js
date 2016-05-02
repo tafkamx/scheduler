@@ -1,23 +1,45 @@
 /**
- *
+ * Accounts are branch-specific entities that may or may not have a related User for authentication.
+ * This Model provides access to the table that Accounts are stored in, and gives us some additional Class Methods for
  */
 var Account = Class('Account').inherits(DynamicModel)({
   tableName: 'Accounts',
 
   /**
-   * Retrieves account using the associated User ID and Branch ID. Useful for Authentication.
+   * Update this Object to create more Account Types. The values should link to Model names to be used within DomainContainer.
    */
-  authenticate: function(user_id, branch_id) {
+  types: {
+    'teacher': 'Teacher',
+    'stduent': 'Student'
+  },
+
+  /**
+   * Retrieves account using the associated User ID and Branch ID. Useful for Authentication.
+   *
+   * @param UUID user_id   User ID that's associated with the Account
+   * @param UUID branch_id Branch that the Account is associated with
+   *
+   * @return Promise object. Resolves to `false` if Account is not found. Otherwise, resolves with `Account` object.
+   */
+  getByUser: function(user_id, branch_id) {
     var model = this;
 
-    return Promise(function() {
+    return Promise(function(resolve, reject) {
       var query = model.query({ user_id: user_id, branch_id: branch_id }); // Need to update to work with DomainContainer
 
-      query.then(function(res) {}); // Attch Account Type data
+      query.then(function(res) { // Attch Account Type data
+        if(!res.length) return resolve(false); // Don't want to `reject` for the sake of usability
+
+        var account = res[0]; // There should only be one Account here.
+        account.getTypeInfo().then(resolve); // Account gets its additional data by reference
+      });
     });
   },
 
-  retrieve: function(account_id) {
+  /**
+   * Retrieves one Account with additional Account Type data
+   */
+  get: function(account_id) {
 
   },
 
@@ -37,14 +59,25 @@ var Account = Class('Account').inherits(DynamicModel)({
   ],
 
   prototype: {
+    /**
+     * Account-Type-specific data is stored here.
+     */
+    typeInfo: {
+      save: function() {}
+    },
 
     /**
-     *
+     * Retrieve and overload Account Type data based on `Account.type`
      */
     getTypeInfo: function() {
+      // TODO make sure that `this` is the Account obect
+      var possibleTypes = Account.types;
+      if(possibleTypes.indexOf(this.type) === -1) return; // If we don't know the Type, we can't do anything
 
+      
     }
   }
+
 });
 
 module.exports = Account;
