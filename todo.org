@@ -2,7 +2,7 @@
 The plan of attack for this is going to be to add the parts slowly but
 surely, making sure compatibility with the tests is maintained where
 possible.
-** TODO Update DomainParser middleware
+** DONE Update DomainParser middleware
 Though for now, only update it so that it puts `installationName` in
 the `req`.
 ** TODO Give all installation models the namespace of M

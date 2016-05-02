@@ -49,7 +49,7 @@ var parser = function(req, res, next) {
     req.installationId = installation.id;
     req.installationName = installation.name; // For reference within InstallationManager
 
-    if (subdomain.lenght === 2) {
+    if (subdomain.length === 2) {
       req.branch = subdomain[0];
     } else {
       req.branch = 'default';
