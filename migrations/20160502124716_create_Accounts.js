@@ -1,7 +1,10 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('Accounts', function (t) {
     t.uuid('id').primary();
-    t.uuid('user_id'); // This can be NULL for Accounts that do not have Authentication
+    t.uuid('user_id') // This can be NULL for Accounts that do not have Authentication
+      .references('id')
+      .inTable('Users')
+      .onDelete('CASCADE');
     t.uuid('branch_id').notNullable();
     t.string('type', 25).notNullable();
     t.string('first_name', 125);
