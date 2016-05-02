@@ -2,7 +2,7 @@ var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var _ = require('lodash');
 
-var base = path.join(process.cwd(), 'views', 'mailers', 'UserMailer');
+var base = path.join(process.cwd(), 'views', 'mailers', 'InstallationManager', 'UserMailer');
 
 var templates = {
   sendActivationLink: path.join(base, 'activationLink.html'),
@@ -11,7 +11,7 @@ var templates = {
   sendResetPassword: path.join(base, 'resetPassword.html'),
 };
 
-var UserMailer = Class('UserMailer').inherits(BaseMailer)({
+Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
   sendActivationLink: function (user) {
     var templateOptions = {
       user: user,
@@ -81,8 +81,8 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
     };
 
     return this._send(options);
-  }
+  },
 
 });
 
-module.exports = UserMailer;
+module.exports = InstallationManager.UserMailer;

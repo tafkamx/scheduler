@@ -1,4 +1,4 @@
-* TODO Steps in order
+* Steps in order
 The plan of attack for this is going to be to add the parts slowly but
 surely, making sure compatibility with the tests is maintained where
 possible.
@@ -13,7 +13,7 @@ the `req`.
 *** DONE Update tests so they use models in M
 ** DONE Add DomainContainer middleware
 Just add it, don't use it anywhere yet.  No mailers yet.
-** TODO Implement new mailer structure
+** DONE Implement new mailer structure
 Referring to the fact that there's the InstallationManager mailers and
 the Installation mailers, separate these two.
 ** TODO Update controllers to use DomainContainer
@@ -26,6 +26,6 @@ the Installation mailers, separate these two.
 *** TODO Make models use mailers through this._modelExtras
 *** TODO Update tests
 ** TODO Update models to use this._container for other models usage
-** TODO TESTS
+** TODO Update all Installation tests to use DomainContainers (for convenience)
 ** TODO PATOS-88
 ** TODO TESTS

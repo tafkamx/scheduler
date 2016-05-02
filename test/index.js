@@ -14,7 +14,8 @@ require(path.join(__dirname, '/integration/controllers/BranchesController'));
 require(path.join(__dirname, '/integration/controllers/UsersController'));
 require(path.join(__dirname, '/integration/controllers/SessionsController'));
 // mailers
-require(path.join(__dirname, '/unit/mailers/UserMailer'));
+require(path.join(__dirname, '/unit/mailers/UserMailer.js'));
+require(path.join(__dirname, '/unit/mailers/InstallationManager/UserMailer.js'));
 // models
 require(path.join(__dirname, '/unit/models/User'));
 require(path.join(__dirname, '/unit/models/UserInfo'));

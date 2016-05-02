@@ -1,5 +1,5 @@
 var path = require('path');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
+var UserMailer = require(path.join(process.cwd(), 'mailers', 'InstallationManager', 'UserMailer.js'));
 
 var user = new InstallationManager.User({
   email : 'sergio@delagarza.io',
