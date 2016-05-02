@@ -5,9 +5,12 @@ possible.
 ** DONE Update DomainParser middleware
 Though for now, only update it so that it puts `installationName` in
 the `req`.
-** TODO Give all installation models the namespace of M
-*** TODO Do so
-*** TODO Update tests so they grab the models from M
+** DONE Give all installation models the namespace of M
+*** DONE Do so
+*** DONE Update models so they use models in M
+*** DONE Update controllers so they use models in M
+*** DONE Update middlewares so they use models in M
+*** DONE Update tests so they use models in M
 ** TODO Add DomainContainer middleware
 Just add it, don't use it anywhere yet.  No mailers yet.
 ** TODO Implement new mailer structure

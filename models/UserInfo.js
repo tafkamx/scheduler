@@ -1,6 +1,6 @@
 'use strict';
 
-var UserInfo = Class('UserInfo').inherits(DynamicModel)({
+Class(M, 'UserInfo').inherits(DynamicModel)({
   tableName: 'UsersInfo',
 
   validations: {
@@ -9,7 +9,7 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
       'uuid',
       {
         rule: function (val) {
-          var query = UserInfo.query(this.target._knex)
+          var query = M.UserInfo.query(this.target._knex)
             .where('user_id', val);
 
           if (this.target.id) {
@@ -54,4 +54,4 @@ var UserInfo = Class('UserInfo').inherits(DynamicModel)({
   }
 });
 
-module.exports = UserInfo;
+module.exports = M.UserInfo;

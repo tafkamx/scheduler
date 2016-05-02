@@ -2,7 +2,7 @@ var bcrypt = require('bcrypt-node');
 var path = require('path');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
-var User = Class('User').inherits(DynamicModel)({
+Class(M, 'User').inherits(DynamicModel)({
   tableName : 'Users',
 
   validations : {
@@ -10,7 +10,7 @@ var User = Class('User').inherits(DynamicModel)({
       'email',
       {
         rule : function(val) {
-          var query = User.query(this.target._knex)
+          var query = M.User.query(this.target._knex)
             .where({
               email : val
             });
@@ -66,7 +66,7 @@ var User = Class('User').inherits(DynamicModel)({
 
       // UserInfo instance
       this.on('afterCreate', function (next) {
-        var info = new UserInfo({
+        var info = new M.UserInfo({
           userId: model.id,
           role: model.role
         });
@@ -133,4 +133,4 @@ var User = Class('User').inherits(DynamicModel)({
   }
 });
 
-module.exports = User;
+module.exports = M.User;

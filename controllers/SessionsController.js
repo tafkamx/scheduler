@@ -94,7 +94,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
 
       Promise.resolve()
         .then(function () {
-          return User.query(req.knex)
+          return M.User.query(req.knex)
             .where('email', req.body.email);
         })
         .then(function (result) {
@@ -103,7 +103,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
             return res.status(404).json({ message: 'Email not found' });
           }
 
-          var token = new ResetPasswordToken({
+          var token = new M.ResetPasswordToken({
             userId: result[0].id
           });
 
@@ -124,7 +124,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
 
       Promise.resolve()
         .then(function () {
-          return ResetPasswordToken.query(req.knex)
+          return M.ResetPasswordToken.query(req.knex)
             .where('token', req.body.token)
             .include('user');
         })

@@ -86,7 +86,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
             .then(function () {
               installationKnex = installation.getDatabase();
 
-              var franchisor = new User({
+              var franchisor = new M.User({
                 email: franchisorForm.email,
                 role: 'franchisor',
                 password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)

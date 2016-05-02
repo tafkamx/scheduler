@@ -21,7 +21,7 @@ describe('UsersController', function() {
 
     Promise.resolve()
       .then(function () {
-        user = new User({
+        user = new M.User({
           email : 'test.installation.one@example.com',
           password : '12345678',
           role: 'franchisor'
@@ -30,7 +30,7 @@ describe('UsersController', function() {
         return user.save(knex);
       })
       .then(function (userId) {
-        return User.query(knex)
+        return M.User.query(knex)
           .where('id', userId[0])
           .then(function (result) {
             return new Promise(function (resolve, reject) {
@@ -147,7 +147,7 @@ describe('UsersController', function() {
           });
         })
         .then(function (id) {
-          return User.query(knex)
+          return M.User.query(knex)
             .where('id', id)
             .then(function (result) {
               expect(result.length).to.equal(1);
@@ -156,7 +156,7 @@ describe('UsersController', function() {
             });
         })
         .then(function () {
-          return UserInfo.query(knex)
+          return M.UserInfo.query(knex)
             .where('user_id', user.id)
             .then(function (result) {
               expect(result.length).to.equal(1);
@@ -379,7 +379,7 @@ describe('UsersController', function() {
               });
             })
             .then(function () {
-              return UserInfo.query(knex)
+              return M.UserInfo.query(knex)
                 .where('user_id', res.id)
                 .then(function (result) {
                   expect(result.length).to.equal(0);
@@ -404,7 +404,7 @@ describe('UsersController', function() {
   });
 
   after(function(done) {
-    User.query(knex).delete().then(function() {
+    M.User.query(knex).delete().then(function() {
       return done();
     });
   });

@@ -11,7 +11,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
   prototype : {
     _loadUser : function(req, res, next) {
-      User.query(req.knex)
+      M.User.query(req.knex)
         .where('id', req.params.id)
         .then(function(result) {
           if (result.length === 0) {
@@ -26,7 +26,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     index : function (req, res, next) {
-      User.query(req.knex)
+      M.User.query(req.knex)
         .then(function(results) {
           res.locals.users = results;
 
@@ -64,7 +64,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     create : function (req, res, next) {
       res.format({
         json : function() {
-          var user = new User(req.body);
+          var user = new M.User(req.body);
 
           user
             .save(req.knex)

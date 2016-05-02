@@ -26,15 +26,17 @@ describe('InstallationManager.InstallationsController', function() {
                 password: adminUser.password
               })
               .end(function(err, res) {
-                installation
+                if (err) { return done(err); }
+
+                return installation
                   .save()
                   .then(function() {
                     done();
-                  })
-                  .catch(done);
+                  });
               });
         });
-      });
+      })
+      .catch(done);
   });
 
   it('Should render /InstallationManager/Installations/', function(done) {
@@ -142,7 +144,7 @@ describe('InstallationManager.InstallationsController', function() {
           });
         })
         .then(function () {
-          return User.query(knex)
+          return M.User.query(knex)
             .then(function (result) {
               expect(result.length).to.equal(1);
 
@@ -150,7 +152,7 @@ describe('InstallationManager.InstallationsController', function() {
             });
         })
         .then(function () {
-          return UserInfo.query(knex)
+          return M.UserInfo.query(knex)
             .then(function (result) {
               expect(result.length).to.equal(1);
 

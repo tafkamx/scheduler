@@ -10,7 +10,7 @@ var knex,
 
 var agent = sa.agent();
 
-describe('User', function () {
+describe('M.User', function () {
 
   before(function (done) {
     knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
@@ -18,7 +18,7 @@ describe('User', function () {
 
     knex = new Knex(knexConfig[CONFIG.environment]);
 
-    var user = new User({
+    var user = new M.User({
       email: 'user-test@example.com',
       password: '12345678',
       role: 'student'
@@ -36,7 +36,7 @@ describe('User', function () {
     describe('info', function () {
 
       it('Should return a proper UserInfo object', function (doneTest) {
-        User.query(knex)
+        M.User.query(knex)
           .include('info')
           .then(function (result) {
             expect(result.length).to.equal(1);
@@ -58,8 +58,8 @@ describe('User', function () {
 
   after(function (done) {
     Promise.all([
-      User.query(knex).delete(),
-      UserInfo.query(knex).delete()
+      M.User.query(knex).delete(),
+      M.UserInfo.query(knex).delete()
     ])
       .then(function () {
         return done();

@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt-node');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer.js'));
 var moment = require('moment');
 
-Class('ResetPasswordToken').inherits(DynamicModel)({
+Class(M, 'ResetPasswordToken').inherits(DynamicModel)({
   tableName: 'ResetPasswordTokens',
 
   validations: {
@@ -57,7 +57,7 @@ Class('ResetPasswordToken').inherits(DynamicModel)({
 
       // Send reset password email
       this.on('afterCreate', function (next) {
-        User.query(model._knex)
+        M.User.query(model._knex)
           .where('id', model.userId)
           .then(function (res) {
             return UserMailer.sendResetPassword(res[0], model);
@@ -77,3 +77,5 @@ Class('ResetPasswordToken').inherits(DynamicModel)({
 
   }
 });
+
+module.exports = M.ResetPasswordToken;

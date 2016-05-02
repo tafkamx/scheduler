@@ -21,17 +21,17 @@ describe('BranchesController', function() {
 
     Promise.resolve()
       .then(function () {
-        branch = new Branch({
+        branch = new M.Branch({
           name: 'branch-one'
         });
 
-        return branch.save(knex)
+        return branch.save(knex);
       })
       .then(function () {
-        return UserInfo.query(knex)
+        return M.UserInfo.query(knex)
           .where('role', 'franchisor')
           .then(function (result) {
-            return User.query(knex)
+            return M.User.query(knex)
               .where('id', result[0].userId);
           })
           .then(function (result) {
@@ -292,7 +292,7 @@ describe('BranchesController', function() {
   });
 
   after(function(done) {
-    Branch.query(knex)
+    M.Branch.query(knex)
       .delete()
       .then(function () {
         return done();

@@ -41,13 +41,13 @@ describe('SessionsController', function() {
     knex1 = new Knex(knexOneConfig[CONFIG.environment]);
     knex2 = new Knex(knexTwoConfig[CONFIG.environment]);
 
-    user1 = new User({
+    user1 = new M.User({
       email : 'installation.one.user@example.com',
       password : '12345678',
       role: 'franchisor'
     });
 
-    user2 = new User({
+    user2 = new M.User({
       email : 'installation.two.user@example.com',
       password : '12345678',
       role: 'franchisor'
@@ -248,12 +248,12 @@ describe('SessionsController', function() {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            ResetPasswordToken.query(knex1)
+            M.ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
-                return ResetPasswordToken.query(knex1).delete();
+                return M.ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -319,7 +319,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            ResetPasswordToken.query(knex1)
+            M.ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -344,7 +344,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return ResetPasswordToken.query(knex1).delete();
+                return M.ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -389,7 +389,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            ResetPasswordToken.query(knex1)
+            M.ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -414,7 +414,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return ResetPasswordToken.query(knex1).delete();
+                return M.ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -434,7 +434,7 @@ describe('SessionsController', function() {
 
             var token;
 
-            ResetPasswordToken.query(knex1)
+            M.ResetPasswordToken.query(knex1)
               .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -464,7 +464,7 @@ describe('SessionsController', function() {
                 });
               })
               .then(function () {
-                return ResetPasswordToken.query(knex1).delete();
+                return M.ResetPasswordToken.query(knex1).delete();
               })
               .then(function () {
                 return doneTest();
@@ -479,8 +479,8 @@ describe('SessionsController', function() {
 
   after(function(done) {
     Promise.all([
-      User.query(knex1).delete(),
-      User.query(knex2).delete()
+      M.User.query(knex1).delete(),
+      M.User.query(knex2).delete()
     ]).then(function() {
       done();
     });

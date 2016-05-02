@@ -10,7 +10,7 @@ var knex,
 
 var agent = sa.agent();
 
-describe('ResetPasswordToken', function () {
+describe('M.ResetPasswordToken', function () {
 
   before(function (done) {
     knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
@@ -18,7 +18,7 @@ describe('ResetPasswordToken', function () {
 
     knex = new Knex(knexConfig[CONFIG.environment]);
 
-    var user = new User({
+    var user = new M.User({
       email: 'user-test@example.com',
       password: '12345678',
       role: 'student'
@@ -40,17 +40,17 @@ describe('ResetPasswordToken', function () {
 
         Promise.resolve()
           .then(function () {
-            return User.query(knex);
+            return M.User.query(knex);
           })
           .then(function (result) {
-            token = new ResetPasswordToken({
+            token = new M.ResetPasswordToken({
               userId: result[0].id,
             })
 
             return token.save(knex);
           })
           .then(function () {
-            return ResetPasswordToken.query(knex)
+            return M.ResetPasswordToken.query(knex)
               .include('user')
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -83,10 +83,10 @@ describe('ResetPasswordToken', function () {
 
       Promise.resolve()
         .then(function () {
-          return User.query(knex);
+          return M.User.query(knex);
         })
         .then(function (result) {
-          token = new ResetPasswordToken({
+          token = new M.ResetPasswordToken({
             userId: result[0].id,
           })
 
@@ -106,10 +106,10 @@ describe('ResetPasswordToken', function () {
 
       Promise.resolve()
         .then(function () {
-          return User.query(knex);
+          return M.User.query(knex);
         })
         .then(function (result) {
-          token = new ResetPasswordToken({})
+          token = new M.ResetPasswordToken({})
 
           return token.save(knex);
         })
@@ -125,8 +125,8 @@ describe('ResetPasswordToken', function () {
 
   after(function (done) {
     Promise.all([
-      User.query(knex).delete(),
-      ResetPasswordToken.query(knex).delete()
+      M.User.query(knex).delete(),
+      M.ResetPasswordToken.query(knex).delete()
     ])
       .then(function () {
         return done();
