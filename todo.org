@@ -1,0 +1,28 @@
+* TODO Steps in order
+The plan of attack for this is going to be to add the parts slowly but
+surely, making sure compatibility with the tests is maintained where
+possible.
+** TODO Update DomainParser middleware
+Though for now, only update it so that it puts `installationName` in
+the `req`.
+** TODO Give all installation models the namespace of M
+*** TODO Do so
+*** TODO Update tests so they grab the models from M
+** TODO Add DomainContainer middleware
+Just add it, don't use it anywhere yet.  No mailers yet.
+** TODO Implement new mailer structure
+Referring to the fact that there's the InstallationManager mailers and
+the Installation mailers, separate these two.
+** TODO Update controllers to use DomainContainer
+** TODO Update middlewares to use DomainContainer
+** TODO Remove req.knex stuff
+** TODO Make models not use mailers during tests
+** TODO Make mailers instance based
+*** TODO Do so
+*** TODO Put them in DomainContainer with modelExtras
+*** TODO Make models use mailers through this._modelExtras
+*** TODO Update tests
+** TODO Update models to use this._container for other models usage
+** TODO TESTS
+** TODO PATOS-88
+** TODO TESTS
