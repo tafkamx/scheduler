@@ -6,6 +6,7 @@ var parser = function(req, res, next) {
   var host = req.headers.host;
 
   if (host === 'localhost:' + CONFIG[CONFIG.environment].port || host === CONFIG[CONFIG.environment].defaultDomainName) {
+    req.installationName = false;
     return next();
   }
 

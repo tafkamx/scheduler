@@ -11,7 +11,7 @@ the `req`.
 *** DONE Update controllers so they use models in M
 *** DONE Update middlewares so they use models in M
 *** DONE Update tests so they use models in M
-** TODO Add DomainContainer middleware
+** DONE Add DomainContainer middleware
 Just add it, don't use it anywhere yet.  No mailers yet.
 ** TODO Implement new mailer structure
 Referring to the fact that there's the InstallationManager mailers and
