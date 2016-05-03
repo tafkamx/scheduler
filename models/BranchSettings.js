@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
   tableName : 'BranchSettings',
 
@@ -63,6 +65,22 @@ var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
       DynamicModel.prototype.init.call(this, config);
 
       return this;
+    },
+
+    getInstallationSettings : function(knex) {
+      var model = this;
+
+      return InstallationSettings.query(knex || this._knex).then(function(res) {
+        for (var property in res[0]) {
+          if (res[0].hasOwnProperty(property)) {
+            if (_.includes(['language', 'currency', 'timezone'], property)) {
+              model[property] = res[0][property]
+            }
+          }
+        }
+
+        return true;
+      });
     }
   }
 });

@@ -1,8 +1,14 @@
+'use strict';
+
 var path = require('path');
 
 describe('InstallationSettings Model', function () {
   var knex;
-  var settingOptions;
+  var settingsOptions = {
+    language : 'en-CA',
+    currency : 'CAD',
+    timezone : 'America/Toronto'
+  };
 
   before(function() {
     var installation = 'installation-one';
@@ -13,12 +19,6 @@ describe('InstallationSettings Model', function () {
     knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
 
     knex = new Knex(knexConfig[CONFIG.environment]);
-
-    settingsOptions = {
-      language : 'en-CA',
-      currency : 'CAD',
-      timezone : 'America/Toronto'
-    }
   });
 
   it('Should save without errors', function(done) {
@@ -104,7 +104,7 @@ describe('InstallationSettings Model', function () {
     });
   });
 
-  // after(function(done) {
-  //   knex.destroy().then(done);
-  // });
+  after(function(done) {
+    knex.destroy().then(done);
+  });
 });

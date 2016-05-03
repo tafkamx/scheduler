@@ -32,7 +32,6 @@ describe('Branch Model', function() {
     });
 
     branch.save(knex).catch(function(err) {
-      console.log(err);
       expect(err).is.an.instanceof(Error);
       expect(err.message).to.be.equal('1 invalid values');
       expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
@@ -46,7 +45,6 @@ describe('Branch Model', function() {
     });
 
     branch.save(knex).catch(function(err) {
-      console.log(err);
       expect(err).is.an.instanceof(Error);
       expect(err.message).to.be.equal('1 invalid values');
       expect(err.errors.name.message).to.be.equal('The name already exists.')
@@ -54,7 +52,7 @@ describe('Branch Model', function() {
     });
   });
 
-  // after(function(done) {
-  //   knex.destroy().then(done);
-  // });
+  after(function(done) {
+    knex.destroy().then(done);
+  });
 });

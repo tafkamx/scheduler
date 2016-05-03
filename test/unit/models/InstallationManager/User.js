@@ -17,7 +17,9 @@ describe('InstallationManager.User', function () {
       .then(function () {
         return done();
       })
-      .catch(done);
+      .catch(function(err) {
+        throw err;
+      });
   });
 
   describe('Relations', function () {
@@ -38,7 +40,9 @@ describe('InstallationManager.User', function () {
             expect(user.info.constructor.className).to.equal('UserInfo');
           })
           .then(doneTest)
-          .catch(doneTest);
+          .catch(function(err) {
+            throw err;
+          });
       });
 
     });

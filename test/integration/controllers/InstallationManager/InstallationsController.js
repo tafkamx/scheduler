@@ -6,12 +6,7 @@ var adminUser = new InstallationManager.User({
 });
 
 var installation = new InstallationManager.Installation({
-  name : 'installation-one',
-  settings : {
-    language : 'en-CA',
-    currency : 'CAD',
-    timezone : 'America/Toronto'
-  }
+  name : 'installation-one'
 });
 
 var agent = sa.agent();
@@ -34,9 +29,24 @@ describe('InstallationManager.InstallationsController', function() {
                 installation
                   .save()
                   .then(function() {
+                    var installationKnex = installation.getDatabase();
+
+                    var settings = new InstallationSettings({
+                      language : 'en-CA',
+                      currency : 'CAD',
+                      timezone : 'America/Toronto'
+                    });
+
+                    return settings.save(installationKnex).then(function() {
+                      return installationKnex.destroy()
+                    });
+                  })
+                  .then(function() {
                     done();
                   })
-                  .catch(done);
+                  .catch(function(err) {
+                    throw new Error(err)
+                  });
               });
         });
       });
@@ -314,7 +324,12 @@ describe('InstallationManager.InstallationsController', function() {
 
     it('Should update installation attributes', function(done) {
       var data = {
-        domain : 'delagarza.io'
+        domain : 'delagarza.io',
+        installationSettings : {
+          language : 'en-US',
+          currency : 'USD',
+          timezone : 'America/New_York'
+        }
       };
 
       agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)

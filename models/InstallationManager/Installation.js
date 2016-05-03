@@ -120,8 +120,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
         var knex = model.getDatabase();
 
         return model.migrate(knex).then(function() {
-          return model.setSettings(knex)
-        }).then(function() {
           knex.destroy()
         });
       })
@@ -132,11 +130,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
       logger.info('Migrating ' + name + ' database');
 
       return knex.migrate.latest();
-    },
-
-    setSettings : function(knex) {
-      var settings = new InstallationSettings(this.settings);
-      return settings.save(knex);
     },
 
     getDatabase: function () {

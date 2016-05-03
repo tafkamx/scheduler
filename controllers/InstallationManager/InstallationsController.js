@@ -49,7 +49,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
         }
 
         res.locals.installationSettings = settings[0];
-        return next();
+        return dynKnex.destroy();
+      }).then(function() {
+        next();
       }).catch(next);
     },
 
@@ -102,8 +104,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     create: function (req, res, next) {
       var installationForm = {
           name: req.body.name,
-          domain: req.body.domain,
-          settings : req.body.installationSettings
+          domain: req.body.domain
         },
         franchisorForm = {
           email: req.body.franchisorEmail
@@ -116,9 +117,14 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
           installation
             .save()
-            .then(function () {
+            .then(function() {
               installationKnex = installation.getDatabase();
 
+              var settings = new InstallationSettings(req.body.installationSettings);
+
+              return settings.save(installationKnex);
+            })
+            .then(function () {
               var franchisor = new User({
                 email: franchisorForm.email,
                 role: 'franchisor',
@@ -126,6 +132,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
               });
 
               return franchisor.save(installationKnex);
+            })
+            .then(function() {
+              return installationKnex.destroy();
             })
             .then(function () {
               res.json(installation);
@@ -152,12 +161,26 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           res.locals.installation
             .updateAttributes(req.body)
             .save()
-            .then(function(val) {
+            .then(function() {
+              if (!req.body.installationSettings) {
+                return;
+              }
+
+              var installation = res.locals.installation;
+              var installationKnex = installation.getDatabase();
+
+              return InstallationSettings.query(installationKnex).then(function(settings) {
+                settings[0].updateAttributes(req.body.installationSettings);
+
+                return settings[0].save(installationKnex).then(function() {
+                  return installationKnex.destroy();
+                });
+              });
+            })
+            .then(function() {
               res.json(res.locals.installation);
             })
-            .catch(function (err) {
-              next(err)
-            });
+            .catch(next);
         }
       });
     },
