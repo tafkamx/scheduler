@@ -20,6 +20,7 @@ require(path.join(__dirname, '/unit/models/User'));
 require(path.join(__dirname, '/unit/models/UserInfo'));
 require(path.join(__dirname, '/unit/models/ResetPasswordToken'));
 require(path.join(__dirname, '/unit/models/InstallationSettings'));
+require(path.join(__dirname, '/unit/models/Branch'));
 require(path.join(__dirname, '/unit/models/InstallationManager/User'));
 require(path.join(__dirname, '/unit/models/InstallationManager/UserInfo'));
 require(path.join(__dirname, '/unit/models/InstallationManager/ResetPasswordToken'));

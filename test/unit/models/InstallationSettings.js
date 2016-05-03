@@ -103,4 +103,8 @@ describe('InstallationSettings Model', function () {
       done();
     });
   });
+
+  // after(function(done) {
+  //   knex.destroy().then(done);
+  // });
 });
