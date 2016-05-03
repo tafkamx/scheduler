@@ -41,7 +41,6 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     },
 
     _loadInstallationSettings : function(req, res, next) {
-      console.log('load settings')
       var dynKnex = res.locals.installation.getDatabase();
 
       InstallationSettings.query(dynKnex).then(function(settings) {
@@ -118,7 +117,6 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           installation
             .save()
             .then(function () {
-              console.log('installation saved...')
               installationKnex = installation.getDatabase();
 
               var franchisor = new User({
