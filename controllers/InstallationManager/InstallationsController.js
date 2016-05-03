@@ -25,8 +25,6 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   prototype: {
     _loadInstallation: function (req, res, next) {
-      var dynKnex;
-
       InstallationManager.Installation.query()
         .where('id', req.params.id)
         .then(function(result) {
