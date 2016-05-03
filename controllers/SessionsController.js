@@ -28,7 +28,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           return res.redirect(urlFor.login());
         }
 
-        return req.container.update(user.activate(), {})
+        return req.container.update(user.activate())
           .then(function() {
             req.login(user, function(err) {
               if (err) {
@@ -134,7 +134,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           token = result[0];
 
           // Invalidate so it can't be used again
-          return req.container.update(token.invalidate(), {});
+          return req.container.update(token.invalidate());
         })
         .then(function () {
           // If the token has expired
