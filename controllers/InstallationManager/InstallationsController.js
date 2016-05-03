@@ -12,11 +12,21 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before : ['_loadInstallationSettings'],
+      actions : ['show', 'edit']
+    },
+    {
+      before : ['_loadTimezones'],
+      actions : ['new', 'edit']
     }
   ],
 
   prototype: {
     _loadInstallation: function (req, res, next) {
+      var dynKnex;
+
       InstallationManager.Installation.query()
         .where('id', req.params.id)
         .then(function(result) {
@@ -26,9 +36,32 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
           res.locals.installation = result[0];
 
-          next();
-        })
-        .catch(next);
+          return next();
+        }).catch(next);
+    },
+
+    _loadInstallationSettings : function(req, res, next) {
+      console.log('load settings')
+      var dynKnex = res.locals.installation.getDatabase();
+
+      InstallationSettings.query(dynKnex).then(function(settings) {
+        if (settings.length === 0) {
+          settings[0] = {};
+        }
+
+        res.locals.installationSettings = settings[0];
+        return next();
+      }).catch(next);
+    },
+
+    _loadTimezones : function(req, res, next) {
+      var knex = InstallationManager.Installation.knex();
+
+      knex('pg_timezone_names').then(function(result) {
+        res.locals.timezones = result;
+
+        next();
+      }).catch(next);
     },
 
     index: function (req, res, next) {
@@ -70,7 +103,8 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     create: function (req, res, next) {
       var installationForm = {
           name: req.body.name,
-          domain: req.body.domain
+          domain: req.body.domain,
+          settings : req.body.installationSettings
         },
         franchisorForm = {
           email: req.body.franchisorEmail
@@ -84,6 +118,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           installation
             .save()
             .then(function () {
+              console.log('installation saved...')
               installationKnex = installation.getDatabase();
 
               var franchisor = new User({

@@ -1,6 +1,7 @@
 var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
+var Promise = require('bluebird');
 
 Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
@@ -88,6 +89,7 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
     id : null,
     name : null,
     domain : null,
+    settings : null,
 
     init : function(config) {
       InstallationManager.InstallationManagerModel.prototype.init.call(this, config);
@@ -95,9 +97,8 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
       var model = this;
 
       this.on('afterCreate', function(done) {
-        model.createDatabase().then(function(res) {
-          return model.migrate();
-        }).then(function(result) {
+        model.createDatabase()
+        .then(function() {
           done();
         }).catch(done);
       });
@@ -106,29 +107,36 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
     },
 
     createDatabase : function () {
+      var model = this;
+
       var conf = require(path.join(process.cwd(), 'knexfile.js'));
 
       var name = [this.name, CONFIG.environment].join('-');
 
       var knex = new Knex(conf[CONFIG.environment]);
-
       logger.info('Creating ' + name + ' database');
 
-      return knex.raw('CREATE DATABASE "' + name + '";')
+      return knex.raw('CREATE DATABASE "' + name + '";').then(function() {
+        var knex = model.getDatabase();
+
+        return model.migrate(knex).then(function() {
+          return model.setSettings(knex)
+        }).then(function() {
+          knex.destroy()
+        });
+      })
     },
 
-    migrate : function () {
-      var conf = require(path.join(process.cwd(), 'knexfile.js'));
-
+    migrate : function (knex) {
       var name = [this.name, CONFIG.environment].join('-');
-
-      conf[CONFIG.environment].connection.database = name;
-
-      var knex = new Knex(conf[CONFIG.environment]);
-
       logger.info('Migrating ' + name + ' database');
 
       return knex.migrate.latest();
+    },
+
+    setSettings : function(knex) {
+      var settings = new InstallationSettings(this.settings);
+      return settings.save(knex);
     },
 
     getDatabase: function () {

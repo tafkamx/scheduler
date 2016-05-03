@@ -6,7 +6,12 @@ var adminUser = new InstallationManager.User({
 });
 
 var installation = new InstallationManager.Installation({
-  name : 'installation-one'
+  name : 'installation-one',
+  settings : {
+    language : 'en-CA',
+    currency : 'CAD',
+    timezone : 'America/Toronto'
+  }
 });
 
 var agent = sa.agent();
@@ -116,7 +121,12 @@ describe('InstallationManager.InstallationsController', function() {
       var data = {
         name : 'installation-two',
         domain : 'empathia.academy',
-        franchisorEmail: 'franchisor@example.com'
+        franchisorEmail: 'franchisor@example.com',
+        installationSettings : {
+          language : 'en-CA',
+          currency : 'CAD',
+          timezone : 'America/Toronto'
+        }
       };
 
       var knex,
@@ -371,7 +381,12 @@ describe('InstallationManager.InstallationsController', function() {
       agent.post(baseURL + '/InstallationManager/Installations/')
         .send({
           name: 'three',
-          franchisorEmail: 'test@example.com'
+          franchisorEmail: 'test@example.com',
+          installationSettings : {
+            language : 'en-CA',
+            currency : 'CAD',
+            timezone : 'America/Toronto'
+          }
         })
         .end(function(err, res) {
           agent.post(baseURL + '/InstallationManager/Installations/' + res.body.id)
