@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+psql -c 'DROP DATABASE IF EXISTS "installation-one-test"'
+psql -c 'DROP DATABASE IF EXISTS "installation-two-test"'
+psql -c 'DROP DATABASE IF EXISTS "three-test"'
