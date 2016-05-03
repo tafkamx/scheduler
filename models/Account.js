@@ -99,10 +99,13 @@ var Account = Class('Account').inherits(DynamicModel)({
      */
     getTypeInfo: function() {
       // TODO make sure that `this` is the Account obect
-      var possibleTypes = Account.types;
+      var possibleTypes = Account.types; // TODO check this for usability with DomainContainer
       if(possibleTypes.indexOf(this.type) === -1) return; // If we don't know the Type, we can't do anything
 
-      this._container.query(possibleTypes[this.type], {}); // TODO as specified in DomainContainer spec
+      this._container.query(possibleTypes[this.type]).where({ 'account_id': this.id }) // TODO as specified in DomainContainer spec
+      .then(function(res) {
+        // Overload properties
+      });
     }
   }
 
