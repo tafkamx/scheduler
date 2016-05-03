@@ -16,15 +16,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return Promise.resolve()
-    .then(function () {
-      return knex.schema.table('UsersInfo', function (t) {
-        t.boolean('is_admin').notNullable();
-        t.dropColumn('role');
-      });
-    })
-    .then(function () {
-      knex('UsersInfo')
-        .update('is_admin', true);
-    });
+  return Promise.resolve(); // Deleted in PATOS-157. No longer necessary.
 };
