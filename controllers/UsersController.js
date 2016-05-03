@@ -11,7 +11,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
 
   prototype : {
     _loadUser : function(req, res, next) {
-      M.User.query(req.knex)
+      req.container.query('User')
         .where('id', req.params.id)
         .then(function(result) {
           if (result.length === 0) {
@@ -26,7 +26,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     index : function (req, res, next) {
-      M.User.query(req.knex)
+      req.container.query('User')
         .then(function(results) {
           res.locals.users = results;
 
@@ -64,11 +64,8 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     create : function (req, res, next) {
       res.format({
         json : function() {
-          var user = new M.User(req.body);
-
-          user
-            .save(req.knex)
-            .then(function() {
+          req.container.create('User', req.body)
+            .then(function (user) {
               res.json(user);
             })
             .catch(next);
@@ -90,10 +87,8 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     update : function (req, res, next) {
       res.format({
         json : function() {
-          res.locals.user
-            .updateAttributes(req.body)
-            .save(req.knex)
-            .then(function(val) {
+          req.container.update(res.locals.user, req.body)
+            .then(function() {
               res.json(res.locals.user);
             })
             .catch(next);
@@ -104,8 +99,7 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     destroy : function (req, res, next) {
       res.format({
         json : function() {
-          res.locals.user
-            .destroy(req.knex)
+          req.container.destroy(res.locals.user)
             .then(function() {
               res.json({ deleted: true });
             })
