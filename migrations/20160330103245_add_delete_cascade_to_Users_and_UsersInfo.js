@@ -12,10 +12,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return Promise.resolve()
-    .then(function () {
-      return knex.schema.table('UsersInfo', function (t) {
-        t.dropForeign('user_id');
-      });
-    });
+  return Promise.resolve(); // Deleted in PATOS-157. Function no longer necessary.
 };
