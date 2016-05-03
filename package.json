@@ -8,9 +8,10 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:rollback ; NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec; psql -c 'DROP DATABASE \"installation-one-test\"'; psql -c 'DROP DATABASE \"installation-two-test\"'; psql -c 'DROP DATABASE \"three-test\"';",
-    "start": "node bin/server.js",
-    "iron-node": "WINSTON_COLORIZE=false iron-node bin/server.js",
+    "test": "scripty",
+    "test:clean": "scripty",
+    "start": "scripty",
+    "iron-node": "scripty",
     "preinstall": "node bin/warn/before-install.js",
     "postinstall": "node bin/warn/post-install.js",
     "prestart": "node bin/warn/before-start.js"
@@ -60,6 +61,7 @@
     "req-flash": "0.0.2",
     "rimraf": "2.5.0",
     "scandium-express": "0.0.3",
+    "scripty": "1.5.0",
     "style-loader": "0.13.0",
     "thulium": "2.0.0",
     "thulium-express": "1.0.4",
