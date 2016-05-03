@@ -49,8 +49,5 @@ module.exports = function (req, res, next) {
     .then(function () {
       return next();
     })
-    .catch(function (err) {
-      console.log(err.stack);
-      next(err);
-    });
+    .catch(next);
 };
