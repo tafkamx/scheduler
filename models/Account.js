@@ -5,6 +5,33 @@
 var Account = Class('Account').inherits(DynamicModel)({
   tableName: 'Accounts',
 
+  validations: {
+    userId: ['uuid'],
+    branchId: ['required', 'uuid'],
+    type: [
+      {
+        rule: function (val) {
+          if (this.types.indexOf(val) === -1) {
+            throw new Error('Invalid Account Type: ' + val);
+          }
+        },
+        message: 'Invalid Account Type.'
+      },
+      'required',
+      'maxLength:25'
+    ],
+    firstName: ['maxLength:125'],
+    lastName: ['maxLength:125'],
+    // TODO dob (date?)
+    addressLine1: ['maxLength:255'],
+    addressLine2: ['maxLength:255'],
+    city: ['maxLength:255'],
+    state: ['maxLength:255'],
+    country: ['maxLength:48'],
+    postalCode: ['maxLength:48'],
+
+  }
+
   /**
    * Update this Object to create more Account Types. The values should link to Model names to be used within DomainContainer.
    */
@@ -45,15 +72,16 @@ var Account = Class('Account').inherits(DynamicModel)({
 
   attributes: [
     'id',
-    'user_id',
-    'branch_id',
+    'userId',
+    'branchId',
     'type',
-    'first_name',
-    'last_name',
+    'firstName',
+    'lastName',
     'dob',
-    'address_line1',
-    'address_line2',
+    'addressLine1',
+    'addressLine2',
     'city',
+    'postalCode',
     'createdAt',
     'updatedAt'
   ],
@@ -74,7 +102,7 @@ var Account = Class('Account').inherits(DynamicModel)({
       var possibleTypes = Account.types;
       if(possibleTypes.indexOf(this.type) === -1) return; // If we don't know the Type, we can't do anything
 
-      
+      this._container.query(possibleTypes[this.type], {}); // TODO as specified in DomainContainer spec
     }
   }
 
