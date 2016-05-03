@@ -18,7 +18,7 @@ Referring to the fact that there's the InstallationManager mailers and
 the Installation mailers, separate these two.
 ** DONE Update controllers to use DomainContainer
 ** DONE Update middlewares to use DomainContainer
-** TODO Remove req.knex stuff
+** DONE Remove req.knex stuff
 ** TODO Make models not use mailers during tests
 ** TODO Make mailers instance based
 *** TODO Do so

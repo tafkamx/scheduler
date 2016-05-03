@@ -28,10 +28,6 @@ var middlewares = [
     path: 'middlewares/domain-container.js',
   },
   {
-    name: 'Destroy Knex',
-    path: 'middlewares/destroyKnex.js'
-  },
-  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },

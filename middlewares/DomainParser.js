@@ -40,13 +40,6 @@ var parser = function(req, res, next) {
 
     installation = installation[0];
 
-    var knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-
-    knexConfig[CONFIG.environment].connection.database = installation.name.toLowerCase() + '-' + CONFIG.environment;
-
-    var knex = new Knex(knexConfig[CONFIG.environment]);
-
-    req.knex = knex;
     req.installationId = installation.id;
     req.installationName = installation.name; // For reference within InstallationManager
 
