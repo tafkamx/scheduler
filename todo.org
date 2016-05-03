@@ -19,13 +19,19 @@ the Installation mailers, separate these two.
 ** DONE Update controllers to use DomainContainer
 ** DONE Update middlewares to use DomainContainer
 ** DONE Remove req.knex stuff
-** TODO Make models not use mailers during tests
-** TODO Make mailers instance based
-*** TODO Do so
-*** TODO Put them in DomainContainer with modelExtras
-*** TODO Make models use mailers through this._modelExtras
-*** TODO Update tests
-** TODO Update models to use this._container for other models usage
-** TODO Update all Installation tests to use DomainContainers
+** TODO Models
+*** DONE Update models to use this._container for other models usage
+*** TODO Update all model unit tests to use DomainContainers
+*** TODO Mailers
+**** TODO Make models not use mailers during 'test' environment
+This is inside the models.  Make the model hooks not get setup if the
+environment is test, only if the hook sends an email though.
+**** TODO Make mailers available in ._modelExtras
+**** TODO Make models use ._modelExtras.mailers
+**** TODO Make mailers instance based
+***** TODO Do so
+***** TODO Put them in DomainContainer with modelExtras
+***** TODO Make models use mailers through this._modelExtras
+***** TODO Update tests
 ** TODO PATOS-88
 ** TODO TESTS

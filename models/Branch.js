@@ -17,11 +17,13 @@ Class(M, 'Branch').inherits(DynamicModel)({
       },
       {
         rule: function(val) {
-          var query = M.Branch.query(this.target._knex)
+          var that = this.target;
+
+          var query = that._container.query('Branch')
             .where('name', val);
 
           if (this.target.id) {
-            query.andWhere('id', '!=', this.target.id);
+            query.andWhere('id', '!=', that.id);
           }
 
           return query

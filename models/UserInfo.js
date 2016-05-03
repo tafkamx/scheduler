@@ -9,11 +9,13 @@ Class(M, 'UserInfo').inherits(DynamicModel)({
       'uuid',
       {
         rule: function (val) {
-          var query = M.UserInfo.query(this.target._knex)
+          var that = this.target;
+
+          var query = that._container.query('UserInfo')
             .where('user_id', val);
 
           if (this.target.id) {
-            query.andWhere('id', '!=', this.target.id);
+            query.andWhere('id', '!=', that.id);
           }
 
           return query
