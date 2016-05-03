@@ -26,6 +26,6 @@ the Installation mailers, separate these two.
 *** TODO Make models use mailers through this._modelExtras
 *** TODO Update tests
 ** TODO Update models to use this._container for other models usage
-** TODO Update all Installation tests to use DomainContainers (for convenience)
+** TODO Update all Installation tests to use DomainContainers
 ** TODO PATOS-88
 ** TODO TESTS

@@ -6,7 +6,7 @@ var user = new InstallationManager.User({
   password : '12345678'
 });
 
-describe('UserMailer', function() {
+describe('InstallationManager.UserMailer', function() {
   before(function(done) {
     user.save().then(function(res) {
       done();
