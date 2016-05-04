@@ -32,7 +32,9 @@ environment is test, only if the hook sends an email though.
 **** DONE Make mailers available in ._modelExtras
 **** DONE Make models use ._modelExtras.mailers
 **** TODO Make mailers instance based
-***** TODO Update BaseMailer
-***** TODO Update UserMailer
+***** DONE Update BaseMailer
+***** DONE Update UserMailers
+***** TODO Update UserMailers tests
+***** TODO Update InstallationManager model usage of mailers
 ** TODO PATOS-88
 ** TODO TESTS
