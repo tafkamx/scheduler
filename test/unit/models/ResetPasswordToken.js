@@ -4,8 +4,6 @@ var path = require('path');
 
 var container = UNIT;
 
-console.log('11111', process.env.NODE_ENV)
-
 describe('M.ResetPasswordToken', function () {
 
   before(function (done) {
