@@ -19,8 +19,6 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
     init: function (config) {
       var that = this;
 
-      BaseMailer.prototype.init.call(that);
-
       if (_.isUndefined(config.baseUrl)) {
         throw new Error('baseUrl cannot be undefined');
       }
@@ -85,7 +83,7 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       return this
         ._send(options)
         .then(function () {
-          return UserMailer.sendActivationLink(user);
+          return that.sendActivationLink(user);
         })
     },
 

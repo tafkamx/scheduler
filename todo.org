@@ -34,7 +34,7 @@ environment is test, only if the hook sends an email though.
 **** TODO Make mailers instance based
 ***** DONE Update BaseMailer
 ***** DONE Update UserMailers
-***** TODO Update UserMailers tests
+***** DONE Update UserMailers tests
 ***** TODO Update InstallationManager model usage of mailers
 ** TODO PATOS-88
 ** TODO TESTS

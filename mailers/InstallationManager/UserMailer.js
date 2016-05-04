@@ -19,13 +19,12 @@ Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
     init: function (config) {
       var that = this;
 
-      BaseMailer.prototype.init.call(that);
-
       that.baseUrl = config.baseUrl || CONFIG.env().defaultDomainName;
     },
 
-
     sendActivationLink: function (user) {
+      var that = this;
+
       var templateOptions = {
         user: user,
         helpers : {
@@ -45,6 +44,8 @@ Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
     },
 
     sendChangedPasswordNotification: function (user) {
+      var that = this;
+
       var templateOptions = {
         user: user,
         baseUrl: that.baseUrl,
@@ -61,6 +62,8 @@ Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
     },
 
     sendChangedEmailEmails: function (user) {
+      var that = this;
+
       var templateOptions = {
         user: user,
         baseUrl: that.baseUrl,
@@ -76,11 +79,13 @@ Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
       return this
         ._send(options)
         .then(function () {
-          return UserMailer.sendActivationLink(user);
+          return that.sendActivationLink(user);
         })
     },
 
     sendResetPassword: function (user, token) {
+      var that = this;
+
       var templateOptions = {
         helpers: {
           urlFor: urlFor
