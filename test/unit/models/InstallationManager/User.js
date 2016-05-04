@@ -2,8 +2,6 @@
 
 var path = require('path');
 
-var agent = sa.agent();
-
 describe('InstallationManager.User', function () {
 
   before(function (done) {

@@ -2,24 +2,11 @@
 
 var path = require('path');
 
-var installation = 'installation-one';
-
-var knex,
-  Knex = require('knex'),
-  knexConfig;
-
-var agent = sa.agent();
-
 var globalUser;
 
 describe('InstallationManager.ResetPasswordToken', function () {
 
   before(function (done) {
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
-
-    knex = new Knex(knexConfig[CONFIG.environment]);
-
     var user = new InstallationManager.User({
       email: 'user-test@example.com',
       password: '12345678',
