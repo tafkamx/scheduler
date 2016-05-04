@@ -79,32 +79,7 @@ Class(M, 'User').inherits(DynamicModel)({
           .catch(next);
       });
 
-      // Send activation email after creation
-      this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model)
-          .then(function () {
-            next();
-          })
-          .catch(next);
-      });
-
-      // Handler for when password was updated
-      this.on('afterUpdate', function (next) {
-        if (model._skipPasswordEmail || !model.password) {
-          return next();
-        }
-
-        // in order to prevent the password changed notice several times
-        model._skipPasswordEmail = true;
-
-        UserMailer.sendChangedPasswordNotification(model)
-          .then(function () {
-            next();
-          })
-          .catch(next);
-      });
-
-      // Send changed email update when the email changes
+      // Set new token if email changes
       this.on('afterUpdate', function (next) {
         if (model._oldEmail === model.email) {
           return next();
@@ -112,17 +87,54 @@ Class(M, 'User').inherits(DynamicModel)({
 
         model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
 
-        UserMailer.sendChangedEmailEmails(model)
-          .then(function () {
-            next();
-          })
-          .catch(next);
+        next();
       });
 
       this.on('afterSave', function (next) {
         model._oldEmail = model.email;
         next();
       });
+
+      // Mailers
+      if (CONFIG.environment !== 'test') {
+        // Send activation email after creation
+        this.on('afterCreate', function(next) {
+          UserMailer.sendActivationLink(model)
+            .then(function () {
+              next();
+            })
+            .catch(next);
+        });
+
+        // Send changed email email when the email changes
+        this.on('afterUpdate', function (next) {
+          if (model._oldEmail === model.email) {
+            return next();
+          }
+
+          UserMailer.sendChangedEmailEmails(model)
+            .then(function () {
+              next();
+            })
+            .catch(next);
+        });
+
+        // Send changed password email
+        this.on('afterUpdate', function (next) {
+          if (model._skipPasswordEmail || !model.password) {
+            return next();
+          }
+
+          // in order to prevent the password changed notice several times
+          model._skipPasswordEmail = true;
+
+          UserMailer.sendChangedPasswordNotification(model)
+            .then(function () {
+              next();
+            })
+            .catch(next);
+        });
+      }
     },
 
     activate : function() {

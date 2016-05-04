@@ -55,18 +55,21 @@ Class(M, 'ResetPasswordToken').inherits(DynamicModel)({
         next();
       });
 
-      // Send reset password email
-      this.on('afterCreate', function (next) {
-        model._container.query('User')
-          .where('id', model.userId)
-          .then(function (res) {
-            return UserMailer.sendResetPassword(res[0], model);
-          })
-          .then(function () {
-            return next();
-          })
-          .catch(next);
-      });
+      // Mailers
+      if (CONFIG.environment !== 'test') {
+        // Send reset password email
+        this.on('afterCreate', function (next) {
+          model._container.query('User')
+            .where('id', model.userId)
+            .then(function (res) {
+              return UserMailer.sendResetPassword(res[0], model);
+            })
+            .then(function () {
+              return next();
+            })
+            .catch(next);
+        });
+      }
     },
 
     invalidate: function () {

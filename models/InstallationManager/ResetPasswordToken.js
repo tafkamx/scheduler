@@ -55,18 +55,21 @@ Class(InstallationManager, 'ResetPasswordToken').inherits(InstallationManager.In
         next();
       });
 
-      // Send reset password email
-      this.on('afterCreate', function (next) {
-        InstallationManager.User.query()
-          .where('id', model.userId)
-          .then(function (res) {
-            return UserMailer.sendResetPassword(res[0], model);
-          })
-          .then(function () {
-            return next();
-          })
-          .catch(next);
-      });
+      // Mailers
+      if (CONFIG.environment !== 'test') {
+        // Send reset password email
+        this.on('afterCreate', function (next) {
+          InstallationManager.User.query()
+            .where('id', model.userId)
+            .then(function (res) {
+              return UserMailer.sendResetPassword(res[0], model);
+            })
+            .then(function () {
+              return next();
+            })
+            .catch(next);
+        });
+      }
     },
 
     invalidate: function () {

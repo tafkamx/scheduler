@@ -78,8 +78,6 @@ describe('M.ResetPasswordToken', function () {
   describe('Checkit rules', function () {
 
     it('Should create a proper token with no errors', function (doneTest) {
-      var token;
-
       Promise.resolve()
         .then(function () {
           return container.query('User');
@@ -89,8 +87,8 @@ describe('M.ResetPasswordToken', function () {
             userId: result[0].id,
           });
         })
-        .then(function () {
-          return token.destroy(knex);
+        .then(function (token) {
+          return container.destroy(token);
         })
         .then(function () {
           return doneTest();
