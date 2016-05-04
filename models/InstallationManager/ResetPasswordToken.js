@@ -2,10 +2,9 @@
 
 var path = require('path');
 var bcrypt = require('bcrypt-node');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'InstallationManager', 'UserMailer.js'));
 var moment = require('moment');
 
-var userMailer = new InstallationManager.UserMailer();
+var userMailer = new InstallationManager.UserMailer({});
 
 Class(InstallationManager, 'ResetPasswordToken').inherits(InstallationManager.InstallationManagerModel)({
   tableName: 'ResetPasswordTokens',

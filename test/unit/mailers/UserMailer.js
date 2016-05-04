@@ -1,5 +1,4 @@
 var path = require('path');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 var userMailer = new UserMailer({ baseUrl: CONFIG.env().defaultDomainName });
 

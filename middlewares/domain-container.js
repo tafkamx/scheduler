@@ -3,8 +3,6 @@
 var Promise = require('bluebird');
 var path = require('path');
 
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer.js'));
-
 var DomainContainer = require('domain-container');
 var _ = require('lodash');
 var knex = require('knex');
