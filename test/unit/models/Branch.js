@@ -52,6 +52,35 @@ describe('Branch Model', function() {
     });
   });
 
+  describe('Relations', function() {
+    it('Should load the settings relation', function(done) {
+      var branch = new Branch({
+        name : 'Vancouver'
+      });
+
+      var settings = new BranchSettings({
+        language : 'en-CA',
+        currency : 'CAD',
+        timezone : 'America/Toronto'
+      });
+
+      branch.save(knex).then(function() {
+        settings.branchId = branch.id;
+
+        return settings.save(knex);
+      }).then(function() {
+        return Branch.query(knex).include('settings').where('id', branch.id)
+        .then(function(res) {
+          console.log(res)
+          expect(res[0]).to.be.instanceof(Branch);
+          expect(res[0].settings).to.be.instanceof(BranchSettings);
+          expect(res[0].settings.id).to.be.equal(settings.id);
+          done();
+        });
+      });
+    });
+  });
+
   after(function(done) {
     knex.destroy().then(done);
   });

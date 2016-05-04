@@ -110,6 +110,34 @@ describe('BranchSettings Model', function() {
     });
   });
 
+  describe('Relations', function() {
+    it('Should load the branch relation', function(done) {
+      var branch = new Branch({
+        name : 'Ottawa'
+      });
+
+      var settings = new BranchSettings({
+        language : 'en-CA',
+        currency : 'CAD',
+        timezone : 'America/Toronto'
+      });
+
+      branch.save(knex).then(function() {
+        settings.branchId = branch.id;
+
+        return settings.save(knex);
+      }).then(function() {
+        return BranchSettings.query(knex).include('branch').where('id', settings.id)
+        .then(function(res) {
+          expect(res[0]).to.be.instanceof(BranchSettings);
+          expect(res[0].branch).to.be.instanceof(Branch);
+          expect(res[0].branch.id).to.be.equal(branch.id);
+          done();
+        });
+      });
+    });
+  });
+
   after(function(done) {
     knex.destroy().then(done);
   });
