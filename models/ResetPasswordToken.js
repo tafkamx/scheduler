@@ -57,7 +57,7 @@ Class(M, 'ResetPasswordToken').inherits(DynamicModel)({
 
       // Send reset password email
       this.on('afterCreate', function (next) {
-        this._container.query('User')
+        model._container.query('User')
           .where('id', model.userId)
           .then(function (res) {
             return UserMailer.sendResetPassword(res[0], model);

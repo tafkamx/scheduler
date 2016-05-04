@@ -21,7 +21,10 @@ the Installation mailers, separate these two.
 ** DONE Remove req.knex stuff
 ** TODO Models
 *** DONE Update models to use this._container for other models usage
-*** TODO Update all model unit tests to use DomainContainers
+*** DONE Update all model unit tests to use DomainContainers
+**** DONE Create one installation named `installation-unit` to hold the DB that unit tests will use
+**** DONE Create global DomainContainer that holds the `installation-unit` installation
+**** DONE Make unit tests use that DomainContainer to access the DB
 *** TODO Mailers
 **** TODO Make models not use mailers during 'test' environment
 This is inside the models.  Make the model hooks not get setup if the

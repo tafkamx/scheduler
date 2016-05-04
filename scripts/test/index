@@ -2,12 +2,12 @@
 
 export NODE_ENV=test
 
+npm run test:clean
+
 # reset InstallationManager DB
 knex --knexfile knexinstallationmanager.js migrate:rollback
 knex --knexfile knexinstallationmanager.js migrate:latest
 
 # run tests
-istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec
-
-# delete test DBs
-npm run test:clean
+#istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec test/index.js
+node test/index.js

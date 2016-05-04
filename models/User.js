@@ -68,9 +68,7 @@ Class(M, 'User').inherits(DynamicModel)({
 
       // UserInfo instance
       this.on('afterCreate', function (next) {
-        var that = this;
-
-        that._container
+        model._container
           .create('UserInfo', {
             userId: model.id,
             role: model.role
