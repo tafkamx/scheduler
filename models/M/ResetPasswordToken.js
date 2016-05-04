@@ -2,7 +2,6 @@
 
 var path = require('path');
 var bcrypt = require('bcrypt-node');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer.js'));
 var moment = require('moment');
 
 Class(M, 'ResetPasswordToken').inherits(DynamicModel)({
@@ -62,7 +61,7 @@ Class(M, 'ResetPasswordToken').inherits(DynamicModel)({
           model._container.query('User')
             .where('id', model.userId)
             .then(function (res) {
-              return UserMailer.sendResetPassword(res[0], model);
+              return model._modelExtras.mailers.user.sendResetPassword(res[0], model);
             })
             .then(function () {
               return next();

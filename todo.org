@@ -26,15 +26,13 @@ the Installation mailers, separate these two.
 **** DONE Create global DomainContainer that holds the `installation-unit` installation
 **** DONE Make unit tests use that DomainContainer to access the DB
 *** TODO Mailers
-**** TODO Make models not use mailers during 'test' environment
+**** DONE Make models not use mailers during 'test' environment
 This is inside the models.  Make the model hooks not get setup if the
 environment is test, only if the hook sends an email though.
-**** TODO Make mailers available in ._modelExtras
-**** TODO Make models use ._modelExtras.mailers
+**** DONE Make mailers available in ._modelExtras
+**** DONE Make models use ._modelExtras.mailers
 **** TODO Make mailers instance based
-***** TODO Do so
-***** TODO Put them in DomainContainer with modelExtras
-***** TODO Make models use mailers through this._modelExtras
-***** TODO Update tests
+***** TODO Update BaseMailer
+***** TODO Update UserMailer
 ** TODO PATOS-88
 ** TODO TESTS

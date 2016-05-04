@@ -1,6 +1,5 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
 Class(M, 'User').inherits(DynamicModel)({
   tableName : 'Users',
@@ -99,7 +98,7 @@ Class(M, 'User').inherits(DynamicModel)({
       if (CONFIG.environment !== 'test') {
         // Send activation email after creation
         this.on('afterCreate', function(next) {
-          UserMailer.sendActivationLink(model)
+          model._modelExtras.mailers.user.sendActivationLink(model)
             .then(function () {
               next();
             })
@@ -112,7 +111,7 @@ Class(M, 'User').inherits(DynamicModel)({
             return next();
           }
 
-          UserMailer.sendChangedEmailEmails(model)
+          model._modelExtras.mailers.user.sendChangedEmailEmails(model)
             .then(function () {
               next();
             })
@@ -128,7 +127,7 @@ Class(M, 'User').inherits(DynamicModel)({
           // in order to prevent the password changed notice several times
           model._skipPasswordEmail = true;
 
-          UserMailer.sendChangedPasswordNotification(model)
+          model._modelExtras.mailers.user.sendChangedPasswordNotification(model)
             .then(function () {
               next();
             })
