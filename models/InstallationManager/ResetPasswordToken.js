@@ -5,6 +5,8 @@ var bcrypt = require('bcrypt-node');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'InstallationManager', 'UserMailer.js'));
 var moment = require('moment');
 
+var userMailer = new InstallationManager.UserMailer();
+
 Class(InstallationManager, 'ResetPasswordToken').inherits(InstallationManager.InstallationManagerModel)({
   tableName: 'ResetPasswordTokens',
 
@@ -62,7 +64,7 @@ Class(InstallationManager, 'ResetPasswordToken').inherits(InstallationManager.In
           InstallationManager.User.query()
             .where('id', model.userId)
             .then(function (res) {
-              return UserMailer.sendResetPassword(res[0], model);
+              return userMailer.sendResetPassword(res[0], model);
             })
             .then(function () {
               return next();

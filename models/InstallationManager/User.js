@@ -2,6 +2,8 @@ var bcrypt = require('bcrypt-node');
 var path = require('path');
 var UserMailer = require(path.join(process.cwd(), 'mailers', 'InstallationManager', 'UserMailer'));
 
+var userMailer = new InstallationManager.UserMailer();
+
 Class(InstallationManager, 'User').inherits(InstallationManager.InstallationManagerModel)({
   tableName: 'Users',
 
@@ -101,7 +103,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
       if (CONFIG.environment !== 'test') {
         // Send activation email after creation
         this.on('afterCreate', function(next) {
-          UserMailer.sendActivationLink(model)
+          userMailer.sendActivationLink(model)
             .then(function () {
               next();
             })
@@ -114,7 +116,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
             return next();
           }
 
-          UserMailer.sendChangedEmailEmails(model)
+          userMailer.sendChangedEmailEmails(model)
             .then(function () {
               next();
             })
@@ -130,7 +132,7 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
           // in order to prevent the password changed notice several times
           model._skipPasswordEmail = true;
 
-          UserMailer.sendChangedPasswordNotification(model)
+          userMailer.sendChangedPasswordNotification(model)
             .then(function () {
               next();
             })

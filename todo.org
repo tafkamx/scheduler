@@ -36,5 +36,6 @@ environment is test, only if the hook sends an email though.
 ***** DONE Update UserMailers
 ***** DONE Update UserMailers tests
 ***** TODO Update InstallationManager model usage of mailers
+**** TODO Load mailer classes in bin/server.js
 ** TODO PATOS-88
 ** TODO TESTS
