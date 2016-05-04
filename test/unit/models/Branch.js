@@ -71,7 +71,6 @@ describe('Branch Model', function() {
       }).then(function() {
         return Branch.query(knex).include('settings').where('id', branch.id)
         .then(function(res) {
-          console.log(res)
           expect(res[0]).to.be.instanceof(Branch);
           expect(res[0].settings).to.be.instanceof(BranchSettings);
           expect(res[0].settings.id).to.be.equal(settings.id);
