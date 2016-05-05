@@ -18,6 +18,18 @@ describe('InstallationManager.SessionsController', function() {
       .catch(done);
   });
 
+  after(function(done) {
+    Promise.all([
+      InstallationManager.Installation.query()
+        .where('name', 'not in', ['installation-inte', 'installation-unit'])
+        .delete(),
+    ])
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
   describe('Login', function () {
 
     it('Should fail login because the account has not been activated', function(done) {
@@ -381,15 +393,5 @@ describe('InstallationManager.SessionsController', function() {
     });
 
   });
-  after(function(done) {
-    Promise.all([
-      InstallationManager.Installation.query()
-        .where('name', 'not in', ['installation-inte', 'installation-unit'])
-        .delete()
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
-  });
+
 });
