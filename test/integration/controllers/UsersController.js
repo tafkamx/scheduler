@@ -6,7 +6,7 @@ var urlFor = CONFIG.router.helpers;
 
 var url = container.props.url;
 
-describe('UsersController', function() {
+describe('Users Controller', function() {
 
   var user;
 
