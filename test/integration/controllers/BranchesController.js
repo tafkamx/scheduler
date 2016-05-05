@@ -12,7 +12,7 @@ describe('Branches Controller', function () {
 
   var branch;
 
-  // Create Branch for GET stuff
+  // Create Branch for tests requiring existing branch
   before(function (done) {
     Promise.resolve()
       .then(function () {
@@ -27,7 +27,26 @@ describe('Branches Controller', function () {
           });
       })
       .catch(done);
+  });
 
+  // Create user for login
+  before(function (done) {
+    Promise.resolve()
+      .then(function () {
+        return container
+          .create('User', {
+            email: 'franch@example.com',
+            password: '12345678',
+            role: 'franchisor',
+          })
+          .then(function (user) {
+            return container.update(user.activate());
+          });
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
   });
 
   // Login agent
@@ -36,7 +55,7 @@ describe('Branches Controller', function () {
       .then(function () {
         agent.post(url + urlFor.login())
           .send({
-            email: 'test@example.com',
+            email: 'franch@example.com',
             password: '12345678',
           })
           .end(function (err, res) {
@@ -51,6 +70,7 @@ describe('Branches Controller', function () {
   // Cleanup
   after(function (done) {
     Promise.all([
+      container.get('User').query().delete(),
       container.get('Branch').query().delete(),
     ])
       .then(function () {

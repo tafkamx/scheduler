@@ -47,16 +47,6 @@ Promise.resolve()
     });
   })
   .then(function () {
-    return INTE.create('User', {
-      email: 'test@example.com',
-      password: '12345678',
-      role: 'franchisor',
-    });
-  })
-  .then(function (user) {
-    return INTE.update(user.activate());
-  })
-  .then(function () {
     // run Mocha
     mocha.run(function (failures) {
       process.on('exit', function () {
