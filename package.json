@@ -10,6 +10,11 @@
   "scripts": {
     "test": "scripty",
     "test:clean": "scripty",
+    "test:knexreset": "scripty",
+    "test:unit": "scripty",
+    "test:integration": "scripty",
+    "test:integration:installation": "scripty",
+    "test:integration:manager": "scripty",
     "start": "scripty",
     "iron-node": "scripty",
     "preinstall": "node bin/warn/before-install.js",
