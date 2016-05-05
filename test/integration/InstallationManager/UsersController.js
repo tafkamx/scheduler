@@ -1,7 +1,7 @@
-var adminUser = new InstallationManager.User({
-  email : 'test@example.com',
-  password : '12345678'
-});
+var adminUser = {
+  email: 'test@example.com',
+  password: '12345678',
+};
 
 var agent = sa.agent();
 

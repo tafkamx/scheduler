@@ -1,75 +1,219 @@
-var expect = require('chai').expect;
+var path = require('path');
 var moment = require('moment');
 
-var adminUser = new InstallationManager.User({
-  email : 'test@example.com',
-  password : '12345678'
-});
+var DomainContainer = require('domain-container');
+
+// Containers
+var cont1,
+  cont2;
+
+var _ = require('lodash');
+var Promise = require('bluebird');
+
+var agent1 = sa.agent();
+var agent2 = sa.agent();
 
 var urlFor = CONFIG.router.helpers;
 
-describe('InstallationManager.SessionsController', function() {
-  before(function(done) {
-    adminUser.save().then(function(res) {
-      done();
-    })
+describe('Sessions Controller', function () {
+
+  var oneUrl,
+    twoUrl;
+
+  // Create installations and DomainContainers
+  before(function (done) {
+    var inst1 = new InstallationManager.Installation({
+      name: 'installation-one',
+    });
+
+    var inst2 = new InstallationManager.Installation({
+      name: 'installation-two',
+    });
+
+    Promise.resolve()
+      .then(function () {
+        return Promise.all([
+          inst1.save(),
+          inst2.save(),
+        ]);
+      })
+      .then(function () {
+        cont1 = new DomainContainer({
+          knex: inst1.getDatabase(),
+          models: M,
+          props: {
+            url: 'http://default.installation-one.test-installation.com:3000',
+          },
+        });
+
+        cont2 = new DomainContainer({
+          knex: inst2.getDatabase(),
+          models: M,
+          props: {
+            url: 'http://default.installation-two.test-installation.com:3000',
+          },
+        });
+
+        oneUrl = cont1.props.url;
+        twoUrl = cont2.props.url;
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
+  var user1, user2;
+
+  // Create users used in tests
+  before(function (done) {
+    this.timeout(4000);
+
+    Promise.resolve()
+      .then(function () {
+        return cont1.create('User', {
+          email: 'franch@example.com',
+          password: '12345678',
+          role: 'franchisor',
+        });
+      })
+      .then(function (user) {
+        user1 = user;
+      })
+      .then(function () {
+        return cont2.create('User', {
+          email: 'franch@example.com',
+          password: '12345678',
+          role: 'franchisor',
+        });
+      })
+      .then(function (user) {
+        return cont2.update(user.activate());
+      })
+      .then(function (user) {
+        user2 = user;
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
+  after(function(done) {
+    Promise.all([
+      cont1.get('User').query().delete(),
+      cont1.get('ResetPasswordToken').query().delete(),
+      cont2.get('User').query().delete(),
+      cont2.get('ResetPasswordToken').query().delete(),
+      InstallationManager.Installation.query()
+        .where('name', 'not in', ['installation-inte', 'installation-unit'])
+        .delete(),
+    ])
+      .then(function () {
+        done();
+      })
+      .catch(done);
   });
 
   describe('Login', function () {
 
     it('Should fail login because the account has not been activated', function(done) {
-      sa.agent().post(baseURL + '/InstallationManager/login')
-        .send({
-          email: adminUser.email,
-          password: adminUser.password
-        })
+      sa.agent().post(oneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
-          expect(err).to.equal(null);
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
           expect(res.text.search('User not activated')).to.not.equal(-1);
           done();
         });
     });
 
     it('Should login and activate with the users token', function(done) {
-      sa.agent().get(baseURL + '/InstallationManager/login?email=false&token=' + adminUser.token)
-        .end(function(err, res) {
-          expect(err).to.equal(null);
-          expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
-          done();
-        })
+      sa.agent().get(oneUrl + '/login?email=false&token=' + user1.token)
+      .end(function(err, res) {
+        expect(err).to.be.equal(null);
+        expect(res.status).to.be.equal(200);
+        expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+        done();
+      })
+
     });
 
     it('Should login with the email/password', function(done) {
-      sa.agent().post(baseURL + '/InstallationManager/login')
-        .send({
-          email: adminUser.email,
-          password: adminUser.password
-        })
+      sa.agent().post(oneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
-          expect(err).to.equal(null);
-          expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
           done();
         });
     });
 
     it('Should not let a logged in user login', function(done) {
       var agent = sa.agent();
+      agent.post(oneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
+        .end(function(err, res) {
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
-      agent.post(baseURL + '/InstallationManager/login')
+          agent.get(oneUrl + '/login')
+          .end(function(err, res) {
+            expect(err).to.be.equal(null);
+            expect(res.status).to.be.equal(200);
+            expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
+            done();
+          })
+
+        });
+    });
+
+    it('Should not be logged-in in other installations', function(done) {
+      var agent = sa.agent();
+
+      agent.post(oneUrl + '/login')
         .send({
-          email: adminUser.email,
-          password: adminUser.password
+          email : user1.email,
+          password : user1.password
         })
         .end(function(err, res) {
-          expect(err).to.equal(null);
-          expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
-          agent.get(baseURL + '/InstallationManager/login')
+          agent.get(twoUrl + '/login')
             .end(function(err, res) {
-              expect(err).to.equal(null);
-              expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              expect(res.text.search('"info": "You are already logged in"')).to.equal(-1);
               done();
             });
+        });
+    });
+
+    it('Should be able to login to more than one installation', function(done) {
+      var agent = sa.agent();
+
+      agent.post(oneUrl + '/login')
+        .send({
+          email : user1.email,
+          password : user1.password
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+
+          agent.post(twoUrl + '/login')
+            .send({
+              email : user2.email,
+              password : user2.password
+            })
+            .end(function(err, res) {
+              expect(err).to.be.equal(null);
+              expect(res.status).to.be.equal(200);
+              done();
+            });
+
         });
     });
 
@@ -79,21 +223,20 @@ describe('InstallationManager.SessionsController', function() {
 
     it('Should logout', function(done) {
       var agent = sa.agent();
-      agent.post(baseURL + '/InstallationManager/login')
-        .send({
-          email: adminUser.email,
-          password: adminUser.password
-        })
+      agent.post(oneUrl + '/login')
+        .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
-          expect(err).to.equal(null);
-          expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
-
-          agent.get(baseURL + '/InstallationManager/logout')
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.equal(200);
+          expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
+          agent.get(oneUrl + '/logout')
           .end(function(err, res) {
-            expect(err).to.equal(null);
+            expect(err).to.be.equal(null);
+            expect(res.status).to.be.equal(200);
             expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);
             done();
-          });
+          })
+
         });
     });
 
@@ -104,7 +247,7 @@ describe('InstallationManager.SessionsController', function() {
     describe('#resetShow', function () {
 
       it('Should GET /resetPassword with status code 200', function (doneTest) {
-        sa.get(baseURL + urlFor.installationManagerReset())
+        sa.get(oneUrl + urlFor.reset())
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
@@ -116,16 +259,16 @@ describe('InstallationManager.SessionsController', function() {
       it('Should redirect to / with status code 200 if already logged-in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(oneUrl + urlFor.login())
           .send({
-            email: adminUser.email,
-            password: adminUser.password
+            email: user1.email,
+            password: user1.password
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.get(baseURL + urlFor.installationManagerReset())
+            agent.get(oneUrl + urlFor.reset())
               .end(function (err, res) {
                 expect(err).to.be.equal(null);
                 expect(res.status).to.be.equal(200);
@@ -141,23 +284,31 @@ describe('InstallationManager.SessionsController', function() {
 
     describe('#resetCreate', function () {
 
+      beforeEach(function (done) {
+        return Promise.all([
+          cont1.get('ResetPasswordToken').query().delete(),
+          cont2.get('ResetPasswordToken').query().delete(),
+        ])
+          .then(function () {
+            done();
+          })
+          .catch(done);
+      });
+
       it('Should return 200 and create a token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(oneUrl + urlFor.reset())
           .send({
-            email: adminUser.email
+            email: user1.email
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            InstallationManager.ResetPasswordToken.query()
-              .where('user_id', adminUser.id)
+            cont1.query('ResetPasswordToken')
+              .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
-                return InstallationManager.ResetPasswordToken.query().delete();
-              })
-              .then(function () {
                 return doneTest();
               })
               .catch(doneTest);
@@ -167,18 +318,18 @@ describe('InstallationManager.SessionsController', function() {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(oneUrl + urlFor.login())
           .send({
-            email: adminUser.email,
-            password: adminUser.password
+            email: user1.email,
+            password: user1.password
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.post(baseURL + urlFor.installationManagerReset())
+            agent.post(oneUrl + urlFor.reset())
               .send({
-                email: adminUser.email
+                email: user1.email
               })
               .end(function (err, res) {
                 expect(err).to.not.equal(null);
@@ -192,7 +343,7 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 with unexistent email', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(oneUrl + urlFor.reset())
           .send({
             email: 'unexistent@email.com'
           })
@@ -210,10 +361,21 @@ describe('InstallationManager.SessionsController', function() {
 
     describe('#resetUpdate', function () {
 
+      beforeEach(function (done) {
+        return Promise.all([
+          cont1.get('ResetPasswordToken').query().delete(),
+          cont2.get('ResetPasswordToken').query().delete(),
+        ])
+          .then(function () {
+            done();
+          })
+          .catch(done);
+      });
+
       it('Should return 200 and change password if provided valid token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(oneUrl + urlFor.reset())
           .send({
-            email: adminUser.email
+            email: user1.email
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
@@ -221,8 +383,8 @@ describe('InstallationManager.SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query()
-              .where('user_id', adminUser.id)
+            cont1.query('ResetPasswordToken')
+              .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
@@ -230,7 +392,7 @@ describe('InstallationManager.SessionsController', function() {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(oneUrl + urlFor.reset())
                     .send({
                       password: '12345678',
                       token: token.token
@@ -246,9 +408,6 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
-              })
-              .then(function () {
                 return doneTest();
               })
               .catch(doneTest);
@@ -258,16 +417,16 @@ describe('InstallationManager.SessionsController', function() {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(oneUrl + urlFor.login())
           .send({
-            email: adminUser.email,
-            password: adminUser.password
+            email: user1.email,
+            password: user1.password
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.put(baseURL + urlFor.installationManagerReset())
+            agent.put(oneUrl + urlFor.reset())
               .send({})
               .end(function (err, res) {
                 expect(err).to.not.equal(null);
@@ -281,9 +440,9 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 and a message with unexistent token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(oneUrl + urlFor.reset())
           .send({
-            email: adminUser.email
+            email: user1.email
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
@@ -291,8 +450,8 @@ describe('InstallationManager.SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query()
-              .where('user_id', adminUser.id)
+            cont1.query('ResetPasswordToken')
+              .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
@@ -300,7 +459,7 @@ describe('InstallationManager.SessionsController', function() {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(oneUrl + urlFor.reset())
                     .send({
                       password: '12345678',
                       token: 'invalid token'
@@ -316,9 +475,6 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
-              })
-              .then(function () {
                 return doneTest();
               })
               .catch(doneTest);
@@ -326,9 +482,9 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 and a message with expired token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(oneUrl + urlFor.reset())
           .send({
-            email: adminUser.email
+            email: user1.email
           })
           .end(function (err, res) {
             expect(err).to.equal(null);
@@ -336,8 +492,8 @@ describe('InstallationManager.SessionsController', function() {
 
             var token;
 
-            InstallationManager.ResetPasswordToken.query()
-              .where('user_id', adminUser.id)
+            cont1.query('ResetPasswordToken')
+              .where('user_id', user1.id)
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
@@ -346,11 +502,11 @@ describe('InstallationManager.SessionsController', function() {
               .then(function () {
                 token.expiresAt = moment().subtract(1, 'days');
 
-                return token.save();
+                return cont1.update(token);
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(oneUrl + urlFor.reset())
                     .send({
                       password: '12345678',
                       token: token.token
@@ -366,9 +522,6 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
-              })
-              .then(function () {
                 return doneTest();
               })
               .catch(doneTest);
@@ -378,9 +531,5 @@ describe('InstallationManager.SessionsController', function() {
     });
 
   });
-  after(function(done) {
-    InstallationManager.User.query().delete().then(function() {
-      done();
-    });
-  });
+
 });
