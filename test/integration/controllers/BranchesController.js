@@ -1,51 +1,58 @@
-var installation = 'installation-two';
-
-var branch, knex, Knex, knexConfig;
-
-var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
-var installationUrl = 'http://default.' + installation + '.' + websiteUrl;
+'use strict';
 
 var agent = sa.agent();
 
+var container = INTE;
 var path = require('path');
+var urlFor = CONFIG.router.helpers;
 
-describe('BranchesController', function() {
-  before(function(done) {
-    Knex = require('knex');
+var url = container.props.url;
 
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
+describe('Branches Controller', function () {
 
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+  var branch;
 
-    knex = new Knex(knexConfig[CONFIG.environment]);
-
+  // Create Branch for GET stuff
+  before(function (done) {
     Promise.resolve()
       .then(function () {
-        branch = new M.Branch({
-          name: 'branch-one'
-        });
-
-        return branch.save(knex);
-      })
-      .then(function () {
-        return M.UserInfo.query(knex)
-          .where('role', 'franchisor')
-          .then(function (result) {
-            return M.User.query(knex)
-              .where('id', result[0].userId);
+        return container
+          .create('Branch', {
+            name: 'branch-one',
           })
-          .then(function (result) {
-            return new Promise(function (resolve, reject) {
-              agent.get(installationUrl + '/login?email=false&token=' + result[0].token)
-                .end(function (err, res) {
-                  expect(err).to.equal(null);
-                  expect(res.status).to.equal(200);
+          .then(function (res) {
+            branch = res;
 
-                  return resolve();
-                });
-            });
+            done();
           });
       })
+      .catch(done);
+
+  });
+
+  // Login agent
+  before(function (done) {
+    Promise.resolve()
+      .then(function () {
+        agent.post(url + urlFor.login())
+          .send({
+            email: 'test@example.com',
+            password: '12345678',
+          })
+          .end(function (err, res) {
+            if (err) { return done(err); }
+
+            done();
+          });
+      })
+      .catch(done);
+  });
+
+  // Cleanup
+  after(function (done) {
+    Promise.all([
+      container.get('Branch').query().delete(),
+    ])
       .then(function () {
         done();
       })
@@ -54,7 +61,7 @@ describe('BranchesController', function() {
 
   it('Should render /Branches/', function(done) {
     agent
-      .get(installationUrl + '/Branches')
+      .get(url + '/Branches')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -65,7 +72,7 @@ describe('BranchesController', function() {
 
   it('Should get the Branches Array from /Branches', function(done) {
     agent
-      .get(installationUrl + '/Branches')
+      .get(url + '/Branches')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -77,7 +84,7 @@ describe('BranchesController', function() {
 
   it('Should render /Branches/:id', function(done) {
     agent
-      .get(installationUrl + '/Branches/' + branch.id)
+      .get(url + '/Branches/' + branch.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -88,7 +95,7 @@ describe('BranchesController', function() {
 
   it('Should return 404 when Branch.id doesnt exists in /Branches/:id', function(done) {
     agent
-      .get(installationUrl + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+      .get(url + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -99,7 +106,7 @@ describe('BranchesController', function() {
 
   it('Should get /Branches/:id', function(done) {
     agent
-      .get(installationUrl + '/Branches/' + branch.id)
+      .get(url + '/Branches/' + branch.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -112,7 +119,7 @@ describe('BranchesController', function() {
 
   it('Should fail to get if id doesnt exists /Branches/:id', function(done) {
     agent
-      .get(installationUrl + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+      .get(url + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -123,7 +130,7 @@ describe('BranchesController', function() {
 
   it('Should render /Branches/new', function(done) {
     agent
-      .get(installationUrl + '/Branches/new')
+      .get(url + '/Branches/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -136,7 +143,7 @@ describe('BranchesController', function() {
 
     it('Should create a new Branch', function(done) {
       agent
-        .post(installationUrl + '/Branches')
+        .post(url + '/Branches')
         .set('Accept', 'application/json')
         .send({
           name: 'branch-two'
@@ -151,7 +158,7 @@ describe('BranchesController', function() {
 
     it('Should fail if the name exists', function(done) {
       agent
-        .post(installationUrl + '/Branches')
+        .post(url + '/Branches')
         .set('Accept', 'application/json')
         .send({
           name: 'branch-two'
@@ -167,7 +174,7 @@ describe('BranchesController', function() {
 
     it('Should fail if the name is empty', function(done) {
       agent
-        .post(installationUrl + '/Branches')
+        .post(url + '/Branches')
         .set('Accept', 'application/json')
         .send({
           name: ''
@@ -183,7 +190,7 @@ describe('BranchesController', function() {
 
     it('Should fail if the name is > 255', function(done) {
       agent
-        .post(installationUrl + '/Branches')
+        .post(url + '/Branches')
         .set('Accept', 'application/json')
         .send({
           name: 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfsasdfasdfasdf'
@@ -199,7 +206,7 @@ describe('BranchesController', function() {
 
     it('Should fail if the name contains non-alpha-numeric characters', function (done) {
       agent
-        .post(installationUrl + '/Branches')
+        .post(url + '/Branches')
         .set('Accept', 'application/json')
         .send({
           name: 'abcd123$'
@@ -217,7 +224,7 @@ describe('BranchesController', function() {
 
   it('Should render /Branches/:id/edit', function(done) {
     agent
-      .get(installationUrl + '/Branches/' + branch.id + '/edit')
+      .get(url + '/Branches/' + branch.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -228,7 +235,7 @@ describe('BranchesController', function() {
 
   it('Should get the branch object /Branches/:id/edit', function(done) {
     agent
-      .get(installationUrl + '/Branches/' + branch.id + '/edit')
+      .get(url + '/Branches/' + branch.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -242,7 +249,7 @@ describe('BranchesController', function() {
 
   it('Should update branch attributes', function(done) {
     agent
-      .put(installationUrl + '/Branches/' + branch.id)
+      .put(url + '/Branches/' + branch.id)
       .set('Accept', 'application/json')
       .send({
         name: 'branch-1',
@@ -259,13 +266,13 @@ describe('BranchesController', function() {
 
   it('Should destroy a record', function(done) {
     agent
-      .post(installationUrl + '/Branches')
+      .post(url + '/Branches')
       .send({
         name: 'branch-temp'
       })
       .end(function(err, res) {
         agent
-          .post(installationUrl + '/Branches/' + res.body.id)
+          .post(url + '/Branches/' + res.body.id)
           .send({
             _method: 'DELETE'
           })
@@ -280,7 +287,7 @@ describe('BranchesController', function() {
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
     agent
-      .post(installationUrl + '/Branches/' + branch.id + '1')
+      .post(url + '/Branches/' + branch.id + '1')
       .send({
         _method: 'DELETE'
       })
@@ -291,11 +298,4 @@ describe('BranchesController', function() {
       });
   });
 
-  after(function(done) {
-    M.Branch.query(knex)
-      .delete()
-      .then(function () {
-        return done();
-      });
-  });
 });
