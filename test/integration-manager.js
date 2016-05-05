@@ -1,7 +1,7 @@
 global.expect = require('chai').expect;
 global.sa = require('superagent');
+global.Promise = require('bluebird');
 
-var Promise = require('bluebird');
 var path = require('path');
 
 var DomainContainer = require('domain-container');

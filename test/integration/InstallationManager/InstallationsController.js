@@ -1,29 +1,64 @@
-var Promise = require('bluebird');
+describe('InstallationManager.InstallationsController', function () {
 
-var adminUser = InstallationManager.User({
-  email: 'test@example.com',
-  password: '12345678',
-});
+  var adminUser;
 
-var agent = sa.agent();
-
-describe('InstallationManager.InstallationsController', function() {
-
+  // Admin user, to login
   before(function (done) {
+    adminUser = new InstallationManager.User({
+      email: 'test@example.com',
+      password: '12345678',
+    });
+
     adminUser
-      .activate()
       .save()
       .then(function () {
-        agent.post(baseURL + '/InstallationManager/login')
-          .send({
-            email: adminUser.email,
-            password: adminUser.password,
-          })
-          .end(function (err, res) {
-            if (err) { return done(err); }
+        return adminUser.activate().save();
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
 
-            done();
-          });
+  // Agent login
+  var agent = sa.agent();
+
+  before(function (done) {
+    agent.post(baseURL + '/InstallationManager/login')
+      .send({
+        email: adminUser.email,
+        password: adminUser.password,
+      })
+      .end(function (err, res) {
+        done(err);
+      });
+  });
+
+  var installation;
+
+  // Installation, test CRUD stuff
+  before(function (done) {
+    installation = new InstallationManager.Installation({
+      name: 'installation-one',
+    });
+
+    installation.save()
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
+  // Cleanup
+  after(function (done) {
+    Promise.all([
+      InstallationManager.Installation.query()
+        .where('name', 'not in', ['installation-inte', 'installation-unit'])
+        .delete(),
+      InstallationManager.User.query().delete(),
+    ])
+      .then(function () {
+        done();
       })
       .catch(done);
   });
@@ -102,6 +137,7 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
   describe('#create', function () {
+    this.timeout(4000);
 
     it('Should create a new Installation', function(done) {
       var data = {
@@ -357,6 +393,7 @@ describe('InstallationManager.InstallationsController', function() {
   });
 
   describe('#destroy', function () {
+    this.timeout(4000);
 
     it('Should destroy a record', function(done) {
       agent.post(baseURL + '/InstallationManager/Installations/')
@@ -388,25 +425,4 @@ describe('InstallationManager.InstallationsController', function() {
 
   });
 
-  after(function(done) {
-    Promise.all([
-      InstallationManager.Installation.query()
-        .where('name', 'not in', ['installation-inte', 'installation-unit'])
-        .delete(),
-      InstallationManager.User.query().delete(),
-      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-one-test'"),
-      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-one-test'"),
-      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-one-test'"),
-      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'installation-two-test'"),
-      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'installation-two-test'"),
-      // InstallationManager.User.knex().raw("DROP DATABASE 'installation-two-test'"),
-      // InstallationManager.User.knex().raw("update pg_database set datallowconn = false where datname = 'three-test'"),
-      // InstallationManager.User.knex().raw("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'three-test'"),
-      // InstallationManager.User.knex().raw("DROP DATABASE 'three-test'"),
-    ])
-      .then(function () {
-        return done();
-      })
-      .catch(done);
-  });
 });
