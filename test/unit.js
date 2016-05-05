@@ -12,8 +12,6 @@ var Mocha = require('mocha');
 var mocha = new Mocha();
 mocha.reporter('spec');
 
-global.baseURL = 'http://localhost:3000';
-
 require(path.join(process.cwd(), '/bin/server.js'));
 
 global.UNIT;
