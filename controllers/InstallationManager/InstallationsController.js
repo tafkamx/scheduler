@@ -122,9 +122,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
             .then(function(val) {
               res.json(res.locals.installation);
             })
-            .catch(function (err) {
-              next(err)
-            });
+            .catch(next);
         }
       });
     },
