@@ -17,7 +17,9 @@ Class(M, 'Branch').inherits(DynamicModel)({
       },
       {
         rule: function(val) {
-          var query = model._container.query('Branch')
+          var that = this.target;
+
+          var query = that._container.query('Branch')
             .where('name', val);
 
           if (this.target.id) {
