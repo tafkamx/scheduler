@@ -11,7 +11,7 @@ Class(M, 'UserInfo').inherits(DynamicModel)({
         rule: function (val) {
           var that = this.target;
 
-          var query = that._container.query('UserInfo')
+          var query = M.UserInfo.query(that._knex)
             .where('user_id', val);
 
           if (this.target.id) {
