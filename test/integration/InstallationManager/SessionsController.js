@@ -23,6 +23,7 @@ describe('InstallationManager.SessionsController', function() {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
+      InstallationManager.User.query().delete(),
     ])
       .then(function () {
         done();
