@@ -29,11 +29,7 @@ describe('InstallationManager.UsersController', function () {
         email: adminUser.email,
         password: adminUser.password,
       })
-      .end(function(err, res) {
-        console.log('!!!!!!!')
-        console.log(res)
-        done(err);
-      });
+      .end(done);
   });
 
   // Cleanup
