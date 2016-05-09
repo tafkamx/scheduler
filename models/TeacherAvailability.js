@@ -14,5 +14,5 @@ var Teacher = Class('TeacherAvailability').inherits(DynamicModel)({
     'sunday',
     'createdAt',
     'updatedAt'
-  ];
+  ]
 });
