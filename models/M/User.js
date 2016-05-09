@@ -11,7 +11,7 @@ Class(M, 'User').inherits(DynamicModel)({
         rule : function(val) {
           var that = this.target;
 
-          var query = M.User.query(that._knex)
+          var query = that._container.query('User')
             .where({
               email : val
             });
@@ -67,12 +67,11 @@ Class(M, 'User').inherits(DynamicModel)({
 
       // UserInfo instance
       this.on('afterCreate', function (next) {
-        var info = new M.UserInfo({
-          userId: model.id,
-          role: model.role
-        });
-
-        info.save(model._knex)
+        model._container
+          .create('UserInfo', {
+            userId: model.id,
+            role: model.role
+          })
           .then(function () {
             next();
           })
