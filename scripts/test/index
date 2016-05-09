@@ -2,9 +2,5 @@
 
 export NODE_ENV=test
 
-npm run test:clean
-
-npm run test:knexreset
-
 npm run test:unit
 npm run test:integration
