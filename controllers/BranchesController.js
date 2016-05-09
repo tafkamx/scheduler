@@ -22,7 +22,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
 
   prototype: {
     _loadBranch: function(req, res, next) {
-      Branch.query(req.knex)
+      req.container.query('Branch')
         .where({ id: req.params.id })
         .then(function (result) {
           if (result.length === 0) {
@@ -37,7 +37,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     },
 
     index: function (req, res, next) {
-      Branch.query(req.knex)
+      req.container.query('Branch')
         .then(function (results) {
           res.locals.branches = results;
 
@@ -75,11 +75,8 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     create: function (req, res, next) {
       res.format({
         json: function () {
-          var branch = new Branch(req.body);
-
-          branch
-            .save(req.knex)
-            .then(function () {
+          req.container.create('Branch', req.body)
+            .then(function (branch) {
               res.json(branch);
             })
             .catch(next);
@@ -101,9 +98,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     update: function (req, res, next) {
       res.format({
         json: function () {
-          res.locals.branch
-            .updateAttributes(req.body)
-            .save(req.knex)
+          req.container.update(res.locals.branch, req.body)
             .then(function (val) {
               res.json(res.locals.branch);
             })
@@ -115,8 +110,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     destroy: function (req, res, next) {
       res.format({
         json: function () {
-          res.locals.branch
-            .destroy(req.knex)
+          req.container.destroy(res.locals.branch)
             .then(function () {
               res.json({ deleted: true });
             })

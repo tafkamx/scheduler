@@ -1,6 +1,7 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var bcrypt = require('bcrypt-node');
+var DomainContainer = require('domain-container');
 
 Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
@@ -78,21 +79,32 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
       res.format({
         json: function () {
-          var installation = new InstallationManager.Installation(installationForm),
-            installationKnex;
+          var installation = new InstallationManager.Installation(installationForm);
 
           installation
             .save()
             .then(function () {
-              installationKnex = installation.getDatabase();
-
-              var franchisor = new User({
-                email: franchisorForm.email,
-                role: 'franchisor',
-                password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
+              var container = new DomainContainer({
+                knex: installation.getDatabase(),
+                models: M,
+                modelExtras: {
+                  mailers: {
+                    user: new UserMailer({
+                      baseUrl: res.locals.helpers.generateInstallationUrl('default', installation.name),
+                    }),
+                  },
+                },
               });
 
-              return franchisor.save(installationKnex);
+              return container
+                .create('User', {
+                  email: franchisorForm.email,
+                  role: 'franchisor',
+                  password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
+                })
+                .then(function () {
+                  return container.cleanup();
+                });
             })
             .then(function () {
               res.json(installation);
@@ -122,9 +134,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
             .then(function(val) {
               res.json(res.locals.installation);
             })
-            .catch(function (err) {
-              next(err)
-            });
+            .catch(next);
         }
       });
     },

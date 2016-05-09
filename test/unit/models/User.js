@@ -2,29 +2,27 @@
 
 var path = require('path');
 
-var installation = 'installation-one';
+var container = UNIT;
 
-var knex,
-  Knex = require('knex'),
-  knexConfig;
-
-var agent = sa.agent();
-
-describe('User', function () {
+describe('M.User', function () {
 
   before(function (done) {
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+    container
+      .create('User', {
+        email: 'user-test@example.com',
+        password: '12345678',
+        role: 'student'
+      })
+      .then(function () {
+        return done();
+      })
+      .catch(done);
+  });
 
-    knex = new Knex(knexConfig[CONFIG.environment]);
-
-    var user = new User({
-      email: 'user-test@example.com',
-      password: '12345678',
-      role: 'student'
-    });
-
-    user.save(knex)
+  after(function (done) {
+    Promise.all([
+      container.get('User').query().delete(),
+    ])
       .then(function () {
         return done();
       })
@@ -36,7 +34,7 @@ describe('User', function () {
     describe('info', function () {
 
       it('Should return a proper UserInfo object', function (doneTest) {
-        User.query(knex)
+        container.query('User')
           .include('info')
           .then(function (result) {
             expect(result.length).to.equal(1);
@@ -54,17 +52,6 @@ describe('User', function () {
 
     });
 
-  });
-
-  after(function (done) {
-    Promise.all([
-      User.query(knex).delete(),
-      UserInfo.query(knex).delete()
-    ])
-      .then(function () {
-        return done();
-      })
-      .catch(done);
   });
 
 });

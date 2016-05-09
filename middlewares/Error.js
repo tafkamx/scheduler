@@ -2,10 +2,6 @@ module.exports = function(err, req, res, next) {
   logger.error(err);
   logger.error(err.stack);
 
-  if (req.knex) {
-    req.knex.destroy(function () {});
-  }
-
   if (err.name) {
     switch (err.name) {
       case 'NotFoundError':

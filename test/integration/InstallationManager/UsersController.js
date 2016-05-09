@@ -1,24 +1,46 @@
-var adminUser = new InstallationManager.User({
-  email : 'test@example.com',
-  password : '12345678'
-});
+describe('InstallationManager.UsersController', function () {
 
-var agent = sa.agent();
+  var adminUser;
 
-describe('InstallationManager.UsersController', function() {
-
-  before(function(done) {
-    adminUser.save().then(function() {
-      return adminUser;
-    }).then(function(res) {
-      res.activate().save().then(function() {
-        agent.post(baseURL + '/InstallationManager/login')
-          .send({ email: adminUser.email, password: '12345678'})
-          .end(function(err, res) {
-            done();
-          });
-      });
+  // Admin user
+  before(function (done) {
+    adminUser = new InstallationManager.User({
+      email: 'test@example.com',
+      password: '12345678',
     });
+
+    adminUser
+      .save()
+      .then(function () {
+        return adminUser.activate().save();
+      })
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
+  var agent = sa.agent();
+
+  // Login agent
+  before(function (done) {
+    agent.post(baseURL + '/InstallationManager/login')
+      .send({
+        email: adminUser.email,
+        password: adminUser.password,
+      })
+      .end(done);
+  });
+
+  // Cleanup
+  after(function(done) {
+    Promise.all([
+      InstallationManager.User.query().delete(),
+    ])
+      .then(function () {
+        done();
+      })
+      .catch(done);
   });
 
   it('Should render /InstallationManager/Users/', function(done) {
@@ -294,8 +316,7 @@ describe('InstallationManager.UsersController', function() {
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
     agent.post(baseURL + '/InstallationManager/Users/' + adminUser.id + '1')
-    .send({'_method' : 'DELETE'})
-
+      .send({'_method' : 'DELETE'})
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -303,10 +324,4 @@ describe('InstallationManager.UsersController', function() {
       })
   });
 
-
-  after(function(done) {
-    InstallationManager.User.query().delete().then(function() {
-      return done();
-    });
-  });
 });

@@ -1,6 +1,6 @@
 'use strict';
 
-var Branch = Class('Branch').inherits(DynamicModel)({
+Class(M, 'Branch').inherits(DynamicModel)({
   tableName: 'Branches',
 
   validations: {
@@ -17,11 +17,13 @@ var Branch = Class('Branch').inherits(DynamicModel)({
       },
       {
         rule: function(val) {
-          var query = Branch.query(this.target._knex)
+          var that = this.target;
+
+          var query = that._container.query('Branch')
             .where('name', val);
 
           if (this.target.id) {
-            query.andWhere('id', '!=', this.target.id);
+            query.andWhere('id', '!=', that.id);
           }
 
           return query
@@ -50,4 +52,4 @@ var Branch = Class('Branch').inherits(DynamicModel)({
   prototype: {}
 });
 
-module.exports = Branch;
+module.exports = M.Branch;

@@ -1,8 +1,7 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
-var UserMailer = require(path.join(process.cwd(), 'mailers', 'UserMailer'));
 
-var User = Class('User').inherits(DynamicModel)({
+Class(M, 'User').inherits(DynamicModel)({
   tableName : 'Users',
 
   validations : {
@@ -10,13 +9,15 @@ var User = Class('User').inherits(DynamicModel)({
       'email',
       {
         rule : function(val) {
-          var query = User.query(this.target._knex)
+          var that = this.target;
+
+          var query = that._container.query('User')
             .where({
               email : val
             });
 
           if (this.target.id) {
-            query.andWhere('id', '!=', this.target.id);
+            query.andWhere('id', '!=', that.id);
           }
 
           return query.then(function(result) {
@@ -66,29 +67,58 @@ var User = Class('User').inherits(DynamicModel)({
 
       // UserInfo instance
       this.on('afterCreate', function (next) {
-        var info = new UserInfo({
-          userId: model.id,
-          role: model.role
-        });
-
-        info
-          .save(model._knex)
+        model._container
+          .create('UserInfo', {
+            userId: model.id,
+            role: model.role
+          })
           .then(function () {
             next();
           })
           .catch(next);
       });
+
+      // Set new token if email changes
+      this.on('afterUpdate', function (next) {
+        if (model._oldEmail === model.email) {
+          return next();
+        }
+
+        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
+
+        next();
+      });
+
+      this.on('afterSave', function (next) {
+        model._oldEmail = model.email;
+        next();
+      });
+
+      // Mailers
 
       // Send activation email after creation
       this.on('afterCreate', function(next) {
-        UserMailer.sendActivationLink(model)
+        model._modelExtras.mailers.user.sendActivationLink(model)
           .then(function () {
             next();
           })
           .catch(next);
       });
 
-      // Handler for when password was updated
+      // Send changed email email when the email changes
+      this.on('afterUpdate', function (next) {
+        if (model._oldEmail === model.email) {
+          return next();
+        }
+
+        model._modelExtras.mailers.user.sendChangedEmailEmails(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
+      // Send changed password email
       this.on('afterUpdate', function (next) {
         if (model._skipPasswordEmail || !model.password) {
           return next();
@@ -97,31 +127,11 @@ var User = Class('User').inherits(DynamicModel)({
         // in order to prevent the password changed notice several times
         model._skipPasswordEmail = true;
 
-        UserMailer.sendChangedPasswordNotification(model)
+        model._modelExtras.mailers.user.sendChangedPasswordNotification(model)
           .then(function () {
             next();
           })
           .catch(next);
-      });
-
-      // Send changed email update when the email changes
-      this.on('afterUpdate', function (next) {
-        if (model._oldEmail === model.email) {
-          return next();
-        }
-
-        model.token = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null);
-
-        UserMailer.sendChangedEmailEmails(model)
-          .then(function () {
-            next();
-          })
-          .catch(next);
-      });
-
-      this.on('afterSave', function (next) {
-        model._oldEmail = model.email;
-        next();
       });
     },
 
@@ -133,4 +143,4 @@ var User = Class('User').inherits(DynamicModel)({
   }
 });
 
-module.exports = User;
+module.exports = M.User;
