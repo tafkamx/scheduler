@@ -8,9 +8,16 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:rollback ; NODE_ENV=test knex --knexfile knexinstallationmanager.js migrate:latest; NODE_ENV=test istanbul cover _mocha -- --slow 100 --timeout 10000 --reporter spec; psql -c 'DROP DATABASE \"installation-one-test\"'; psql -c 'DROP DATABASE \"installation-two-test\"'; psql -c 'DROP DATABASE \"three-test\"';",
-    "start": "node bin/server.js",
-    "iron-node": "WINSTON_COLORIZE=false iron-node bin/server.js",
+    "test": "scripty",
+    "test:clean": "scripty",
+    "test:knexreset": "scripty",
+    "test:unit": "scripty",
+    "test:integration": "scripty",
+    "test:integration:installation": "scripty",
+    "test:integration:manager": "scripty",
+    "report": "scripty",
+    "start": "scripty",
+    "iron-node": "scripty",
     "preinstall": "node bin/warn/before-install.js",
     "postinstall": "node bin/warn/post-install.js",
     "prestart": "node bin/warn/before-start.js"
@@ -27,6 +34,7 @@
     "cookie-parser": "1.4.0",
     "css-loader": "0.23.1",
     "csurf": "1.8.3",
+    "domain-container": "2.4.0",
     "express": "4.13.3",
     "express-session": "^1.13.0",
     "file-loader": "0.8.5",
@@ -59,6 +67,7 @@
     "req-flash": "0.0.2",
     "rimraf": "2.5.0",
     "scandium-express": "0.0.3",
+    "scripty": "1.5.0",
     "style-loader": "0.13.0",
     "thulium": "2.0.0",
     "thulium-express": "1.0.4",
@@ -70,6 +79,7 @@
   "devDependencies": {
     "chai": "3.4.1",
     "istanbul": "0.4.2",
+    "istanbul-combine": "0.3.0",
     "mocha": "2.3.4",
     "nodemailer-stub-transport": "1.0.0",
     "superagent": "1.6.1"
