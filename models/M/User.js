@@ -95,45 +95,44 @@ Class(M, 'User').inherits(DynamicModel)({
       });
 
       // Mailers
-      if (CONFIG.environment !== 'test') {
-        // Send activation email after creation
-        this.on('afterCreate', function(next) {
-          model._modelExtras.mailers.user.sendActivationLink(model)
-            .then(function () {
-              next();
-            })
-            .catch(next);
-        });
 
-        // Send changed email email when the email changes
-        this.on('afterUpdate', function (next) {
-          if (model._oldEmail === model.email) {
-            return next();
-          }
+      // Send activation email after creation
+      this.on('afterCreate', function(next) {
+        model._modelExtras.mailers.user.sendActivationLink(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
 
-          model._modelExtras.mailers.user.sendChangedEmailEmails(model)
-            .then(function () {
-              next();
-            })
-            .catch(next);
-        });
+      // Send changed email email when the email changes
+      this.on('afterUpdate', function (next) {
+        if (model._oldEmail === model.email) {
+          return next();
+        }
 
-        // Send changed password email
-        this.on('afterUpdate', function (next) {
-          if (model._skipPasswordEmail || !model.password) {
-            return next();
-          }
+        model._modelExtras.mailers.user.sendChangedEmailEmails(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
 
-          // in order to prevent the password changed notice several times
-          model._skipPasswordEmail = true;
+      // Send changed password email
+      this.on('afterUpdate', function (next) {
+        if (model._skipPasswordEmail || !model.password) {
+          return next();
+        }
 
-          model._modelExtras.mailers.user.sendChangedPasswordNotification(model)
-            .then(function () {
-              next();
-            })
-            .catch(next);
-        });
-      }
+        // in order to prevent the password changed notice several times
+        model._skipPasswordEmail = true;
+
+        model._modelExtras.mailers.user.sendChangedPasswordNotification(model)
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
     },
 
     activate : function() {

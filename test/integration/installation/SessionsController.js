@@ -44,6 +44,13 @@ describe('Sessions Controller', function () {
           props: {
             url: 'http://default.installation-one.test-installation.com:3000',
           },
+          modelExtras: {
+            mailers: {
+              user: new UserMailer({
+                baseUrl: 'http://default.installation-inte.test-installation.com:3000',
+              }),
+            },
+          },
         });
 
         cont2 = new DomainContainer({
@@ -51,6 +58,13 @@ describe('Sessions Controller', function () {
           models: M,
           props: {
             url: 'http://default.installation-two.test-installation.com:3000',
+          },
+          modelExtras: {
+            mailers: {
+              user: new UserMailer({
+                baseUrl: 'http://default.installation-inte.test-installation.com:3000',
+              }),
+            },
           },
         });
 

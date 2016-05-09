@@ -89,7 +89,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
                 models: M,
                 modelExtras: {
                   mailers: {
-                    user: UserMailer,
+                    user: new UserMailer({
+                      baseUrl: 'http://default.installation-inte.test-installation.com:3000',
+                    }),
                   },
                 },
               });
