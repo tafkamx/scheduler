@@ -38,7 +38,35 @@ environment is test, only if the hook sends an email though.
 ***** DONE Update InstallationManager model usage of mailers
 **** DONE Load mailer classes in bin/server.js
 ** DONE Integration tests
-** TODO Make InstallationsController#create use DomainContainers
-*** TODO Update models validations to use ._container
-*** TODO Update InstallationsController#create
-** TODO PATOS-88
+** DONE Make InstallationsController#create use DomainContainers
+*** DONE Update models validations to use ._container
+*** DONE Update InstallationsController#create
+** DONE PATOS-88
+*** DONE Merge PATOS-88 branch, need to cherry-pick
+**** DONE Utils funcs
+**** DONE Update res.locals.helpers
+**** DONE Update views
+***** DONE Normal views: To use stuff available from res.locals.helpers
+***** DONE Mailers: To use baseUrl
+*** DONE Update DomainContainer middleware mailers to give them a URL
+** DONE Activate mailers even in test environment
+** DONE Test all mailer events manually
+*** DONE InstallationManager
+**** DONE Mailers
+The links are generated properly but without http:// at the beginning,
+potentially confusing the client that is figuring out where to send
+the URL.
+**** DONE Views
+***** DONE Installations/index/login link
+***** DONE Activation link
+***** DONE Reset password
+*** DONE Installation
+**** DONE InstallationsController#create
+**** DONE Mailers
+***** DONE Activation link
+***** DONE Reset password
+**** DONE Views
+***** DONE Branches/index/login link
+* Migration steps
+** Add CONFIG.env()
+** Update /etc/hosts
