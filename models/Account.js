@@ -30,7 +30,7 @@ var Account = Class('Account').inherits(DynamicModel)({
     country: ['maxLength:48'],
     postalCode: ['maxLength:48'],
 
-  }
+  },
 
   /**
    * Update this Object to create more Account Types. The values should link to Model names to be used within DomainContainer.
@@ -104,7 +104,8 @@ var Account = Class('Account').inherits(DynamicModel)({
 
       this._container.query(possibleTypes[this.type]).where({ 'account_id': this.id }) // TODO as specified in DomainContainer spec
       .then(function(res) {
-        // Overload properties
+        // Overload attributes
+        // Create functions within `this.prototype` based on `res.prototype`
       });
     }
   }
