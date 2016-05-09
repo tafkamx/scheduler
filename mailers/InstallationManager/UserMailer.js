@@ -19,7 +19,7 @@ Class(InstallationManager, 'UserMailer').inherits(BaseMailer)({
     init: function (config) {
       var that = this;
 
-      that.baseUrl = config.baseUrl || CONFIG.env().defaultDomainName;
+      that.baseUrl = config.baseUrl || 'http://' + CONFIG.env().defaultDomainName;
     },
 
     sendActivationLink: function (user) {
