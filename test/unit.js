@@ -39,6 +39,13 @@ Promise.resolve()
     UNIT = new DomainContainer({
       knex: unitInstall.getDatabase(),
       models: M,
+      modelExtras: {
+        mailers: {
+          user: new UserMailer({
+            baseUrl: 'http://default.installation-unit.test-installation.com:3000',
+          }),
+        },
+      },
     });
   })
   .then(function () {

@@ -42,6 +42,13 @@ Promise.resolve()
       props: {
         url: 'http://default.installation-inte.test-installation.com:3000',
       },
+      modelExtras: {
+        mailers: {
+          user: new UserMailer({
+            baseUrl: 'http://default.installation-inte.test-installation.com:3000',
+          }),
+        },
+      },
     });
   })
   .then(function () {

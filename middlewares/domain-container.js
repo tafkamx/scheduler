@@ -7,6 +7,8 @@ var DomainContainer = require('domain-container');
 var _ = require('lodash');
 var knex = require('knex');
 
+var getCurrentInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-current-installation-url.js'));
+
 var containers = {};
 
 module.exports = function (req, res, next) {
@@ -41,7 +43,9 @@ module.exports = function (req, res, next) {
         models: M,
         modelExtras: {
           mailers: {
-            user: UserMailer,
+            user: new UserMailer({
+              baseUrl: getCurrentInstallationUrl(req),
+            }),
           },
         },
       });
