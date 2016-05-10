@@ -67,6 +67,21 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
         next();
       });
 
+      // UserInfo instance
+      this.on('afterCreate', function (next) {
+        var info = new InstallationManager.UserInfo({
+          userId: model.id,
+          role: model.role
+        });
+
+        info
+          .save()
+          .then(function () {
+            next();
+          })
+          .catch(next);
+      });
+
       // Set new token if email changes
       this.on('afterUpdate', function (next) {
         if (model._oldEmail === model.email) {
