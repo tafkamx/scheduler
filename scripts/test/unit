@@ -3,7 +3,6 @@
 export NODE_ENV=test
 
 npm run test:clean
-
 npm run test:knexreset
 
-istanbul cover test/unit.js --dir coverage/unit/
+istanbul cover test/unit.js --dir coverage/unit/ -- "$1"

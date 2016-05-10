@@ -29,9 +29,15 @@ Promise.resolve()
     ]);
   })
   .then(function () {
-    glob.sync('test/unit/**/*.js').forEach(function (file) {
-      mocha.addFile(path.join(process.cwd(), file));
-    });
+    glob.sync('test/unit/**/*.js')
+      .filter(function (filePath) {
+        var fileName = path.parse(filePath).base;
+
+        return (fileName.indexOf(process.argv[2]) !== -1)
+      })
+      .forEach(function (file) {
+        mocha.addFile(path.join(process.cwd(), file));
+      });
 
     return Promise.resolve();
   })
