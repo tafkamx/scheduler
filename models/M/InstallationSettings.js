@@ -1,4 +1,4 @@
-var InstallationSettings = Class('InstallationSettings').inherits(DynamicModel)({
+Class(M, 'InstallationSettings').inherits(DynamicModel)({
   tableName : 'InstallationSettings',
   LANGUAGES : {
     'en-CA' : 'Canadian English',
@@ -18,7 +18,7 @@ var InstallationSettings = Class('InstallationSettings').inherits(DynamicModel)(
       'required',
       {
         rule : function(val) {
-          if (!InstallationSettings.LANGUAGES[val]) {
+          if (!M.InstallationSettings.LANGUAGES[val]) {
             throw new Error('Language is invalid.');
           }
         },
@@ -29,7 +29,7 @@ var InstallationSettings = Class('InstallationSettings').inherits(DynamicModel)(
       'required',
       {
         rule : function(val) {
-          if (!InstallationSettings.CURRENCIES[val]) {
+          if (!M.InstallationSettings.CURRENCIES[val]) {
             throw new Error('Currency is invalid.')
           }
         },
@@ -83,4 +83,4 @@ var InstallationSettings = Class('InstallationSettings').inherits(DynamicModel)(
   }
 });
 
-module.exports = InstallationSettings;
+module.exports = M.InstallationSettings;
