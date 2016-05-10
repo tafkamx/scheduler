@@ -1,86 +1,96 @@
 var path = require('path');
 
-describe('Branch Model', function() {
-  var knex;
+describe('M.Branch', function() {
+  var container = UNIT;
 
-  before(function() {
-    var installation = 'installation-one';
-    var Knex = require('knex');
-    var knexConfig;
-
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
-
-    knex = new Knex(knexConfig[CONFIG.environment]);
+  beforeEach(function () {
+    return Promise.all([
+      container.get('Branch').query().delete(),
+      container.get('BranchSettings').query().delete(),
+    ]);
   });
 
-  it('Should create a branch', function(done) {
-    var branch = new Branch({
-      name : 'toronto'
-    });
-
-    branch.save(knex).then(function(res) {
-      expect(res.length).to.be.equal(1);
-      expect(res[0]).to.be.equal(branch.id);
-      done();
-    });
+  after(function () {
+    return Promise.all([
+      container.get('Branch').query().delete(),
+      container.get('BranchSettings').query().delete(),
+    ]);
   });
 
-  it('Should fail if name is invalid', function(done) {
-    var branch = new Branch({
-      name : 'Thunder Bay'
-    });
-
-    branch.save(knex).catch(function(err) {
-      expect(err).is.an.instanceof(Error);
-      expect(err.message).to.be.equal('1 invalid values');
-      expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
-      done();
-    });
-  });
-
-  it('Should fail if name already exists', function(done) {
-    var branch = new Branch({
-      name : 'toronto'
-    });
-
-    branch.save(knex).catch(function(err) {
-      expect(err).is.an.instanceof(Error);
-      expect(err.message).to.be.equal('1 invalid values');
-      expect(err.errors.name.message).to.be.equal('The name already exists.')
-      done();
-    });
-  });
-
-  describe('Relations', function() {
-    it('Should load the settings relation', function(done) {
-      var branch = new Branch({
-        name : 'Vancouver'
+  it('Should create a branch', function () {
+    return container
+      .create('Branch', {
+        name: 'toronto',
+      })
+      .then(function (branch) {
+        expect(branch).to.have.property('id');
       });
+  });
 
-      var settings = new BranchSettings({
-        language : 'en-CA',
-        currency : 'CAD',
-        timezone : 'America/Toronto'
+  it('Should fail if name is invalid', function (done) {
+    container
+      .create('Branch', {
+        name: 'Thunder Bay',
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err.message).to.be.equal('1 invalid values');
+        expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+
+        done();
       });
+  });
 
-      branch.save(knex).then(function() {
-        settings.branchId = branch.id;
+  it('Should fail if name already exists', function (done) {
+    return container
+      .create('Branch', {
+        name: 'toronto',
+      })
+      .then(function () {
+        return container
+          .create('Branch', {
+            name: 'toronto',
+          });
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err.message).to.be.equal('1 invalid values');
+        expect(err.errors.name.message).to.be.equal('The name already exists.')
 
-        return settings.save(knex);
-      }).then(function() {
-        return Branch.query(knex).include('settings').where('id', branch.id)
-        .then(function(res) {
-          expect(res[0]).to.be.instanceof(Branch);
-          expect(res[0].settings).to.be.instanceof(BranchSettings);
-          expect(res[0].settings.id).to.be.equal(settings.id);
-          done();
+        done();
+      });
+  });
+
+  describe('Relations', function () {
+
+    it('Should load the settings relation', function () {
+      return Promise.resolve()
+        .then(function () {
+          return container.create('Branch', {
+            name: 'Vancouver',
+          });
+        })
+        .then(function (branch) {
+          return container.create('BranchSettings', {
+            language: 'en-CA',
+            currency: 'CAD',
+            timezone: 'America/Toronto',
+            branchId: branch.id,
+          });
+        })
+        .then(function (set) {
+          return container.query('Branch').include('settings');
+        })
+        .then(function (res) {
+          expect(res[0]).to.be.instanceof(M.Branch);
+          expect(res[0].settings).to.be.instanceof(M.BranchSettings);
         });
-      });
     });
+
   });
 
-  after(function(done) {
-    knex.destroy().then(done);
-  });
 });
