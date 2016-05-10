@@ -10,10 +10,10 @@ Class(M, 'Branch').inherits(DynamicModel)({
           var regExp = /^[a-zA-Z0-9\-]+$/;
 
           if (!regExp.test(val)) {
-            throw new Error('name must only contain alpha-numeric characters and dashes.');
+            throw new Error('The name must only contain alpha-numeric characters and dashes.');
           }
         },
-        message: 'name must only contain alpha-numeric characters and dashes.'
+        message: 'The name must only contain alpha-numeric characters and dashes.'
       },
       {
         rule: function(val) {

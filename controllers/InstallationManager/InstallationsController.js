@@ -13,6 +13,14 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     {
       before: ['_loadInstallation'],
       actions: ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before : ['_loadInstallationSettings'],
+      actions : ['show', 'edit']
+    },
+    {
+      before : ['_loadTimezones'],
+      actions : ['new', 'edit']
     }
   ],
 
@@ -27,9 +35,33 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
           res.locals.installation = result[0];
 
-          next();
-        })
-        .catch(next);
+          return next();
+        }).catch(next);
+    },
+
+    _loadInstallationSettings : function(req, res, next) {
+      var dynKnex = res.locals.installation.getDatabase();
+
+      InstallationSettings.query(dynKnex).then(function(settings) {
+        if (settings.length === 0) {
+          settings[0] = {};
+        }
+
+        res.locals.installationSettings = settings[0];
+        return dynKnex.destroy();
+      }).then(function() {
+        next();
+      }).catch(next);
+    },
+
+    _loadTimezones : function(req, res, next) {
+      var knex = InstallationManager.Installation.knex();
+
+      knex('pg_timezone_names').then(function(result) {
+        res.locals.timezones = result;
+
+        next();
+      }).catch(next);
     },
 
     index: function (req, res, next) {
@@ -103,8 +135,14 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
                   password: bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11)
                 })
                 .then(function () {
+                  return container.create('InstallationSettings', req.body.installationSettings);
+                })
+                .then(function () {
                   return container.cleanup();
                 });
+            })
+            .then(function() {
+              return installationKnex.destroy();
             })
             .then(function () {
               res.json(installation);
@@ -131,7 +169,23 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           res.locals.installation
             .updateAttributes(req.body)
             .save()
-            .then(function(val) {
+            .then(function() {
+              if (!req.body.installationSettings) {
+                return;
+              }
+
+              var installation = res.locals.installation;
+              var installationKnex = installation.getDatabase();
+
+              return InstallationSettings.query(installationKnex).then(function(settings) {
+                settings[0].updateAttributes(req.body.installationSettings);
+
+                return settings[0].save(installationKnex).then(function() {
+                  return installationKnex.destroy();
+                });
+              });
+            })
+            .then(function() {
               res.json(res.locals.installation);
             })
             .catch(next);

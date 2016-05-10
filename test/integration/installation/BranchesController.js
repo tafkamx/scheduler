@@ -235,7 +235,7 @@ describe('Branches Controller', function () {
           expect(err).to.be.instanceof(Error);
           expect(res.status).to.be.eql(500);
           expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
+          expect(err.response.body.name[0]).to.be.equal('The name must only contain alpha-numeric characters and dashes.');
           done();
         });
     });
