@@ -2,34 +2,23 @@
 
 var path = require('path');
 
-describe('InstallationSettings Model', function () {
-  var knex;
+describe('M.InstallationSettings', function () {
+  var container = UNIT;
+
   var settingsOptions = {
     language : 'en-CA',
     currency : 'CAD',
     timezone : 'America/Toronto'
   };
 
-  before(function() {
-    var installation = 'installation-one';
-    var Knex = require('knex');
-    var knexConfig;
-
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
-
-    knex = new Knex(knexConfig[CONFIG.environment]);
+  beforeEach(function () {
+    return Promise.all([
+      container.get('InstallationSettings').query().delete(),
+    ]);
   });
 
-  it('Should save without errors', function(done) {
-
-    var settings =  new InstallationSettings(settingsOptions);
-
-    settings.save(knex).then(function(result) {
-      expect(result.length).to.be.equal(1);
-      expect(result[0]).to.be.equal(settings.id);
-      done()
-    });
+  it('Should save without errors', function () {
+    return container.create('InstallationSettings', settingsOptions);
   });
 
   it('Should fail if language is invalid', function(done) {
@@ -39,14 +28,16 @@ describe('InstallationSettings Model', function () {
       timezone : 'America/Toronto'
     };
 
-    var settings =  new InstallationSettings(options);
+    container.create('InstallationSettings', options)
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err.message).to.be.equal('1 invalid values');
+        expect(err.errors.language.message).to.be.equal('Language is invalid.');
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.message).to.be.equal('1 invalid values');
-      expect(err.errors.language.message).to.be.equal('Language is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
   it('Should fail if currency is invalid', function(done) {
@@ -56,14 +47,16 @@ describe('InstallationSettings Model', function () {
       timezone : 'America/Toronto'
     };
 
-    var settings =  new InstallationSettings(options);
+    container.create('InstallationSettings', options)
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err.message).to.be.equal('1 invalid values');
+        expect(err.errors.currency.message).to.be.equal('Currency is invalid.');
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.message).to.be.equal('1 invalid values');
-      expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
   it('Should fail if timezone is invalid', function(done) {
@@ -73,38 +66,32 @@ describe('InstallationSettings Model', function () {
       timezone : 'Canada'
     };
 
-    var settings =  new InstallationSettings(options);
+    container.create('InstallationSettings', options)
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err.message).to.be.equal('1 invalid values');
+        expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.');
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.message).to.be.equal('1 invalid values');
-      expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
-  it('Should delete all records when creating a new one', function(done) {
-
-    var settings =  new InstallationSettings(settingsOptions);
-
-    var oldId;
-
-    InstallationSettings.query(knex).then(function(result) {
-      oldId = result[0].id;
-      return;
-    }).then(function() {
-      return settings.save(knex)
-    }).then(function() {
-      expect(oldId).to.not.equal(settings.id)
-
-      return InstallationSettings.query(knex)
-    }).then(function(result) {
-      expect(result[0].id).to.be.equal(settings.id)
-      done();
-    });
+  it('Should delete all records when creating a new one', function () {
+    return Promise.resolve()
+      .then(function () {
+        return container.create('InstallationSettings', settingsOptions);
+      })
+      .then(function () {
+        return container.create('InstallationSettings', settingsOptions);
+      })
+      .then(function () {
+        return container.query('InstallationSettings');
+      })
+      .then(function (result) {
+        expect(result.length).to.equal(1);
+      });
   });
 
-  after(function(done) {
-    knex.destroy().then(done);
-  });
 });
