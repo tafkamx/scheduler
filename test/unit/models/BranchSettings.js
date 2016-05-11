@@ -2,143 +2,176 @@
 
 var path = require('path');
 
-describe('BranchSettings Model', function() {
-  var knex;
+describe('M.BranchSettings', function() {
+  var container = UNIT;
 
-  before(function() {
-    var installation = 'installation-one';
-    var Knex = require('knex');
-    var knexConfig;
-
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
-
-    knex = new Knex(knexConfig[CONFIG.environment]);
+  beforeEach(function () {
+    return Promise.all([
+      container.get('Branch').query().delete(),
+      container.get('BranchSettings').query().delete(),
+      container.get('InstallationSettings').query().delete(),
+    ]);
   });
 
-  it('Should create a record', function(done) {
-    var settings = new BranchSettings({
-      language : 'en-CA',
-      currency : 'CAD',
-      timezone : 'America/Toronto'
-    });
-
-    var branch = new Branch({ name : 'ontario-please' });
-
-    branch.save(knex).then(function(branch) {
-      settings.branchId = branch[0];
-
-      return settings.save(knex);
-    }).then(function(res) {
-      expect(res.length).to.be.equal(1);
-      expect(res[0]).to.be.equal(settings.id);
-      done();
-    });
+  after(function () {
+    return Promise.all([
+      container.get('Branch').query().delete(),
+      container.get('BranchSettings').query().delete(),
+      container.get('InstallationSettings').query().delete(),
+    ]);
   });
 
-  it('Should create a record from with the same InstallationSettings', function(done) {
-    var settings = new BranchSettings();
-
-    var branch = new Branch({ name : 'Abbotsford' });
-
-    branch.save(knex).then(function(branch) {
-      settings.branchId = branch[0];
-
-      return settings.getInstallationSettings(knex).then(function() {
-        return settings.save(knex)
+  it('Should create a record', function () {
+    return Promise.resolve()
+      .then(function () {
+        return container.create('Branch', {
+          name: 'ontario-please',
+        });
       })
-    }).then(function(res) {
-      expect(res.length).to.be.equal(1);
-      expect(res[0]).to.be.equal(settings.id);
-      done();
-    });
+      .then(function (branch) {
+        return container.create('BranchSettings', {
+          language: 'en-CA',
+          currency: 'CAD',
+          timezone: 'America/Toronto',
+          branchId: branch.id,
+        });
+      });
   });
 
-  it('Should fail if language is invalid', function(done) {
-    var settings = new BranchSettings({
-      language : 'es-MX',
-      currency : 'CAD',
-      timezone : 'America/Toronto'
-    });
+  it('Should fail if language is invalid', function (done) {
+    return container
+      .create('BranchSettings', {
+        language: 'es-MX',
+        currency: 'CAD',
+        timezone: 'America/Toronto',
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err).to.be.instanceof(Error);
+        expect(err.errors.language.message).to.be.equal('Language is invalid.')
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.errors.language.message).to.be.equal('Language is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
   it('Should fail if currency is invalid', function(done) {
-    var settings = new BranchSettings({
-      language : 'en-CA',
-      currency : 'MXP',
-      timezone : 'America/Toronto'
-    });
+    return container
+      .create('BranchSettings', {
+        language: 'es-CA',
+        currency: 'MXP',
+        timezone: 'America/Toronto',
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err).to.be.instanceof(Error);
+        expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
   it('Should fail if timezone is invalid', function(done) {
-    var settings = new BranchSettings({
-      language : 'en-CA',
-      currency : 'CAD',
-      timezone : 'Canada'
-    });
+    return container
+      .create('BranchSettings', {
+        language: 'es-CA',
+        currency: 'CAD',
+        timezone: 'Canada',
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err).to.be.instanceof(Error);
+        expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
-      done()
-    });
+        done();
+      });
   });
 
   it('Should fail if branchId is null', function(done) {
-    var settings = new BranchSettings({
-      language : 'en-CA',
-      currency : 'CAD',
-      timezone : 'America/Toronto'
-    });
+    return container
+      .create('BranchSettings', {
+        language: 'es-CA',
+        currency: 'CAD',
+        timezone: 'Canada',
+      })
+      .then(function () {
+        expect.fail('should have rejected');
+      })
+      .catch(function (err) {
+        expect(err).to.be.instanceof(Error);
+        expect(err.errors.branchId.message).to.be.equal('The branchId is required')
 
-    settings.save(knex).catch(function(err) {
-      expect(err).to.be.instanceof(Error);
-      expect(err.errors.branchId.message).to.be.equal('The branchId is required')
-      done()
-    });
+        done();
+      });
   });
 
-  describe('Relations', function() {
-    it('Should load the branch relation', function(done) {
-      var branch = new Branch({
-        name : 'Ottawa'
-      });
+  describe('Relations', function () {
 
-      var settings = new BranchSettings({
-        language : 'en-CA',
-        currency : 'CAD',
-        timezone : 'America/Toronto'
-      });
-
-      branch.save(knex).then(function() {
-        settings.branchId = branch.id;
-
-        return settings.save(knex);
-      }).then(function() {
-        return BranchSettings.query(knex).include('branch').where('id', settings.id)
-        .then(function(res) {
-          expect(res[0]).to.be.instanceof(BranchSettings);
-          expect(res[0].branch).to.be.instanceof(Branch);
-          expect(res[0].branch.id).to.be.equal(branch.id);
-          done();
+    it('Should load the branch relation', function () {
+      return Promise.resolve()
+        .then(function () {
+          return container.create('Branch', {
+            name: 'Ottawa',
+          });
+        })
+        .then(function (branch) {
+          return container.create('BranchSettings', {
+            language: 'en-CA',
+            currency: 'CAD',
+            timezone: 'America/Toronto',
+            branchId: branch.id,
+          });
+        })
+        .then(function () {
+          return container.query('BranchSettings').include('branch');
+        })
+        .then(function (res) {
+          expect(res[0].branch).to.be.instanceof(M.Branch);
         });
-      });
     });
+
   });
 
-  after(function(done) {
-    knex.destroy().then(done);
+  describe('Methods', function () {
+
+    describe('#getInstallationSettings', function () {
+
+      it('Should create a record from with the same InstallationSettings', function () {
+        return Promise.resolve()
+          .then(function () {
+            return container.create('InstallationSettings', {
+              language: 'en-CA',
+              currency: 'CAD',
+              timezone: 'America/Toronto',
+            });
+          })
+          .then(function () {
+            return container.create('Branch', {
+              name: 'Abbotsford',
+            });
+          })
+          .then(function (branch) {
+            var Model = container.get('BranchSettings');
+
+            var settings = new Model({
+              branchId: branch.id,
+            });
+
+            return settings
+              .getInstallationSettings()
+              .then(function () {
+                return container.update(settings);
+              });
+          });
+      });
+
+    });
+
   });
-})
+
+});

@@ -21,9 +21,6 @@ describe('M.Branch', function() {
     return container
       .create('Branch', {
         name: 'toronto',
-      })
-      .then(function (branch) {
-        expect(branch).to.have.property('id');
       });
   });
 
