@@ -1,55 +1,71 @@
-var installation = 'installation-one';
-
-var user, knex, Knex, knexConfig;
-
-var websiteUrl = CONFIG[CONFIG.environment].defaultDomainName;
-var installationUrl = 'http://default.' + installation + '.' + websiteUrl;
-
 var agent = sa.agent();
 
+var container = INTE;
 var path = require('path');
+var urlFor = CONFIG.router.helpers;
 
-describe('UsersController', function() {
-  before(function(done) {
-    Knex = require('knex');
+var url = container.props.url;
 
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
+describe('Users Controller', function() {
 
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+  var user;
 
-    knex = new Knex(knexConfig[CONFIG.environment]);
-
+  // Create User for tests requiring existing user
+  // Also used for login
+  before(function (done) {
     Promise.resolve()
       .then(function () {
-        user = new User({
-          email : 'test.installation.one@example.com',
-          password : '12345678',
-          role: 'franchisor'
-        });
+        return container
+          .create('User', {
+            email: 'franch@example.com',
+            password: '12345678',
+            role: 'franchisor',
+          })
+          .then(function (res) {
+            user = res;
 
-        return user.save(knex);
-      })
-      .then(function (userId) {
-        return User.query(knex)
-          .where('id', userId[0])
-          .then(function (result) {
-            return new Promise(function (resolve, reject) {
-              agent.get(installationUrl + '/login?email=false&token=' + result[0].token)
-                .end(function (err, res) {
-                  expect(err).to.equal(null);
-                  expect(res.status).to.equal(200);
-
-                  return resolve();
-                });
-            });
+            return container.update(user.activate());
           });
       })
-      .then(done)
+      .then(function () {
+        done();
+      })
+      .catch(done);
+  });
+
+  // Login agent
+  before(function (done) {
+    Promise.resolve()
+      .then(function (userId) {
+        agent.post(url + urlFor.login())
+          .send({
+            email: 'franch@example.com',
+            password: '12345678',
+            role: 'franchisor',
+          })
+          .end(function (err, res) {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+
+            done();
+          });
+      })
+      .catch(done);
+  });
+
+  // Cleanup
+  after(function(done) {
+    return Promise.all([
+      container.get('User').query().delete(),
+    ])
+      .then(function () {
+        done();
+      })
       .catch(done);
   });
 
   it('Should render /Users/', function(done) {
-    agent.get(installationUrl + '/Users')
+    agent.get(url + '/Users')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -59,7 +75,7 @@ describe('UsersController', function() {
   });
 
   it('Should get the Users Array from /Users', function(done) {
-    agent.get(installationUrl + '/Users')
+    agent.get(url + '/Users')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -70,7 +86,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/:id', function(done) {
-    agent.get(installationUrl + '/Users/' + user.id)
+    agent.get(url + '/Users/' + user.id)
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -80,7 +96,7 @@ describe('UsersController', function() {
   });
 
   it('Should return 404 when User.id doesnt exists in /Users/:id', function(done) {
-    agent.get(installationUrl + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(url + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -90,7 +106,7 @@ describe('UsersController', function() {
   });
 
   it('Should get /Users/:id', function(done) {
-    agent.get(installationUrl + '/Users/' + user.id)
+    agent.get(url + '/Users/' + user.id)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -102,7 +118,7 @@ describe('UsersController', function() {
   });
 
   it('Should fail to get if id doesnt exists /Users/:id', function(done) {
-    agent.get(installationUrl + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(url + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -112,7 +128,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/new', function(done) {
-    agent.get(installationUrl + '/Users/new')
+    agent.get(url + '/Users/new')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -130,7 +146,7 @@ describe('UsersController', function() {
       Promise.resolve()
         .then(function () {
           return new Promise(function (resolve) {
-            agent.post(installationUrl + '/Users')
+            agent.post(url + '/Users')
               .set('Accept', 'application/json')
               .send({
                 email : 'test1@example.com',
@@ -147,7 +163,7 @@ describe('UsersController', function() {
           });
         })
         .then(function (id) {
-          return User.query(knex)
+          return container.query('User')
             .where('id', id)
             .then(function (result) {
               expect(result.length).to.equal(1);
@@ -156,7 +172,7 @@ describe('UsersController', function() {
             });
         })
         .then(function () {
-          return UserInfo.query(knex)
+          return container.query('UserInfo')
             .where('user_id', user.id)
             .then(function (result) {
               expect(result.length).to.equal(1);
@@ -177,7 +193,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail if the email exists', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .set('Accept', 'application/json')
         .send({
           email : 'test1@example.com',
@@ -194,7 +210,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail if the email is no email', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .set('Accept', 'application/json')
         .send({
           email : 'test2example.com',
@@ -211,7 +227,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail if the email is empty', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .set('Accept', 'application/json')
         .send({
           email : '',
@@ -228,7 +244,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail if the email is > 255', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .set('Accept', 'application/json')
         .send({
           email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
@@ -245,7 +261,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail if the password is < 8', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .set('Accept', 'application/json')
         .send({
           email : 'test3@example.com',
@@ -264,7 +280,7 @@ describe('UsersController', function() {
   });
 
   it('Should render /Users/:id/edit', function(done) {
-    agent.get(installationUrl + '/Users/' + user.id + '/edit')
+    agent.get(url + '/Users/' + user.id + '/edit')
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -274,7 +290,7 @@ describe('UsersController', function() {
   });
 
   it('Should get the user object /Users/:id/edit', function(done) {
-    agent.get(installationUrl + '/Users/' + user.id + '/edit')
+    agent.get(url + '/Users/' + user.id + '/edit')
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -287,7 +303,7 @@ describe('UsersController', function() {
   describe('#update', function () {
 
     it('Should update user attributes', function(done) {
-      agent.put(installationUrl + '/Users/' + user.id)
+      agent.put(url + '/Users/' + user.id)
         .set('Accept', 'application/json')
         .send({
           email : 'email@example.com',
@@ -304,7 +320,7 @@ describe('UsersController', function() {
     });
 
     it('Should update user attributes if its the same email', function(done) {
-      agent.put(installationUrl + '/Users/' + user.id)
+      agent.put(url + '/Users/' + user.id)
         .set('Accept', 'application/json')
         .send({
           password : 'abcdefghi'
@@ -320,7 +336,7 @@ describe('UsersController', function() {
     });
 
     it('Should fail update if password doesnt validate', function(done) {
-      agent.put(installationUrl + '/Users/' + user.id)
+      agent.put(url + '/Users/' + user.id)
         .set('Accept', 'application/json')
         .send({
           password : 'abcd'
@@ -339,13 +355,13 @@ describe('UsersController', function() {
   describe('#destroy', function () {
 
     it('Should destroy a record', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .send({
           email : 'temp@example.com',
           password : '12345678',
           role: 'student'
         }).end(function(err, res) {
-          agent.post(installationUrl + '/Users/' + res.body.id)
+          agent.post(url + '/Users/' + res.body.id)
             .send({'_method' : 'DELETE'})
             .set('Accept', 'application/json')
             .end(function(err, res) {
@@ -357,7 +373,7 @@ describe('UsersController', function() {
     });
 
     it('Should destroy UsersInfo record if User is destroyed', function(done) {
-      agent.post(installationUrl + '/Users')
+      agent.post(url + '/Users')
         .send({
           email: 'temp@example.com',
           password: '12345678',
@@ -367,7 +383,7 @@ describe('UsersController', function() {
           Promise.resolve()
             .then(function () {
               return new Promise(function (resolve) {
-                agent.post(installationUrl + '/Users/' + res.body.id)
+                agent.post(url + '/Users/' + res.body.id)
                   .send({ _method: 'DELETE' })
                   .set('Accept', 'application/json')
                   .end(function(err, res) {
@@ -379,7 +395,7 @@ describe('UsersController', function() {
               });
             })
             .then(function () {
-              return UserInfo.query(knex)
+              return container.query('UserInfo')
                 .where('user_id', res.id)
                 .then(function (result) {
                   expect(result.length).to.equal(0);
@@ -391,9 +407,8 @@ describe('UsersController', function() {
     });
 
     it('Should fail if id doesnt exist when destroy a record', function(done) {
-      agent.post(installationUrl + '/Users/' + user.id + '1')
-      .send({'_method' : 'DELETE'})
-
+      agent.post(url + '/Users/' + user.id + '1')
+        .send({'_method' : 'DELETE'})
         .set('Accept', 'application/json')
         .end(function(err, res) {
           expect(err).to.be.instanceof(Error);
@@ -403,9 +418,4 @@ describe('UsersController', function() {
 
   });
 
-  after(function(done) {
-    User.query(knex).delete().then(function() {
-      return done();
-    });
-  });
 });

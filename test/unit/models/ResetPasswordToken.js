@@ -2,29 +2,28 @@
 
 var path = require('path');
 
-var installation = 'installation-one';
+var container = UNIT;
 
-var knex,
-  Knex = require('knex'),
-  knexConfig;
-
-var agent = sa.agent();
-
-describe('ResetPasswordToken', function () {
+describe('M.ResetPasswordToken', function () {
 
   before(function (done) {
-    knexConfig = require(path.join(process.cwd(), 'knexfile.js'));
-    knexConfig[CONFIG.environment].connection.database = installation.toLowerCase() + '-' + CONFIG.environment;
+    container
+      .create('User', {
+        email: 'user-test@example.com',
+        password: '12345678',
+        role: 'student'
+      })
+      .then(function () {
+        return done();
+      })
+      .catch(done);
+  });
 
-    knex = new Knex(knexConfig[CONFIG.environment]);
-
-    var user = new User({
-      email: 'user-test@example.com',
-      password: '12345678',
-      role: 'student'
-    });
-
-    user.save(knex)
+  after(function (done) {
+    Promise.all([
+      container.get('User').query().delete(),
+      container.get('ResetPasswordToken').query().delete(),
+    ])
       .then(function () {
         return done();
       })
@@ -40,17 +39,15 @@ describe('ResetPasswordToken', function () {
 
         Promise.resolve()
           .then(function () {
-            return User.query(knex);
+            return container.query('User');
           })
           .then(function (result) {
-            token = new ResetPasswordToken({
+            return container.create('ResetPasswordToken', {
               userId: result[0].id,
-            })
-
-            return token.save(knex);
+            });
           })
           .then(function () {
-            return ResetPasswordToken.query(knex)
+            return container.query('ResetPasswordToken')
               .include('user')
               .then(function (result) {
                 expect(result.length).to.equal(1);
@@ -64,7 +61,7 @@ describe('ResetPasswordToken', function () {
               });
           })
           .then(function () {
-            return token.destroy(knex);
+            container.destroy(token);
           })
           .then(function () {
             return doneTest();
@@ -79,21 +76,17 @@ describe('ResetPasswordToken', function () {
   describe('Checkit rules', function () {
 
     it('Should create a proper token with no errors', function (doneTest) {
-      var token;
-
       Promise.resolve()
         .then(function () {
-          return User.query(knex);
+          return container.query('User');
         })
         .then(function (result) {
-          token = new ResetPasswordToken({
+          return container.create('ResetPasswordToken', {
             userId: result[0].id,
-          })
-
-          return token.save(knex);
+          });
         })
-        .then(function () {
-          return token.destroy(knex);
+        .then(function (token) {
+          return container.destroy(token);
         })
         .then(function () {
           return doneTest();
@@ -106,12 +99,12 @@ describe('ResetPasswordToken', function () {
 
       Promise.resolve()
         .then(function () {
-          return User.query(knex);
+          return container.query('User');
         })
         .then(function (result) {
-          token = new ResetPasswordToken({})
-
-          return token.save(knex);
+          return container.create('ResetPasswordToken', {
+            userId: null,
+          });
         })
         .then(function () {
           return doneTest(new Error('should have failed before this'));
@@ -121,17 +114,6 @@ describe('ResetPasswordToken', function () {
         });
     });
 
-  });
-
-  after(function (done) {
-    Promise.all([
-      User.query(knex).delete(),
-      ResetPasswordToken.query(knex).delete()
-    ])
-      .then(function () {
-        return done();
-      })
-      .catch(done);
   });
 
 });

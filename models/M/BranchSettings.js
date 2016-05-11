@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
+Class(M, 'BranchSettings').inherits(DynamicModel)({
   tableName : 'BranchSettings',
 
   validations : {
@@ -11,7 +11,7 @@ var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
       'required',
       {
         rule : function(val) {
-          if (!InstallationSettings.LANGUAGES[val]) {
+          if (!M.InstallationSettings.LANGUAGES[val]) {
             throw new Error('Language is invalid.');
           }
         },
@@ -22,7 +22,7 @@ var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
       'required',
       {
         rule : function(val) {
-          if (!InstallationSettings.CURRENCIES[val]) {
+          if (!M.InstallationSettings.CURRENCIES[val]) {
             throw new Error('Currency is invalid.')
           }
         },
@@ -70,7 +70,7 @@ var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
     getInstallationSettings : function(knex) {
       var model = this;
 
-      return InstallationSettings.query(knex || this._knex).then(function(res) {
+      return M.InstallationSettings.query(knex || this.constructor.knex()).then(function(res) {
         for (var property in res[0]) {
           if (res[0].hasOwnProperty(property)) {
             if (_.includes(['language', 'currency', 'timezone'], property)) {
@@ -85,4 +85,4 @@ var BranchSettings = Class('BranchSettings').inherits(DynamicModel)({
   }
 });
 
-module.exports = BranchSettings;
+module.exports = M.BranchSettings;

@@ -10,8 +10,8 @@
     <div class="">
         <label for="installationSettings[language]">Language</label>
         <select class="" name="installationSettings[language]">
-            <% for (var language in InstallationSettings.LANGUAGES) { %>
-                <option value="<%= language %>"><%= InstallationSettings.LANGUAGES[language] %></option>
+            <% for (var language in M.InstallationSettings.LANGUAGES) { %>
+                <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
             <% } %>
         </select>
     </div>
@@ -19,7 +19,7 @@
     <div class="">
         <label for="installationSettings[currency]">Currency</label>
         <select class="" name="installationSettings[currency]">
-            <% for (var currency in InstallationSettings.CURRENCIES) { %>
+            <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
                 <option value="<%= currency %>"><%= currency %></option>
             <% } %>
         </select>
