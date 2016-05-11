@@ -64,28 +64,32 @@ describe('M.Branch', function() {
 
   describe('Relations', function () {
 
-    it('Should load the settings relation', function () {
-      return Promise.resolve()
-        .then(function () {
-          return container.create('Branch', {
-            name: 'Vancouver',
+    describe('settings', function () {
+
+      it('Should load the settings relation', function () {
+        return Promise.resolve()
+          .then(function () {
+            return container.create('Branch', {
+              name: 'Vancouver',
+            });
+          })
+          .then(function (branch) {
+            return container.create('BranchSettings', {
+              language: 'en-CA',
+              currency: 'CAD',
+              timezone: 'America/Toronto',
+              branchId: branch.id,
+            });
+          })
+          .then(function (set) {
+            return container.query('Branch').include('settings');
+          })
+          .then(function (res) {
+            expect(res[0]).to.be.instanceof(M.Branch);
+            expect(res[0].settings).to.be.instanceof(M.BranchSettings);
           });
-        })
-        .then(function (branch) {
-          return container.create('BranchSettings', {
-            language: 'en-CA',
-            currency: 'CAD',
-            timezone: 'America/Toronto',
-            branchId: branch.id,
-          });
-        })
-        .then(function (set) {
-          return container.query('Branch').include('settings');
-        })
-        .then(function (res) {
-          expect(res[0]).to.be.instanceof(M.Branch);
-          expect(res[0].settings).to.be.instanceof(M.BranchSettings);
-        });
+      });
+
     });
 
   });

@@ -112,27 +112,31 @@ describe('M.BranchSettings', function() {
 
   describe('Relations', function () {
 
-    it('Should load the branch relation', function () {
-      return Promise.resolve()
-        .then(function () {
-          return container.create('Branch', {
-            name: 'Ottawa',
+    describe('branch', function () {
+
+      it('Should load the branch relation', function () {
+        return Promise.resolve()
+          .then(function () {
+            return container.create('Branch', {
+              name: 'Ottawa',
+            });
+          })
+          .then(function (branch) {
+            return container.create('BranchSettings', {
+              language: 'en-CA',
+              currency: 'CAD',
+              timezone: 'America/Toronto',
+              branchId: branch.id,
+            });
+          })
+          .then(function () {
+            return container.query('BranchSettings').include('branch');
+          })
+          .then(function (res) {
+            expect(res[0].branch).to.be.instanceof(M.Branch);
           });
-        })
-        .then(function (branch) {
-          return container.create('BranchSettings', {
-            language: 'en-CA',
-            currency: 'CAD',
-            timezone: 'America/Toronto',
-            branchId: branch.id,
-          });
-        })
-        .then(function () {
-          return container.query('BranchSettings').include('branch');
-        })
-        .then(function (res) {
-          expect(res[0].branch).to.be.instanceof(M.Branch);
-        });
+      });
+
     });
 
   });
