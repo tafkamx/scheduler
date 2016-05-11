@@ -9,16 +9,16 @@ machine:
   node:
     version: 4.4.0
   hosts:
-    - default.installation-one.test-installation.com 127.0.0.1
-    - installation-one.test-installation.com 127.0.0.1
-    - default.installation-two.test-installation.com 127.0.0.1
-    - installation-two.test-installation.com 127.0.0.1
-    - default.three.test-installation.com 127.0.0.1
-    - three.test-installation.com 127.0.0.1
-    - default.installation-inte.test-installation.com 127.0.0.1
-    - installation-inte.test-installation.com 127.0.0.1
-    - default.installation-unit.test-installation.com 127.0.0.1
-    - installation-unit.test-installation.com 127.0.0.1
+    default.installation-one.test-installation.com: 127.0.0.1
+    installation-one.test-installation.com: 127.0.0.1
+    default.installation-two.test-installation.com: 127.0.0.1
+    installation-two.test-installation.com: 127.0.0.1
+    default.three.test-installation.com: 127.0.0.1
+    three.test-installation.com: 127.0.0.1
+    default.installation-inte.test-installation.com: 127.0.0.1
+    installation-inte.test-installation.com: 127.0.0.1
+    default.installation-unit.test-installation.com: 127.0.0.1
+    installation-unit.test-installation.com: 127.0.0.1
 
 checkout:
   post:
