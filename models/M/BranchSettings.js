@@ -70,7 +70,7 @@ Class(M, 'BranchSettings').inherits(DynamicModel)({
     getInstallationSettings : function(knex) {
       var model = this;
 
-      return M.InstallationSettings.query(knex || this._knex).then(function(res) {
+      return M.InstallationSettings.query(knex || this.constructor.knex()).then(function(res) {
         for (var property in res[0]) {
           if (res[0].hasOwnProperty(property)) {
             if (_.includes(['language', 'currency', 'timezone'], property)) {
