@@ -46,7 +46,7 @@ describe('InstallationManager.InstallationsController', function () {
       .then(function () {
         var installationKnex = installation.getDatabase();
 
-        var settings = new InstallationSettings({
+        var settings = new M.InstallationSettings({
           language: 'en-CA',
           currency: 'CAD',
           timezone: 'America/Toronto',
@@ -171,7 +171,7 @@ describe('InstallationManager.InstallationsController', function () {
 
       Promise.resolve()
         .then(function () {
-          return new Promise(function (resolve) {
+          return new Promise(function (resolve, reject) {
             agent.post(baseURL + '/InstallationManager/Installations')
               .set('Accept', 'application/json')
               .send(data)
@@ -212,7 +212,9 @@ describe('InstallationManager.InstallationsController', function () {
         .then(function () {
           return done();
         })
-        .catch(done);
+        .catch(function (err) {
+          done(err)
+        });
     });
 
     it('Should fail to create an Installation if the name contains spaces', function(done) {

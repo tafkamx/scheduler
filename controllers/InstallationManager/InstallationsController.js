@@ -42,7 +42,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     _loadInstallationSettings : function(req, res, next) {
       var dynKnex = res.locals.installation.getDatabase();
 
-      InstallationSettings.query(dynKnex).then(function(settings) {
+      M.InstallationSettings.query(dynKnex).then(function(settings) {
         if (settings.length === 0) {
           settings[0] = {};
         }
@@ -141,9 +141,6 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
                   return container.cleanup();
                 });
             })
-            .then(function() {
-              return installationKnex.destroy();
-            })
             .then(function () {
               res.json(installation);
             })
@@ -177,13 +174,15 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
               var installation = res.locals.installation;
               var installationKnex = installation.getDatabase();
 
-              return InstallationSettings.query(installationKnex).then(function(settings) {
-                settings[0].updateAttributes(req.body.installationSettings);
+              return M.InstallationSettings.query(installationKnex)
+                .then(function(settings) {
+                  settings[0].updateAttributes(req.body.installationSettings);
 
-                return settings[0].save(installationKnex).then(function() {
+                  return settings[0].save(installationKnex);
+                })
+                .then(function () {
                   return installationKnex.destroy();
                 });
-              });
             })
             .then(function() {
               res.json(res.locals.installation);
