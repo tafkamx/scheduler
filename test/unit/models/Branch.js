@@ -1,4 +1,5 @@
 var path = require('path');
+var _ = require('lodash');
 
 describe('M.Branch', function() {
   var container = UNIT;
@@ -24,42 +25,82 @@ describe('M.Branch', function() {
       });
   });
 
-  it('Should fail if name is invalid', function (done) {
-    container
-      .create('Branch', {
-        name: 'Thunder Bay',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err.message).to.be.equal('1 invalid values');
-        expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+  describe('Checkit rules', function () {
 
-        done();
+    describe('name', function () {
+
+      it('Should fail if name is empty', function (done) {
+        container
+          .create('Branch', {
+            name: '',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            expect(err.message).to.be.equal('1 invalid values');
+            expect(err.errors.name.message).to.be.equal('The name is required')
+
+            done();
+          });
       });
-  });
 
-  it('Should fail if name already exists', function (done) {
-    return container
-      .create('Branch', {
-        name: 'toronto',
-      })
-      .then(function () {
+      it('Should fail if name contains non-alpha-numeric characters', function (done) {
+        container
+          .create('Branch', {
+            name: 'abcd123$',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            expect(err.message).to.be.equal('1 invalid values');
+            expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+
+            done();
+          });
+      });
+
+      it('Should fail if name already exists', function (done) {
         return container
           .create('Branch', {
             name: 'toronto',
-          });
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err.message).to.be.equal('1 invalid values');
-        expect(err.errors.name.message).to.be.equal('The name already exists.')
+          })
+          .then(function () {
+            return container
+              .create('Branch', {
+                name: 'toronto',
+              });
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            expect(err.message).to.be.equal('1 invalid values');
+            expect(err.errors.name.message).to.be.equal('The name already exists.')
 
-        done();
+            done();
+          });
       });
+
+      it('Should fail if the name is longer than 255 characters', function (done) {
+        container
+          .create('Branch', {
+            name: _.repeat('a', 256),
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            expect(err.message).to.be.equal('1 invalid values');
+            expect(err.errors.name.message).to.be.equal('The name must not exceed 255 characters long')
+
+            done();
+          });
+      });
+
+    });
+
   });
 
   describe('Relations', function () {
