@@ -29,9 +29,9 @@ describe('M.User', function () {
       .catch(done);
   });
 
-  /**
-  describe('Relations', function () {
 
-  });*/
+  it('Should be an object', function (done) {
+    done();
+  });
 
 });
