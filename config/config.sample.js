@@ -5,6 +5,10 @@ var config = {
   appName : 'PatOS',
   environment : env,
 
+  env: function () {
+    return config[config.environment];
+  },
+
   development : {
     port : process.env.PORT || 3000,
     // sessions : false, if you want to disable Redis sessions

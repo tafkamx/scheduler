@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+knex --knexfile knexinstallationmanager.js migrate:rollback
+knex --knexfile knexinstallationmanager.js migrate:latest

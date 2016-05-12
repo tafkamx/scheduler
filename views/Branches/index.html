@@ -9,7 +9,7 @@
     <tr>
         <td><%= branch.id %></td>
         <td><%= branch.name %></td>
-        <td><a href="http://<%= branch.name %>.<%= helpers.req.installationName %>.<%= CONFIG[CONFIG.environment].defaultDomainName %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a></td>
+        <td><a href="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a></td>
         <td><a href="<%= helpers.urlFor.editBranch(branch.id) %>">Edit</a></td>
     </tr>
     <% }) %>

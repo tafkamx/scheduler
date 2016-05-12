@@ -1,0 +1,72 @@
+* Steps in order
+The plan of attack for this is going to be to add the parts slowly but
+surely, making sure compatibility with the tests is maintained where
+possible.
+** DONE Update DomainParser middleware
+Though for now, only update it so that it puts `installationName` in
+the `req`.
+** DONE Give all installation models the namespace of M
+*** DONE Do so
+*** DONE Update models so they use models in M
+*** DONE Update controllers so they use models in M
+*** DONE Update middlewares so they use models in M
+*** DONE Update tests so they use models in M
+** DONE Add DomainContainer middleware
+Just add it, don't use it anywhere yet.  No mailers yet.
+** DONE Implement new mailer structure
+Referring to the fact that there's the InstallationManager mailers and
+the Installation mailers, separate these two.
+** DONE Update controllers to use DomainContainer
+** DONE Update middlewares to use DomainContainer
+** DONE Remove req.knex stuff
+** DONE Models
+*** DONE Update models to use this._container for other models usage
+*** DONE Update all model unit tests to use DomainContainers
+**** DONE Create one installation named `installation-unit` to hold the DB that unit tests will use
+**** DONE Create global DomainContainer that holds the `installation-unit` installation
+**** DONE Make unit tests use that DomainContainer to access the DB
+*** DONE Mailers
+**** DONE Make models not use mailers during 'test' environment
+This is inside the models.  Make the model hooks not get setup if the
+environment is test, only if the hook sends an email though.
+**** DONE Make mailers available in ._modelExtras
+**** DONE Make models use ._modelExtras.mailers
+**** DONE Make mailers instance based
+***** DONE Update BaseMailer
+***** DONE Update UserMailers
+***** DONE Update UserMailers tests
+***** DONE Update InstallationManager model usage of mailers
+**** DONE Load mailer classes in bin/server.js
+** DONE Integration tests
+** DONE Make InstallationsController#create use DomainContainers
+*** DONE Update models validations to use ._container
+*** DONE Update InstallationsController#create
+** DONE PATOS-88
+*** DONE Merge PATOS-88 branch, need to cherry-pick
+**** DONE Utils funcs
+**** DONE Update res.locals.helpers
+**** DONE Update views
+***** DONE Normal views: To use stuff available from res.locals.helpers
+***** DONE Mailers: To use baseUrl
+*** DONE Update DomainContainer middleware mailers to give them a URL
+** DONE Activate mailers even in test environment
+** DONE Test all mailer events manually
+*** DONE InstallationManager
+**** DONE Mailers
+The links are generated properly but without http:// at the beginning,
+potentially confusing the client that is figuring out where to send
+the URL.
+**** DONE Views
+***** DONE Installations/index/login link
+***** DONE Activation link
+***** DONE Reset password
+*** DONE Installation
+**** DONE InstallationsController#create
+**** DONE Mailers
+***** DONE Activation link
+***** DONE Reset password
+**** DONE Views
+***** DONE Branches/index/login link
+* Migration steps
+** Add CONFIG.env()
+** Update /etc/hosts

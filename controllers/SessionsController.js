@@ -28,19 +28,19 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           return res.redirect(urlFor.login());
         }
 
-        user.token = null;
+        return req.container.update(user.activate())
+          .then(function() {
+            req.login(user, function(err) {
+              if (err) {
+                logger.error('Error', err);
+                return next(err);
+              }
 
-        user.save(req.knex).then(function() {
-          req.login(user, function(err) {
-            if (err) {
-              logger.error('Error', err);
-              return next(err);
-            }
-
-            req.flash('success', 'Welcome to PatOS Installation');
-            return res.redirect(urlFor.root());
-          });
-        }).catch(next);
+              req.flash('success', 'Welcome to PatOS Installation');
+              return res.redirect(urlFor.root());
+            });
+          })
+          .catch(next);
 
       })(req, res, next);
 
@@ -94,7 +94,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
 
       Promise.resolve()
         .then(function () {
-          return User.query(req.knex)
+          return req.container.query('User')
             .where('email', req.body.email);
         })
         .then(function (result) {
@@ -103,11 +103,9 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
             return res.status(404).json({ message: 'Email not found' });
           }
 
-          var token = new ResetPasswordToken({
-            userId: result[0].id
+          return req.container.create('ResetPasswordToken', {
+            userId: result[0].id,
           });
-
-          return token.save(req.knex);
         })
         .then(function () {
           return res.status(200).json({ message: 'Reset password email sent' });
@@ -124,7 +122,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
 
       Promise.resolve()
         .then(function () {
-          return ResetPasswordToken.query(req.knex)
+          return req.container.query('ResetPasswordToken')
             .where('token', req.body.token)
             .include('user');
         })
@@ -136,7 +134,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           token = result[0];
 
           // Invalidate so it can't be used again
-          return token.invalidate().save(req.knex);
+          return req.container.update(token.invalidate());
         })
         .then(function () {
           // If the token has expired
@@ -146,9 +144,9 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
         })
         .then(function () {
           // Save new password
-          token.user.password = req.body.password;
-
-          return token.user.save(req.knex);
+          return req.container.update(token.user, {
+            password: req.body.password,
+          });
         })
         .then(function () {
           return res.status(200).json({ message: 'Password has been reset' });

@@ -1,5 +1,4 @@
-# [Neon.js][3] powered MVC Full-Stack development Anti-Framework.
-[![npm-image](https://img.shields.io/npm/v/generator-neonode.svg?style=flat-square)](https://www.npmjs.com/package/generator-neonode)
+# PatOS
 
 ## Setup
 
@@ -22,14 +21,18 @@ Add the following to your `/etc/hosts` file:
 
 127.0.0.1 default.installation-one.test-installation.com
 127.0.0.1 installation-one.test-installation.com
-127.0.0.1 default.installation-one.test-installation.com
-127.0.0.1 installation-one.test-installation.com
 
 127.0.0.1 default.installation-two.test-installation.com
-127.0.0.1 default.installation-two.test-installation.com
 127.0.0.1 installation-two.test-installation.com
-127.0.0.1 installation-two.test-installation.com
-127.0.0.1 default.installation-three.test-installation.com
+
+127.0.0.1 default.three.test-installation.com
+127.0.0.1 three.test-installation.com
+
+127.0.0.1 default.installation-inte.test-installation.com
+127.0.0.1 installation-inte.test-installation.com
+
+127.0.0.1 default.installation-unit.test-installation.com
+127.0.0.1 installation-unit.test-installation.com
 ```
 
 ## Run the server

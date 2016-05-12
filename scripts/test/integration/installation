@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+export NODE_ENV=test
+
+npm run test:clean
+npm run test:knexreset
+
+istanbul cover test/integration-installation.js --dir coverage/int-installation -- "$1"
