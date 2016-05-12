@@ -1,16 +1,19 @@
 /**
  *
  */
-var Teacher = Class('Teacher').inherits(DynamicModel)({
+var Teacher = Class(M, 'Teacher').inherits(DynamicModel)({
   tableName: 'Teachers',
 
   validations: {
+    id: ['natural'], // This is using int value instead of UUID, because it's not necessary.
+    accountId: ['uuid', 'required'],
     active: ['boolean'],
     baseWage: ['numeric']
   },
 
   attributes: [
     'id',
+    'accountId',
     'active',
     'bio',
     'baseWage',
@@ -21,6 +24,17 @@ var Teacher = Class('Teacher').inherits(DynamicModel)({
   ],
 
   prototype: {
+    init: function(config) {
+      DynamicModel.prototype.init.call(this, config);
+      var instance = this;
+
+      instance.on('beforeCreate', function(next) {
+        if(typeof instance.id !== 'number') delete instance.id; // This model uses incremental integer IDs
+        instance.active = !!instance.active; // Force typing
+        next();
+      });
+    },
+
     getAvailability: function() {
 
     },

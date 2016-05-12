@@ -1,6 +1,8 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('Teachers', function (t) {
     t.increments(); // Sets ID column AUTO_INCREMENT Integer
+    t.uuid('account_id');
+    t.uuid('branch_id');
     t.boolean('active');
     t.text('bio', 'longtext');
     t.float('base_wage'); // Default precision of 8 and scale of 2
