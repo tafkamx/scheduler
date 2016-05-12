@@ -10,8 +10,7 @@ describe('M.User', function () {
     container
       .create('User', {
         email: 'user-test@example.com',
-        password: '12345678',
-        role: 'student'
+        password: '12345678'
       })
       .then(function () {
         return done();
