@@ -7,6 +7,18 @@ describe('M.User', function () {
 
   var container = UNIT;
 
+  before(function (done) {
+    container
+      .create('User', {
+        email: 'user-test@example.com',
+        password: '12345678'
+      })
+      .then(function () {
+        return done();
+      })
+      .catch(done);
+  });
+
   after(function () {
     return Promise.all([
       container.get('User').query().delete(),

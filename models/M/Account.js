@@ -51,14 +51,19 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     var model = this;
 
     return new Promise(function(resolve, reject) {
-      var query = model._container.query('Account', { user_id: user_id, branch_id: branch_id });
+      model.prototype._container.get('Account').query().where({ 'user_id': user_id, 'branch_id': branch_id })
+      .then(function(res) {
+        var account = res[0];
 
-      query.then(function(res) { // Attch Account Type data
-        if(!res.length) return resolve(false); // Don't want to `reject` for the sake of usability
-
-        var account = res[0]; // There should only be one Account here.
-        account.getTypeInfo().then(resolve); // Account gets its additional data by reference
+        account.getTypeInfo()
+        .then(function() {
+          resolve(account);
+        })
+        .catch(function() {
+          resolve(false);
+        });
       });
+
     });
   },
 
@@ -130,7 +135,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
       // Calls `typeInfo.save()`
       instance.on('afterSave', function(next) {
-        if(instance.typeInfo) instance.typeInfo.save().then(next);
+        if(instance.typeInfo)
+          instance._container.update(instance.typeInfo).then(function() { next(); }).catch(next);
         else next();
       });
     },
@@ -155,6 +161,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
       .then(function(res) {
         if(!res.length) return; // If this is the case, then the type must not exist.
         var accountData = res[0];
+        instance.typeInfo = accountData;
         var attributes = M[possibleTypes[instance.type]].attributes;
 
         attributes.forEach(function(a) {

@@ -6,15 +6,24 @@ describe('M.Acccount', function() {
   var teacherAccount;
 
   before(function(done) {
-    container.create('Account', {
-      branchId: uuid.v4(),
-      type: 'teacher'
-    })
-    .then(function() {
-      return done();
-    })
-    .catch(function(err) {
-      return done();
+
+    container.create('User', {
+      email: 'user-account-test@example.com',
+      password: '12345678'
+    }).then(function(res) {
+      container.create('Account', {
+        userId: res.id,
+        branchId: uuid.v4(),
+        type: 'teacher'
+      })
+      .then(function() {
+        return done();
+      })
+      .catch(function(err) {
+        console.log(err);
+        return done();
+      });
+
     });
   });
 
@@ -32,16 +41,35 @@ describe('M.Acccount', function() {
      });
   });
 
-  it('Should work through `container.get()`', function(doneTest) {
+  it('Should work through `container.get(Account).getById`', function(doneTest) {
     container.get('Account').getById(teacherAccount.id) // Doesn't work within this class method
     .then(function(account) {
-      expect(account).to.have.ownProperty('active');
+      expect(account).to.have.ownProperty('active'); // This is a Teacher-specific property
+      doneTest();
+    });
+  });
+
+
+  it('Should work through `container.get(Account).getByUser`', function(doneTest) {
+    container.get('Account').getByUser(teacherAccount.userId, teacherAccount.branchId) // Doesn't work within this class method
+    .then(function(account) {
+      expect(account).to.have.ownProperty('active'); // This is a Teacher-specific property
       doneTest();
     });
   });
 
   it('Should save Account Type data on save.', function(doneTest) {
-    expect(1).to.equal(1);
-    doneTest();
+    expect(teacherAccount.active).to.equal(false);
+    teacherAccount.active = true; // Set in account scope
+    expect(teacherAccount.typeInfo.active).to.equal(true); // Check typeInfo for update
+
+    container.update(teacherAccount)
+    .then(function() { // Gotta recheck the database for update to Teacher
+      container.get('Teacher').query().where('account_id', teacherAccount.id)
+      .then(function(res) {
+        expect(res[0].active).to.equal(true);
+        doneTest();
+      });
+    });
   });
 });
