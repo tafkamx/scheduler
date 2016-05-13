@@ -54,7 +54,7 @@ describe('M.BranchSettings', function() {
           })
           .catch(function (err) {
             try {
-              expect(err).to.be.instanceof(Error);
+              expect(err.message).to.be.equal('1 invalid values');
               expect(err.errors.language.message).to.be.equal('Language is invalid.')
             } catch (err) {
               return done(err);
@@ -80,7 +80,7 @@ describe('M.BranchSettings', function() {
           })
           .catch(function (err) {
             try {
-              expect(err).to.be.instanceof(Error);
+              expect(err.message).to.be.equal('1 invalid values');
               expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
             } catch (err) {
               return done(err);
@@ -106,7 +106,7 @@ describe('M.BranchSettings', function() {
           })
           .catch(function (err) {
             try {
-              expect(err).to.be.instanceof(Error);
+              expect(err.message).to.be.equal('1 invalid values');
               expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
             } catch (err) {
               return done(err);
@@ -132,7 +132,7 @@ describe('M.BranchSettings', function() {
           })
           .catch(function (err) {
             try {
-              expect(err).to.be.instanceof(Error);
+              expect(err.message).to.be.equal('1 invalid values');
               expect(err.errors.branchId.message).to.be.equal('The branchId is required')
             } catch (err) {
               return done(err);
@@ -145,7 +145,6 @@ describe('M.BranchSettings', function() {
     });
 
   });
-
 
   describe('Relations', function () {
 
