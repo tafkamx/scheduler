@@ -38,77 +38,114 @@ describe('M.BranchSettings', function() {
       });
   });
 
-  it('Should fail if language is invalid', function (done) {
-    return container
-      .create('BranchSettings', {
-        language: 'es-MX',
-        currency: 'CAD',
-        timezone: 'America/Toronto',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err).to.be.instanceof(Error);
-        expect(err.errors.language.message).to.be.equal('Language is invalid.')
+  describe('Validations', function () {
 
-        done();
+    describe('language', function () {
+
+      it('Should fail if language is invalid', function (done) {
+        return container
+          .create('BranchSettings', {
+            language: 'es-MX',
+            currency: 'CAD',
+            timezone: 'America/Toronto',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err).to.be.instanceof(Error);
+              expect(err.errors.language.message).to.be.equal('Language is invalid.')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
       });
+
+    });
+
+    describe('currency', function () {
+
+      it('Should fail if currency is invalid', function(done) {
+        return container
+          .create('BranchSettings', {
+            language: 'es-CA',
+            currency: 'MXP',
+            timezone: 'America/Toronto',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err).to.be.instanceof(Error);
+              expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('timezone', function () {
+
+      it('Should fail if timezone is invalid', function(done) {
+        return container
+          .create('BranchSettings', {
+            language: 'es-CA',
+            currency: 'CAD',
+            timezone: 'Canada',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err).to.be.instanceof(Error);
+              expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('branchId', function () {
+
+      it('Should fail if branchId is null', function(done) {
+        return container
+          .create('BranchSettings', {
+            language: 'es-CA',
+            currency: 'CAD',
+            timezone: 'Canada',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err).to.be.instanceof(Error);
+              expect(err.errors.branchId.message).to.be.equal('The branchId is required')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
   });
 
-  it('Should fail if currency is invalid', function(done) {
-    return container
-      .create('BranchSettings', {
-        language: 'es-CA',
-        currency: 'MXP',
-        timezone: 'America/Toronto',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err).to.be.instanceof(Error);
-        expect(err.errors.currency.message).to.be.equal('Currency is invalid.')
-
-        done();
-      });
-  });
-
-  it('Should fail if timezone is invalid', function(done) {
-    return container
-      .create('BranchSettings', {
-        language: 'es-CA',
-        currency: 'CAD',
-        timezone: 'Canada',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err).to.be.instanceof(Error);
-        expect(err.errors.timezone.message).to.be.equal('Timezone is invalid.')
-
-        done();
-      });
-  });
-
-  it('Should fail if branchId is null', function(done) {
-    return container
-      .create('BranchSettings', {
-        language: 'es-CA',
-        currency: 'CAD',
-        timezone: 'Canada',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err).to.be.instanceof(Error);
-        expect(err.errors.branchId.message).to.be.equal('The branchId is required')
-
-        done();
-      });
-  });
 
   describe('Relations', function () {
 
