@@ -18,14 +18,14 @@ describe('M.Branch', function() {
     ]);
   });
 
-  it('Should create a branch', function () {
+  it('Should create a record', function () {
     return container
       .create('Branch', {
         name: 'toronto',
       });
   });
 
-  describe('Checkit rules', function () {
+  describe('Validations', function () {
 
     describe('name', function () {
 
@@ -38,8 +38,12 @@ describe('M.Branch', function() {
             expect.fail('should have rejected');
           })
           .catch(function (err) {
-            expect(err.message).to.be.equal('1 invalid values');
-            expect(err.errors.name.message).to.be.equal('The name is required')
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name is required')
+            } catch (err) {
+              return done(err);
+            }
 
             done();
           });
@@ -54,8 +58,12 @@ describe('M.Branch', function() {
             expect.fail('should have rejected');
           })
           .catch(function (err) {
-            expect(err.message).to.be.equal('1 invalid values');
-            expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+            } catch (err) {
+              return done(err);
+            }
 
             done();
           });
@@ -76,8 +84,12 @@ describe('M.Branch', function() {
             expect.fail('should have rejected');
           })
           .catch(function (err) {
-            expect(err.message).to.be.equal('1 invalid values');
-            expect(err.errors.name.message).to.be.equal('The name already exists.')
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name already exists.')
+            } catch (err) {
+              return done(err);
+            }
 
             done();
           });
@@ -92,8 +104,12 @@ describe('M.Branch', function() {
             expect.fail('should have rejected');
           })
           .catch(function (err) {
-            expect(err.message).to.be.equal('1 invalid values');
-            expect(err.errors.name.message).to.be.equal('The name must not exceed 255 characters long')
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name must not exceed 255 characters long')
+            } catch (err) {
+              return done(err);
+            }
 
             done();
           });
