@@ -1,4 +1,5 @@
 var path = require('path');
+var _ = require('lodash');
 
 describe('M.Branch', function() {
   var container = UNIT;
@@ -17,49 +18,104 @@ describe('M.Branch', function() {
     ]);
   });
 
-  it('Should create a branch', function () {
+  it('Should create a record', function () {
     return container
       .create('Branch', {
         name: 'toronto',
       });
   });
 
-  it('Should fail if name is invalid', function (done) {
-    container
-      .create('Branch', {
-        name: 'Thunder Bay',
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err.message).to.be.equal('1 invalid values');
-        expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+  describe('Validations', function () {
 
-        done();
+    describe('name', function () {
+
+      it('Should fail if name is empty', function (done) {
+        container
+          .create('Branch', {
+            name: '',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name is required')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
       });
-  });
 
-  it('Should fail if name already exists', function (done) {
-    return container
-      .create('Branch', {
-        name: 'toronto',
-      })
-      .then(function () {
+      it('Should fail if name contains non-alpha-numeric characters', function (done) {
+        container
+          .create('Branch', {
+            name: 'abcd123$',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name must only contain alpha-numeric characters and dashes.')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+      it('Should fail if name already exists', function (done) {
         return container
           .create('Branch', {
             name: 'toronto',
-          });
-      })
-      .then(function () {
-        expect.fail('should have rejected');
-      })
-      .catch(function (err) {
-        expect(err.message).to.be.equal('1 invalid values');
-        expect(err.errors.name.message).to.be.equal('The name already exists.')
+          })
+          .then(function () {
+            return container
+              .create('Branch', {
+                name: 'toronto',
+              });
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name already exists.')
+            } catch (err) {
+              return done(err);
+            }
 
-        done();
+            done();
+          });
       });
+
+      it('Should fail if the name is longer than 255 characters', function (done) {
+        container
+          .create('Branch', {
+            name: _.repeat('a', 256),
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.be.equal('1 invalid values');
+              expect(err.errors.name.message).to.be.equal('The name must not exceed 255 characters long')
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
   });
 
   describe('Relations', function () {

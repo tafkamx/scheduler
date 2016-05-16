@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var _ = require('lodash');
 
 var container = UNIT;
 

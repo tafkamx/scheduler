@@ -108,21 +108,47 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
     createDatabase : function () {
       var model = this;
-
-      var conf = require(path.join(process.cwd(), 'knexfile.js'));
-
       var name = [this.name, CONFIG.environment].join('-');
 
-      var knex = new Knex(conf[CONFIG.environment]);
+      var knex = model.constructor.knex();
+
       logger.info('Creating ' + name + ' database');
 
-      return knex.raw('CREATE DATABASE "' + name + '";').then(function() {
-        var knex = model.getDatabase();
+      // See if we can find a DB by this name, if yes then don't create new DB
+      return knex.raw('SELECT count(*) FROM "pg_catalog"."pg_database" WHERE datname = ?', [name])
+        .then(function (res) {
+          var count = +res.rows[0].count;
 
-        return model.migrate(knex).then(function() {
-          knex.destroy()
+          if (count > 0) {
+            logger.info('Database ' + name + ' already exists');
+            return Promise.resolve(true); // skip creating new DB
+          } else {
+            return Promise.resolve(false); // create new DB
+          }
+        })
+        .then(function (skip) {
+          var installKnex;
+
+          if (skip) {
+            installKnex = model.getDatabase();
+
+            // migrate, just in case but don't create DB
+            return model.migrate(installKnex)
+              .then(function () {
+                return installKnex.destroy();
+              });
+          }
+
+          return knex.raw('CREATE DATABASE "' + name + '";')
+            .then(function() {
+              installKnex = model.getDatabase();
+
+              return model.migrate(installKnex)
+                .then(function () {
+                  return installKnex.destroy();
+                });
+            });
         });
-      })
     },
 
     migrate : function (knex) {
