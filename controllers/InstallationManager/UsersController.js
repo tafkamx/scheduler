@@ -1,4 +1,5 @@
 var path = require('path');
+var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 Class(InstallationManager, 'UsersController').inherits(BaseController)({
 
@@ -6,6 +7,17 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
       actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
+    },
+    {
+      before : function(req, res, next) {
+        RESTFulAPI.createMiddleware({
+          queryBuilder : InstallationManager.User.query(),
+          filters : {
+            allowedFields : ['email']
+          }
+        })(req, res, next);
+      },
+      actions : ['index']
     },
     {
       before : ['_loadUser'],
@@ -30,20 +42,14 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     },
 
     index : function (req, res, next) {
-      InstallationManager.User.query()
-        .then(function(results) {
-          res.locals.adminUsers = results;
-
-          res.format({
-            html : function() {
-              res.render('InstallationManager/Users/index.html');
-            },
-            json : function() {
-              res.json(results);
-            }
-          });
-        })
-        .catch(next);
+      res.format({
+        html : function() {
+          res.render('InstallationManager/Users/index.html', { adminUsers : res.locals.results });
+        },
+        json : function() {
+          res.json(res.locals.results);
+        }
+      });
     },
 
     show : function (req, res, next) {
