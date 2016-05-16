@@ -2,6 +2,7 @@ var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var bcrypt = require('bcrypt-node');
 var DomainContainer = require('domain-container');
+var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
@@ -9,6 +10,17 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     {
       before: [neonode.controllers['InstallationManager.Home']._authenticate],
       actions: ['index', 'show', 'new', 'create', 'edit', 'update', 'destroy']
+    },
+    {
+      before : function(req, res, next) {
+        RESTFulAPI.createMiddleware({
+          queryBuilder : InstallationManager.Installation.query(),
+          filters : {
+            allowedFields : ['name', 'domain']
+          }
+        })(req, res, next);
+      },
+      actions : ['index']
     },
     {
       before: ['_loadInstallation'],
@@ -65,20 +77,16 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     },
 
     index: function (req, res, next) {
-      InstallationManager.Installation.query()
-        .then(function(results) {
-          res.locals.installations = results;
-
-          res.format({
-            html: function () {
-              res.render('InstallationManager/Installations/index.html');
-            },
-            json: function () {
-              res.json(results);
-            }
+      res.format({
+        html: function () {
+          res.render('InstallationManager/Installations/index.html', {
+            installations : res.locals.results
           });
-        })
-        .catch(next);
+        },
+        json: function () {
+          res.json(res.locals.results);
+        }
+      });
     },
 
     show: function (req, res, next) {
