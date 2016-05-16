@@ -4,6 +4,7 @@
   "repository": "",
   "version": "0.0.1",
   "keywords": [],
+  "private": true,
   "engines": {
     "node": ">=4.0"
   },
