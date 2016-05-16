@@ -9,7 +9,7 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "test": "scripty",
+    "test": "npm run test:unit && npm run test:integration:manager && npm run test:integration",
     "test:clean": "scripty",
     "test:knexreset": "scripty",
     "test:unit": "scripty",
