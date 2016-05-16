@@ -29,9 +29,15 @@ Promise.resolve()
     ]);
   })
   .then(function () {
-    glob.sync('test/integration/installation/**/*.js').forEach(function (file) {
-      mocha.addFile(path.join(process.cwd(), file));
-    });
+    glob.sync('test/integration/installation/**/*.js')
+      .filter(function (filePath) {
+        var fileName = path.parse(filePath).base;
+
+        return (fileName.indexOf(process.argv[2]) !== -1)
+      })
+      .forEach(function (file) {
+        mocha.addFile(path.join(process.cwd(), file));
+      });
 
     return Promise.resolve();
   })

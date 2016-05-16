@@ -2,5 +2,5 @@
 
 export NODE_ENV=test
 
-npm run test:unit
-npm run test:integration
+npm run test:unit "$1"
+npm run test:integration "$1"

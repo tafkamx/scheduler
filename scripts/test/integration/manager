@@ -3,7 +3,6 @@
 export NODE_ENV=test
 
 npm run test:clean
-
 npm run test:knexreset
 
-node test/integration-manager.js
+istanbul cover test/integration-manager.js --dir coverage/int-manager -- "$1"

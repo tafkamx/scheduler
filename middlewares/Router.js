@@ -21,19 +21,26 @@ routeMapper.routes.forEach(function(route) {
 
     var args = [];
 
+    /* Get the beforeActions from the controller and filter the ones that
+       match the current route.action and flatten the result*/
     if (beforeActions.length > 0) {
-      var filters = beforeActions.filter(function(item) {
+      var filters = _.flatten(beforeActions.filter(function(item) {
         if (item.actions.indexOf(action) !== -1) {
           return true;
         }
       }).map(function(item) {
         return item.before;
-      });
+      }));
 
-      _.flatten(filters).reverse().forEach(function(filter) {
-        if (_.isString(filter)) {
-          args.push(neonode.controllers[controller][filter]);
-        } else if (_.isFunction(filter)) {
+
+      filters.forEach(function(filter) {
+        if (_.isString(filter)) { // if is string look for the method in the same controller
+          if (neonode.controllers[controller][filter]) {
+            args.push(neonode.controllers[controller][filter]);
+          } else {
+            throw new Error('BeforeActions Error: Unknown method ' + filter + ' in ' + controller);
+          }
+        } else if (_.isFunction(filter)) { // if is a function just add it to the middleware stack
           args.push(filter);
         } else {
           throw new Error('Invalid BeforeAction ' + filter);
