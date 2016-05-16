@@ -5,9 +5,20 @@ var path = require('path');
 describe('M.BranchSettings', function() {
   var container = UNIT;
 
+  var branch;
+
+  before(function () {
+    return container
+      .create('Branch', {
+        name: 'these-tests-branch',
+      })
+      .then(function (res) {
+        branch = res;
+      });
+  });
+
   beforeEach(function () {
     return Promise.all([
-      container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
@@ -22,20 +33,12 @@ describe('M.BranchSettings', function() {
   });
 
   it('Should create a record', function () {
-    return Promise.resolve()
-      .then(function () {
-        return container.create('Branch', {
-          name: 'ontario-please',
-        });
-      })
-      .then(function (branch) {
-        return container.create('BranchSettings', {
-          language: 'en-CA',
-          currency: 'CAD',
-          timezone: 'America/Toronto',
-          branchId: branch.id,
-        });
-      });
+    return container.create('BranchSettings', {
+      language: 'en-CA',
+      currency: 'CAD',
+      timezone: 'America/Toronto',
+      branchId: branch.id,
+    });
   });
 
   describe('Validations', function () {
@@ -48,6 +51,7 @@ describe('M.BranchSettings', function() {
             language: 'es-MX',
             currency: 'CAD',
             timezone: 'America/Toronto',
+            branchId: branch.id,
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -71,9 +75,10 @@ describe('M.BranchSettings', function() {
       it('Should fail if currency is invalid', function(done) {
         return container
           .create('BranchSettings', {
-            language: 'es-CA',
+            language: 'en-CA',
             currency: 'MXP',
             timezone: 'America/Toronto',
+            branchId: branch.id,
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -97,9 +102,10 @@ describe('M.BranchSettings', function() {
       it('Should fail if timezone is invalid', function(done) {
         return container
           .create('BranchSettings', {
-            language: 'es-CA',
+            language: 'en-CA',
             currency: 'CAD',
             timezone: 'Canada',
+            branchId: branch.id,
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -123,9 +129,9 @@ describe('M.BranchSettings', function() {
       it('Should fail if branchId is null', function(done) {
         return container
           .create('BranchSettings', {
-            language: 'es-CA',
+            language: 'en-CA',
             currency: 'CAD',
-            timezone: 'Canada',
+            timezone: 'America/Toronto',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -188,6 +194,7 @@ describe('M.BranchSettings', function() {
               language: 'en-CA',
               currency: 'CAD',
               timezone: 'America/Toronto',
+              branchId: branch.id,
             });
           })
           .then(function () {
