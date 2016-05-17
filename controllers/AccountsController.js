@@ -15,7 +15,7 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
      * Tries to initially load an Account through various request parameters
      */
     _loadAccount: function(req, res, next) {
-      var accountId, userId, branchId;
+      var accountId, userId, branchName;
       var promise = new Promise().resolve();
 
       // First check for an Account ID
@@ -24,14 +24,11 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
 
       // These will get validated later
       if(req.params.userId) userId = req.params.userId;
-      if(req.params.branchId) userId = req.params.branchId;
+      if(req.params.branchName) branchName = req.params.branchName;
 
       // If neither of the above is set, look for current logged-in User and current branch
       if(!userId && req.User) userId = req.User.id; // Defaults to current User (if applicable)
-      if(!userId && req.branch) {
-
-        branchId = req.branch;
-      }
+      if(!branchName && req.branch) branchName = req.branch; // Defaults to current branch
 
       // Set `res.locals.account` for the methods below, or throw `NotFoundError`.
     },

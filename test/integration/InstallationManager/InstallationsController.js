@@ -188,7 +188,7 @@ describe('InstallationManager.InstallationsController', function () {
           });
         })
         .then(function () {
-          return M.User.query(knex)
+          return InstallationManager.User.query(knex)
             .then(function (result) {
               expect(result.length).to.equal(1);
 

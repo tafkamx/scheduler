@@ -52,6 +52,10 @@ var middlewares = [
     path : 'middlewares/GuestUsers.js'
   },
   {
+    name : 'Accounts Initialize',
+    path : 'middlewares/Account.js'
+  },
+  {
     name : 'Locals',
     path : 'middlewares/locals.js'
   },

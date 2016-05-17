@@ -8,7 +8,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
   /* Validations for this table are very simple. Everything but the branchId and type is optional. */
   validations: {
     userId: ['uuid'],
-    branchId: ['required', 'uuid'],
+    branchName: ['required', 'maxLength:255'],
     type: [
       {
         rule: function(val) {
@@ -36,22 +36,22 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
    */
   types: {
     'teacher': 'Teacher',
-    'stduent': 'Student'
+    'student': 'Student'
   },
 
   /**
    * Retrieves account using the associated User ID and Branch ID. Useful for Authentication.
    *
-   * @param UUID user_id   User ID that's associated with the Account
-   * @param UUID branch_id Branch that the Account is associated with
+   * @param UUID userId     User ID that's associated with the Account
+   * @param UUID branchName Branch that the Account is associated with
    *
    * @return Promise object. Resolves to `false` if Account is not found. Otherwise, resolves with `Account` object.
    */
-  getByUser: function(user_id, branch_id) {
+  getByUser: function(userId, branchName) {
     var model = this;
 
     return new Promise(function(resolve, reject) {
-      model.prototype._container.get('Account').query().where({ 'user_id': user_id, 'branch_id': branch_id })
+      model.prototype._container.get('Account').query().where({ 'user_id': userId, 'branch_name': branchName })
       .then(function(res) {
         var account = res[0];
 
@@ -95,7 +95,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
   attributes: [
     'id',
     'userId',
-    'branchId',
+    'branchName',
     'type',
     'firstName',
     'lastName',

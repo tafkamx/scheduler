@@ -1,7 +1,7 @@
 /**
  *
  */
-var Teacher = Class(M, 'Teacher').inherits(DynamicModel)({
+var Teacher = Class(M, 'Teacher').inherits(Krypton.Model)({
   tableName: 'Teachers',
 
   validations: {
