@@ -19,13 +19,14 @@ module.exports = function(req, res, next) {
     req.container.get('Account')
     .getByUser(req.user.id, req.branch)
     .then(function(account) {
-      if(!account) req.role = 'Franchisor'; // If not existing, set role to Visitor
+      if(!account) req.role = 'Visitor'; // If not existing, set role to Visitor
       else req.role = account.type.charAt(0).toUpperCase() + account.type.slice(1); // Capitalize first letter
 
       req.account = account;
       next();
     });
-  }).then(next).catch(next);
+  })
+  .then(next).catch(next);
 
   // TODO: Possibly also check to see if User ID is the Installation Franchisor, and set the Role to Franchisor in that case.
 };

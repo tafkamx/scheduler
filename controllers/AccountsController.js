@@ -11,9 +11,7 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
   ],
 
   prototype: {
-    /**
-     * Tries to initially load an Account through various request parameters
-     */
+    /* Tries to initially load an Account through various request parameters */
     _loadAccount: function(req, res, next) {
       var accountId, userId, branchName;
       var promise = new Promise().resolve();
@@ -30,26 +28,77 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       if(!userId && req.User) userId = req.User.id; // Defaults to current User (if applicable)
       if(!branchName && req.branch) branchName = req.branch; // Defaults to current branch
 
-      // Set `res.locals.account` for the methods below, or throw `NotFoundError`.
+      if(accountId) {
+        req.container.get('Account').getById(accountId)
+        .then(function(account) {
+          if(!account) throw new NotFoundError('Account ``' + accountId + '`` not found.');
+          else res.locals.account = account;
+
+          next();
+        });
+      } else if(userId && branchName) {
+        req.container.get('Account').getByUser(userId, branchName)
+        .then(function(account) {
+          if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
+          else res.locals.account = account;
+
+          next();
+        });
+      }
+      else {
+        throw new NotFoundError('Account not found.');
+        next();
+      }
     },
 
-    /**
-     * HTTP Action to show an Account (defaults to current logged-in Account for branch)
-     */
+    /* Show an Account (defaults to current logged-in Account for branch) */
     show: function(req, res, next) {
-
+      res.format({
+        html : function() {
+          res.render('Accounts/show.html');
+        },
+        json : function() {
+          res.json(res.locals.account);
+        }
+      });
     },
 
+    /* TODO Edit Page */
     edit: function(req, res, next) {
-
+      res.format({
+        html : function() {
+          res.render('Accounts/edit.html');
+        },
+        json : function() {
+          res.json(res.locals.account);
+        }
+      });
     },
 
+    /* Updates the Account associated with the current-logged-in User */
     update: function(req, res, next) {
-
+      res.format({
+        json : function() {
+          req.container.update(res.locals.account, req.body)
+            .then(function() {
+              res.json(res.locals.account);
+            })
+            .catch(next);
+        }
+      });
     },
 
+    /* Destroys the Account associated with the current-logged-in User */
     destroy: function(req, res, next) {
-
+      res.format({
+        json : function() {
+          req.container.destroy(res.locals.account)
+            .then(function() {
+              res.json({ deleted: true });
+            })
+            .catch(next);
+        }
+      });
     }
   }
 
