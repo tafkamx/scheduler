@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
       .references('id')
       .inTable('Users')
       .onDelete('CASCADE');
-    t.uuid('branch_id').notNullable();
+    t.string('branch_name', 255).notNullable();
     t.string('type', 25).notNullable();
     t.string('first_name', 125);
     t.string('last_name', 125);
