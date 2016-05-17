@@ -165,9 +165,7 @@ describe('InstallationManager.InstallationsController', function () {
         }
       };
 
-      var knex,
-        user,
-        userInfo;
+      var knex, user;
 
       Promise.resolve()
         .then(function () {
@@ -194,20 +192,6 @@ describe('InstallationManager.InstallationsController', function () {
 
               user = result[0];
             });
-        })
-        .then(function () {
-          return InstallationManager.UserInfo.query(knex)
-            .then(function (result) {
-              expect(result.length).to.equal(1);
-
-              userInfo = result[0];
-            });
-        })
-        .then(function () {
-          expect(user.id).to.equal(userInfo.userId);
-          expect(userInfo.role).to.equal('franchisor');
-
-          return Promise.resolve();
         })
         .then(function () {
           return done();

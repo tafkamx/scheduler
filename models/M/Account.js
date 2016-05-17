@@ -54,6 +54,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
       model.prototype._container.get('Account').query().where({ 'user_id': userId, 'branch_name': branchName })
       .then(function(res) {
         var account = res[0];
+        if(!account) return resolve(false);
 
         account.getTypeInfo()
         .then(function() {
@@ -79,6 +80,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
       model.prototype._container.get('Account').query().where('id', account_id)
       .then(function(res) {
         var account = res[0];
+        if(!account) return resolve(false);
 
         account.getTypeInfo()
         .then(function() {
