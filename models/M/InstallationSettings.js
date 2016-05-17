@@ -50,7 +50,28 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
         },
         message : 'Timezone is invalid.'
       }
-    ]
+    ],
+
+    franchisorId: [
+      'required',
+      'uuid',
+      {
+        rule: function (val) {
+          var that = this.target;
+
+          var query = that._container.query('User')
+            .where('id', val);
+
+          return query
+            .then(function (result) {
+              if (result.length === 0) {
+                throw new Error('The franchisorId does not exist.');
+              }
+            });
+        },
+        message: 'The franchisorId does not exist.'
+      }
+    ],
   },
   attributes : [
     'id',
@@ -58,7 +79,8 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
     'currency',
     'timezone',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
+    'franchisorId',
   ],
 
   prototype : {
