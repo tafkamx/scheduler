@@ -34,7 +34,13 @@ describe('Accounts Controller', function() {
     .end(function(err, res) {
       expect(err).to.be.equal(null);
       expect(res.status).to.equal(200);
+
+      done();
     });
+  });
+
+  it('Should render /Accounts/show', function(done) {
+    
   });
 
 });
