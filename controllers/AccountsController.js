@@ -13,6 +13,8 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
   prototype: {
     /* Tries to initially load an Account through various request parameters */
     _loadAccount: function(req, res, next) {
+      console.log(':          ^)');
+
       var accountId, userId, branchName;
       var promise = new Promise().resolve();
 
@@ -31,24 +33,41 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       if(accountId) {
         req.container.get('Account').getById(accountId)
         .then(function(account) {
-          if(!account) throw new NotFoundError('Account ``' + accountId + '`` not found.');
-          else res.locals.account = account;
+          //if(!account) throw new NotFoundError('Account ``' + accountId + '`` not found.');
+          res.locals.account = account;
 
           next();
         });
       } else if(userId && branchName) {
         req.container.get('Account').getByUser(userId, branchName)
         .then(function(account) {
-          if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
-          else res.locals.account = account;
+          //if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
+          res.locals.account = account;
 
           next();
         });
       }
       else {
-        throw new NotFoundError('Account not found.');
+        //throw new NotFoundError('Account not found.');
         next();
       }
+    },
+
+    index: function(req, res, next) {
+      req.container.query('Account')
+        .then(function(results) {
+          res.locals.accounts = results;
+
+          res.format({
+            html : function() {
+              res.render('Users/index.html');
+            },
+            json : function() {
+              res.json(results);
+            }
+          });
+        })
+        .catch(next);
     },
 
     /* Show an Account (defaults to current logged-in Account for branch) */
