@@ -153,6 +153,12 @@ describe('InstallationManager.InstallationsController', function () {
   describe('#create', function () {
     this.timeout(4000);
 
+    before(function () {
+      return InstallationManager.Installation.query()
+        .delete()
+        .where('name', 'installation-two');
+    });
+
     it('Should create a new Installation', function(done) {
       var data = {
         name : 'installation-two',
