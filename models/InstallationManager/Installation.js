@@ -3,6 +3,7 @@ var psl = require('psl');
 var path = require('path');
 var Promise = require('bluebird');
 var DomainContainer = require('domain-container');
+var bcrypt = require('bcrypt-node');
 
 Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
@@ -89,13 +90,18 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
      * }
      */
 
-    var Installation = this;
+    var newInstallation,
+      container;
 
-    var newInstallation = new Installation(config.installation);
+    try {
+      config.franchisor.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
+      config.franchisor.role = 'franchisor'; // TODO: Remove
+      newInstallation = new InstallationManager.Installation(config.installation);
+    } catch (err) {
+      return Promise.reject(err);
+    }
 
-    var container;
-
-    Promise.resolve()
+    return Promise.resolve()
       .then(function () {
         return newInstallation.save();
       })
