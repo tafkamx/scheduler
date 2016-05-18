@@ -6,17 +6,14 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
   beforeActions: [
     {
       before: ['_loadAccount'],
-      actions: ['show', 'edit', 'update', 'destroy'] // Follows standard set by UsersController
+      actions: ['index', 'show', 'edit', 'update', 'destroy'] // Follows standard set by UsersController
     }
   ],
 
   prototype: {
     /* Tries to initially load an Account through various request parameters */
     _loadAccount: function(req, res, next) {
-      console.log(':          ^)');
-
       var accountId, userId, branchName;
-      var promise = new Promise().resolve();
 
       // First check for an Account ID
       if(req.params.id && Checkit.checkSync('accountId', req.params.id, ['uuid', 'required']))
@@ -47,27 +44,31 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
           next();
         });
       }
-      else {
-        //throw new NotFoundError('Account not found.');
-        next();
-      }
+      else next();
     },
 
     index: function(req, res, next) {
-      req.container.query('Account')
-        .then(function(results) {
-          res.locals.accounts = results;
+      req.container.get('Account').query()
+      .then(function(results) {
+        res.locals.accounts = results;
 
-          res.format({
-            html : function() {
-              res.render('Users/index.html');
-            },
-            json : function() {
-              res.json(results);
-            }
-          });
-        })
-        .catch(next);
+        res.format({
+          html : function() {
+            res.render('Accounts/index.html');
+          },
+          json : function() {
+            res.json(results);
+          }
+        });
+      }).catch(next);
+    },
+
+    new: function(req, res, next) {
+      next();
+    },
+
+    create: function(req, res, next) {
+      next();
     },
 
     /* Show an Account (defaults to current logged-in Account for branch) */
