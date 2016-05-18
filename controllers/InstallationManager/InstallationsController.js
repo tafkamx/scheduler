@@ -127,7 +127,8 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
             })
             .then(function (installation) {
               res.json(installation);
-            });
+            })
+            .catch(done);
         }
       });
     },
