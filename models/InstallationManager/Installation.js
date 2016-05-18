@@ -121,7 +121,9 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
       .then(function () {
         return container.create('User', config.franchisor);
       })
-      .then(function () {
+      .then(function (franchisor) {
+        config.installationSettings.franchisorId = franchisor.id;
+
         return container.create('InstallationSettings', config.installationSettings);
       })
       // Create default Branch
