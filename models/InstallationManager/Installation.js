@@ -157,7 +157,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
     createDatabase : function () {
       var model = this;
-
       var name = [this.name, CONFIG.environment].join('-');
 
       var knex = model.constructor.knex();

@@ -37,7 +37,6 @@ describe('Branches Controller', function () {
           .create('User', {
             email: 'franch@example.com',
             password: '12345678',
-            role: 'franchisor',
           })
           .then(function (user) {
             return container.update(user.activate());
@@ -174,6 +173,70 @@ describe('Branches Controller', function () {
           expect(res.body.name).to.be.equal('branch-two');
           done();
         })
+    });
+
+    it('Should fail if the name exists', function(done) {
+      agent
+        .post(url + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'branch-two'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name already exists.');
+          done();
+        });
+    });
+
+    it('Should fail if the name is empty', function(done) {
+      agent
+        .post(url + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: ''
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name is required');
+          done();
+        });
+    });
+
+    it('Should fail if the name is > 255', function(done) {
+      agent
+        .post(url + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfsasdfasdfasdf'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name must not exceed 255 characters long');
+          done();
+        });
+    });
+
+    it('Should fail if the name contains non-alpha-numeric characters', function (done) {
+      agent
+        .post(url + '/Branches')
+        .set('Accept', 'application/json')
+        .send({
+          name: 'abcd123$'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.name[0]).to.be.equal('The name must only contain alpha-numeric characters and dashes.');
+          done();
+        });
     });
 
   });

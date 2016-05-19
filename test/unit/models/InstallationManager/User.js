@@ -8,7 +8,6 @@ describe('InstallationManager.User', function () {
   after(function () {
     return Promise.all([
       InstallationManager.User.query().delete(),
-      // UserInfo deleted automatically by PostgreSQL
     ]);
   });
 
@@ -17,14 +16,12 @@ describe('InstallationManager.User', function () {
     beforeEach(function () {
       return Promise.all([
         InstallationManager.User.query().delete(),
-        // UserInfo deleted automatically by PostgreSQL
       ]);
     });
 
     after(function () {
       return Promise.all([
         InstallationManager.User.query().delete(),
-        // UserInfo deleted automatically by PostgreSQL
       ]);
     });
 
@@ -156,41 +153,5 @@ describe('InstallationManager.User', function () {
       });
 
     });
-
   });
-
-  describe('Relations', function () {
-
-    before(function () {
-      return new InstallationManager.User({
-        email: 'user-test@example.com',
-        password: '12345678',
-      }).save();
-    });
-
-    describe('info', function () {
-
-      it('Should return a proper UserInfo object', function (doneTest) {
-        InstallationManager.User.query()
-          .include('info')
-          .then(function (result) {
-            expect(result.length).to.equal(1);
-
-            var user = result[0];
-
-            expect(user).to.be.an('object');
-            expect(user.constructor.className).to.equal('User');
-            expect(user.info).to.be.an('object');
-            expect(user.info.constructor.className).to.equal('UserInfo');
-          })
-          .then(doneTest)
-          .catch(function(err) {
-            throw err;
-          });
-      });
-
-    });
-
-  });
-
 });

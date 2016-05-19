@@ -4,7 +4,6 @@ var path = require('path');
 
 describe('M.BranchSettings', function() {
   var container = UNIT;
-
   var branch;
 
   before(function () {
@@ -149,7 +148,6 @@ describe('M.BranchSettings', function() {
       });
 
     });
-
   });
 
   describe('Relations', function () {

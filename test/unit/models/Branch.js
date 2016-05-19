@@ -116,7 +116,6 @@ describe('M.Branch', function() {
       });
 
     });
-
   });
 
   describe('Relations', function () {

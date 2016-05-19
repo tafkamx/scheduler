@@ -38,14 +38,12 @@ describe('M.User', function () {
             return container.create('User', {
               email: 'user-test@example.com',
               password: '12345678',
-              role: 'student',
             });
           })
           .then(function () {
             return container.create('User', {
               email: 'user-test@example.com',
               password: '12345678',
-              role: 'student',
             });
           })
           .then(function () {
@@ -68,7 +66,6 @@ describe('M.User', function () {
           .then(function () {
             return container.create('User', {
               password: '12345678',
-              role: 'student',
             });
           })
           .then(function () {
@@ -92,7 +89,6 @@ describe('M.User', function () {
             return container.create('User', {
               email: '1',
               password: '12345678',
-              role: 'student',
             });
           })
           .then(function () {
@@ -116,7 +112,6 @@ describe('M.User', function () {
             return container.create('User', {
               email: _.repeat('a', 256),
               password: '12345678',
-              role: 'student',
             });
           })
           .then(function () {
@@ -145,7 +140,6 @@ describe('M.User', function () {
             return container.create('User', {
               email: 'user-test@example.com',
               password: '1234567',
-              role: 'student',
             });
           })
           .then(function () {
@@ -161,40 +155,6 @@ describe('M.User', function () {
 
             done();
           });
-      });
-
-    });
-
-  });
-
-  describe('Relations', function () {
-
-    describe('info', function () {
-
-      before(function () {
-        return container
-          .create('User', {
-            email: 'user-test@example.com',
-            password: '12345678',
-            role: 'student'
-          });
-      });
-
-      it('Should return a proper UserInfo object', function (doneTest) {
-        container.query('User')
-          .include('info')
-          .then(function (result) {
-            expect(result.length).to.equal(1);
-
-            var user = result[0];
-
-            expect(user).to.be.an('object');
-            expect(user.constructor.className).to.equal('User');
-            expect(user.info).to.be.an('object');
-            expect(user.info.constructor.className).to.equal('UserInfo');
-          })
-          .then(doneTest)
-          .catch(doneTest);
       });
 
     });

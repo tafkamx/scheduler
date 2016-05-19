@@ -52,12 +52,12 @@ var middlewares = [
     path : 'middlewares/GuestUsers.js'
   },
   {
-    name : 'Locals',
-    path : 'middlewares/locals.js'
+    name : 'Accounts Initialize',
+    path : 'middlewares/Account.js'
   },
   {
-    name: 'Role',
-    path: 'middlewares/role.js'
+    name : 'Locals',
+    path : 'middlewares/locals.js'
   },
   {
     name : 'Flash Messages',

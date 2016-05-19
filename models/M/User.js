@@ -65,19 +65,6 @@ Class(M, 'User').inherits(DynamicModel)({
         next();
       });
 
-      // UserInfo instance
-      this.on('afterCreate', function (next) {
-        model._container
-          .create('UserInfo', {
-            userId: model.id,
-            role: model.role
-          })
-          .then(function () {
-            next();
-          })
-          .catch(next);
-      });
-
       // Set new token if email changes
       this.on('afterUpdate', function (next) {
         if (model._oldEmail === model.email) {

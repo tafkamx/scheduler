@@ -140,8 +140,7 @@ describe('Users Controller', function() {
   describe('#create', function () {
 
     it('Should create a new User', function(done) {
-      var user,
-        userInfo;
+      var user;
 
       Promise.resolve()
         .then(function () {
@@ -172,24 +171,94 @@ describe('Users Controller', function() {
             });
         })
         .then(function () {
-          return container.query('UserInfo')
-            .where('user_id', user.id)
-            .then(function (result) {
-              expect(result.length).to.equal(1);
-
-              userInfo = result[0];
-            });
-        })
-        .then(function () {
-          expect(user.id).to.equal(userInfo.userId);
-          expect(userInfo.role).to.equal('staff');
-
-          return Promise.resolve();
-        })
-        .then(function () {
           return done();
         })
         .catch(done);
+    });
+
+    it('Should fail if the email exists', function(done) {
+      agent.post(url + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test1@example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email already exists.');
+          done();
+        });
+    });
+
+    it('Should fail if the email is no email', function(done) {
+      agent.post(url + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test2example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email must be a valid email address');
+          done();
+        })
+    });
+
+    it('Should fail if the email is empty', function(done) {
+      agent.post(url + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : '',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email is required');
+          done();
+        })
+    });
+
+    it('Should fail if the email is > 255', function(done) {
+      agent.post(url + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs@example.com',
+          password : '12345678',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.email[0]).to.be.equal('The email must not exceed 255 characters long');
+          done();
+        });
+    });
+
+    it('Should fail if the password is < 8', function(done) {
+      agent.post(url + '/Users')
+        .set('Accept', 'application/json')
+        .send({
+          email : 'test3@example.com',
+          password : '1234567',
+          role: 'staff'
+        })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.eql(500);
+          expect(err.response.body).to.exists;
+          expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
+          done();
+        });
     });
 
   });
@@ -284,40 +353,6 @@ describe('Users Controller', function() {
               expect(res.body.deleted).to.be.equal(true);
               done();
             })
-        });
-    });
-
-    it('Should destroy UsersInfo record if User is destroyed', function(done) {
-      agent.post(url + '/Users')
-        .send({
-          email: 'temp@example.com',
-          password: '12345678',
-          role: 'student'
-        })
-        .end(function(err, res) {
-          Promise.resolve()
-            .then(function () {
-              return new Promise(function (resolve) {
-                agent.post(url + '/Users/' + res.body.id)
-                  .send({ _method: 'DELETE' })
-                  .set('Accept', 'application/json')
-                  .end(function(err, res) {
-                    expect(err).to.be.eql(null);
-                    expect(res.body.deleted).to.be.equal(true);
-
-                    resolve();
-                  });
-              });
-            })
-            .then(function () {
-              return container.query('UserInfo')
-                .where('user_id', res.id)
-                .then(function (result) {
-                  expect(result.length).to.equal(0);
-                });
-            })
-            .then(done)
-            .catch(done);
         });
     });
 
