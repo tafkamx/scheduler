@@ -4,15 +4,17 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema
-    .createTable('UsersInfo', function (t) {
-      t.uuid('id').primary();
-      t.uuid('user_id').unique().notNullable();
-      t.string('role').notNullable();
-      t.timestamps();
-    })
+  return Promise.resolve()
     .then(function () {
-      knex('UsersInfo')
-        .update('role', 'admin');
+      return knex.schema
+        .createTable('UsersInfo', function (t) {
+          t.uuid('id').primary();
+          t.uuid('user_id')
+            .references('id')
+            .inTable('Users')
+            .onDelete('CASCADE');
+          t.string('role').notNullable();
+          t.timestamps();
+        });
     });
 };
