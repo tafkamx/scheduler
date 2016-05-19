@@ -175,6 +175,7 @@ describe('InstallationManager.Installation', function () {
   describe('Class methods', function () {
 
     describe('::createInstallation', function () {
+      this.timeout(4000);
 
       var knex = Knex(CONFIG.database[CONFIG.environment]);
 
@@ -188,25 +189,24 @@ describe('InstallationManager.Installation', function () {
       });
 
       after(function () {
-        return Promise.all([
-          InstallationManager.Installation.query()
-            .where('name', 'boop')
-            .delete(),
-          knex.raw('DROP DATABASE IF EXISTS "boop-test"'),
-        ]);
-      });
-
-      after(function () {
-        return knex.destroy();
+        return Promise
+          .all([
+            InstallationManager.Installation.query()
+              .where('name', 'boop')
+              .delete(),
+            knex.raw('DROP DATABASE IF EXISTS "boop-test"'),
+          ])
+          .then(function () {
+            return knex.destroy();
+          });
       });
 
       it('Should create installation', function () {
         return Promise.resolve()
           .then(function () {
-            InstallationManager.Installation.createInstallation({
+            return InstallationManager.Installation.createInstallation({
               installation: {
-                name: 'boop-test',
-                domain : '',
+                name: 'boop',
               },
               franchisor: {
                 email: 'franchisor@example.com',
@@ -217,8 +217,8 @@ describe('InstallationManager.Installation', function () {
                 currency: 'CAD',
                 timezone: 'America/Toronto',
               },
-            })
-          })
+            });
+          });
       });
 
     });
