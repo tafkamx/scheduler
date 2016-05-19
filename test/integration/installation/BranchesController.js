@@ -36,7 +36,7 @@ describe('Branches Controller', function () {
         return container
           .create('User', {
             email: 'franch@example.com',
-            password: '12345678'
+            password: '12345678',
           })
           .then(function (user) {
             return container.update(user.activate());
