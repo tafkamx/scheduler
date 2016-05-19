@@ -59,7 +59,7 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
         rule: function (val) {
           var that = this.target;
 
-          var query = that._container.query('User')
+          var query = that._knex('Users')
             .where('id', val);
 
           return query
