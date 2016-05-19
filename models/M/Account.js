@@ -63,6 +63,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         .catch(function() {
           resolve(false);
         });
+      }).catch(function() {
+        resolve(false);
       });
 
     });
@@ -89,6 +91,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         .catch(function() {
           resolve(false);
         });
+      }).catch(function() {
+        resolve(false);
       });
 
     });

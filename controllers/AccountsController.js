@@ -1,5 +1,6 @@
 var path = require('path');
 var Promise = require('bluebird');
+var Checkit = require('checkit');
 
 var AccountsController = Class('AccountsController').inherits(BaseController)({
 
@@ -16,8 +17,10 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       var accountId, userId, branchName;
 
       // First check for an Account ID
-      if(req.params.id && Checkit.checkSync('accountId', req.params.id, ['uuid', 'required']))
-        accountId = req.params.id; // This only gets set if req.params.id is a valid UUID.
+      if(req.params.id) {
+        var checkit = Checkit.checkSync('accountId', req.params.id, ['uuid', 'required']);
+        if(checkit[0] == null) accountId = req.params.id;
+      }
 
       // These will get validated later
       if(req.params.userId) userId = req.params.userId;
@@ -30,19 +33,19 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       if(accountId) {
         req.container.get('Account').getById(accountId)
         .then(function(account) {
-          //if(!account) throw new NotFoundError('Account ``' + accountId + '`` not found.');
+          if(!account) throw new NotFoundError('Account `' + accountId + '` not found.');
           res.locals.account = account;
 
           next();
-        });
+        }).catch(next);
       } else if(userId && branchName) {
         req.container.get('Account').getByUser(userId, branchName)
         .then(function(account) {
-          //if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
+          if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
           res.locals.account = account;
 
           next();
-        });
+        }).catch(next);
       }
       else next();
     },
@@ -73,14 +76,17 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
 
     /* Show an Account (defaults to current logged-in Account for branch) */
     show: function(req, res, next) {
-      res.format({
-        html : function() {
-          res.render('Accounts/show.html');
-        },
-        json : function() {
-          res.json(res.locals.account);
-        }
-      });
+      if(!res.locals.account) throw new NotFoundError('You must specify an Account or be logged in.');
+      else {
+        res.format({
+          html : function() {
+            res.render('Accounts/show.html');
+          },
+          json : function() {
+            res.json(res.locals.account);
+          }
+        });
+      }
     },
 
     /* TODO Edit Page */

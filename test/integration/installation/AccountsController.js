@@ -7,7 +7,7 @@ var url = container.props.url;
 
 describe('Accounts Controller', function() {
 
-  var account1, account2, account3;
+  var account1;
 
   /* === Before/After Actions === */
   before(function(done) {
@@ -16,7 +16,11 @@ describe('Accounts Controller', function() {
       branchName: 'default',
       type: 'teacher'
     }).then(function() {
-      done();
+      container.get('Account').query()
+      .then(function(res) {
+        account1 = res[0];
+        done();
+      }).catch(done);
     }).catch(done);
   });
 
@@ -28,7 +32,7 @@ describe('Accounts Controller', function() {
   });
   /* === END Before/After Actions === */
 
-  /* === Expect statement === */
+  /* === Expect Statements === */
   it('Should render /Accounts', function(done) {
     agent.get(url + '/Accounts').set('Accept', 'text/html')
     .end(function(err, res) {
@@ -39,8 +43,22 @@ describe('Accounts Controller', function() {
     });
   });
 
-  it('Should render /Accounts/show', function(done) {
-    
+  it('Should render /Accounts/show as 404 when no accountId', function(done) {
+    agent.get(url + '/Accounts/show').set('Accept', 'text/html')
+    .end(function(err, res) {
+      expect(err).to.be.instanceof(Error);
+      expect(res.status).to.equal(404);
+      done();
+    });
+  });
+
+  it('Should render /Accounts/accountId as JSON Object', function(done) {
+    agent.get(url + '/Accounts/' + account1.id).set('Accept', 'application/json')
+    .end(function(err, res) {
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      done();
+    });
   });
 
 });
