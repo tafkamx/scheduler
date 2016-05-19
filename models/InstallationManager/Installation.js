@@ -167,7 +167,10 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
       logger.info('Creating ' + name + ' database');
 
       // See if we can find a DB by this name, if yes then don't create new DB
-      return knex.raw('SELECT count(*) FROM "pg_catalog"."pg_database" WHERE datname = ?', [name])
+      return Promise.resolve()
+        .then(function () {
+          return knex.raw('SELECT count(*) FROM "pg_catalog"."pg_database" WHERE datname = ?', [name]);
+        })
         .then(function (res) {
           var count = +res.rows[0].count;
 
@@ -175,31 +178,39 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
             logger.info('Database ' + name + ' already exists');
             return Promise.resolve(true); // skip creating new DB
           } else {
-            return Promise.resolve(false); // create new DB
+            logger.info('Database ' + name + ' does not yet exist')
+            return Promise.resolve(false); // don't skip creating new DB
           }
         })
         .then(function (skip) {
+          var prom = Promise.resolve();
           var installKnex;
 
           if (skip) {
             installKnex = model.getDatabase();
 
             // migrate, just in case but don't create DB
-            return model.migrate(installKnex)
+            return prom
+              .then(function () {
+                return model.migrate(installKnex);
+              })
+              .then(function () {
+                return installKnex.destroy();
+              });
+          } else {
+            return prom
+              .then(function () {
+                return knex.raw('CREATE DATABASE "' + name + '";');
+              })
+              .then(function () {
+                installKnex = model.getDatabase();
+
+                return model.migrate(installKnex);
+              })
               .then(function () {
                 return installKnex.destroy();
               });
           }
-
-          return knex.raw('CREATE DATABASE "' + name + '";')
-            .then(function() {
-              installKnex = model.getDatabase();
-
-              return model.migrate(installKnex)
-                .then(function () {
-                  return installKnex.destroy();
-                });
-            });
         });
     },
 
