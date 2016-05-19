@@ -9,9 +9,18 @@ logger.info('Loading routes...');
 
 logger.info('Routes')
 routeMapper.routes.forEach(function(route) {
-  var controller = route.controller.split('/').join('.');
-  var action     = route.action;
-  var verbs      = route.verb;
+  // append given Foo#bar
+  if (route.to) {
+    route.handler.push(route.to);
+  }
+  // remove last handler segment if its an action
+  if (route.handler[route.handler.length - 1] === route.action) {
+    route.handler.pop();
+  }
+  var _handler   = route.handler.join('.').split('#');
+  var controller = _handler[0];
+  var action     = _handler[1] || route.action;
+  var verbs      = [route.verb];
 
   verbs.forEach(function(verb) {
     logger.info(verb + ': ' + route.path + ' ' + controller + '#' + action);
@@ -54,15 +63,15 @@ routeMapper.routes.forEach(function(route) {
   });
 });
 
-logger.info("---------------------------------");
-logger.info('\n');
+// logger.info("---------------------------------");
+// logger.info('\n');
 
-logger.info('Route Helpers:');
+// logger.info('Route Helpers:');
 
-for (var helper in routeMapper.helpers) {
-  logger.info(helper)
-}
+// for (var helper in routeMapper.helpers) {
+//   logger.info(helper)
+// }
 
-logger.info('\n');
+// logger.info('\n');
 
 module.exports = router;
