@@ -67,11 +67,23 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
     },
 
     new: function(req, res, next) {
-      next();
+      return res.format({
+        html: function () {
+          res.render('Accounts/new.html');
+        }
+      });
     },
 
     create: function(req, res, next) {
-      next();
+      res.format({
+        json: function () {
+          req.container.create('Account', req.body)
+            .then(function (account) {
+              res.json(account);
+            })
+            .catch(next);
+        }
+      });
     },
 
     /* Show an Account (defaults to current logged-in Account for branch) */

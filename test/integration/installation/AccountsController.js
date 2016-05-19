@@ -61,4 +61,43 @@ describe('Accounts Controller', function() {
     });
   });
 
+  describe('#create', function() {
+
+    it('Should create an Account', function(done) {
+      agent.post(url + '/Accounts')
+        .set('Accept', 'application/json')
+        .send({branchName: 'default', type: 'teacher'})
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.eql(200);
+          expect(res.body.branchName).to.be.equal('default');
+          expect(res.body.type).to.be.equal('teacher');
+          done();
+        });
+    });
+
+    it('Should fail if no branchName specified', function(done) {
+      agent.post(url + '/Accounts')
+        .set('Accept', 'application/json')
+        .send({type: 'teacher'})
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+
+    it('Should fail if no type specified', function(done) {
+      agent.post(url + '/Accounts')
+      .set('Accept', 'application/json')
+      .send({branchName: 'default'})
+      .end(function(err, res) {
+        expect(err).to.be.instanceof(Error);
+        expect(res.status).to.be.equal(500);
+        done();
+      });
+    });
+
+  });
+
 });
