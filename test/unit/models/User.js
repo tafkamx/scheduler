@@ -3,34 +3,35 @@
 var path = require('path');
 var _ = require('lodash');
 
-var container = UNIT;
-
 describe('M.User', function () {
 
-  before(function (done) {
-    container
-      .create('User', {
-        email: 'user-test@example.com',
-        password: '12345678'
-      })
-      .then(function () {
-        return done();
-      })
-      .catch(done);
-  });
+  var container = UNIT;
 
-  after(function (done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       container.get('User').query().delete(),
-    ])
-      .then(function () {
-        return done();
-      })
-      .catch(done);
+      // UserInfo deleted automatically by PostgreSQL
+    ]);
   });
 
-  describe('Validations', function() {
+  describe('Validations', function () {
+
+    beforeEach(function () {
+      return Promise.all([
+        container.get('User').query().delete(),
+        // UserInfo deleted automatically by PostgreSQL
+      ]);
+    });
+
+    after(function () {
+      return Promise.all([
+        container.get('User').query().delete(),
+        // UserInfo deleted automatically by PostgreSQL
+      ]);
+    });
+
     describe('email', function () {
+
       it('Should fail if the email already exists', function (done) {
         return Promise.resolve()
           .then(function () {
@@ -146,7 +147,7 @@ describe('M.User', function () {
           })
           .catch(function (err) {
             try {
-              //expect(err.message).to.be.equal('1 invalid values');
+              expect(err.message).to.be.equal('1 invalid values');
               expect(err.errors.password.message).to.be.equal('The password must be at least 8 characters long')
             } catch (err) {
               return done(err);
@@ -155,6 +156,9 @@ describe('M.User', function () {
             done();
           });
       });
+
     });
+
   });
+
 });
