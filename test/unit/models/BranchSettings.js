@@ -187,6 +187,26 @@ describe('M.BranchSettings', function() {
 
     describe('#getInstallationSettings', function () {
 
+      var user;
+
+      before(function () {
+        return container
+          .create('User', {
+            email: 'boop@baaps.com',
+            password: '12345678',
+          })
+          .then(function (res) {
+            user = res;
+          });
+      });
+
+      after(function () {
+        return Promise.all([
+          container.get('InstallationSettings').query().delete(),
+          container.get('User').query().delete(),
+        ]);
+      });
+
       it('Should create a record from with the same InstallationSettings', function () {
         return Promise.resolve()
           .then(function () {
@@ -195,6 +215,7 @@ describe('M.BranchSettings', function() {
               currency: 'CAD',
               timezone: 'America/Toronto',
               branchId: branch.id,
+              franchisorId: user.id,
             });
           })
           .then(function () {
