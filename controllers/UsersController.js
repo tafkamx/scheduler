@@ -1,4 +1,5 @@
 var path = require('path');
+var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 var UsersController = Class('UsersController').inherits(BaseController)({
 
@@ -6,6 +7,17 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     {
       before : ['_loadUser'],
       actions : ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before : function(req, res, next) {
+        RESTFulAPI.createMiddleware({
+          queryBuilder : req.container.query('User'),
+          filters : {
+            allowedFields : ['email']
+          }
+        })(req, res, next);
+      },
+      actions : ['index']
     }
   ],
 
@@ -26,20 +38,14 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     },
 
     index : function (req, res, next) {
-      req.container.query('User')
-        .then(function(results) {
-          res.locals.users = results;
-
-          res.format({
-            html : function() {
-              res.render('Users/index.html');
-            },
-            json : function() {
-              res.json(results);
-            }
-          });
-        })
-        .catch(next);
+      res.format({
+        html : function() {
+          res.render('Users/index.html', { users : res.locals.results });
+        },
+        json : function() {
+          res.json(res.locals.results);
+        }
+      });
     },
 
     show : function (req, res, next) {
