@@ -2,6 +2,8 @@ var Knex = require('knex');
 var psl = require('psl');
 var path = require('path');
 var Promise = require('bluebird');
+var DomainContainer = require('domain-container');
+var bcrypt = require('bcrypt-node');
 
 Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
@@ -77,12 +79,59 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
   attributes : ['id', 'name', 'domain', 'createdAt', 'updatedAt'],
 
-  migrateAll : function () {
-    return this.query().then(function(result) {
-      return Promise.each(result, function(installation) {
-        return installation.migrate();
+  createInstallation: function (config) {
+    /*
+     * config = {
+     *   installation: {},
+     *   franchisor: {},
+     *   baseUrl: '',
+     *   installationSettings: {},
+     *   defaultBranchSettings: {},
+     * }
+     */
+
+    var newInstallation,
+      container;
+
+    try {
+      config.franchisor.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
+      config.franchisor.role = 'franchisor'; // TODO: Remove
+      newInstallation = new InstallationManager.Installation(config.installation);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+
+    return Promise.resolve()
+      .then(function () {
+        return newInstallation.save();
+      })
+      .then(function () {
+        container = new DomainContainer({
+          knex: newInstallation.getDatabase(),
+          models: M,
+          modelExtras: {
+            mailers: {
+              user: new UserMailer({
+                baseUrl: config.baseUrl,
+              }),
+            },
+          },
+        });
+      })
+      .then(function () {
+        return container.create('User', config.franchisor);
+      })
+      .then(function () {
+        return container.create('InstallationSettings', config.installationSettings);
+      })
+      // Create default Branch
+      // Create BranchSettings for Branch (based on config.defaultBranchSettings)
+      .then(function () {
+        return container.cleanup();
+      })
+      .then(function () {
+        return Promise.resolve(newInstallation);
       });
-    });
   },
 
   prototype : {
@@ -109,20 +158,47 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
     createDatabase : function () {
       var model = this;
 
-      var conf = require(path.join(process.cwd(), 'knexfile.js'));
-
       var name = [this.name, CONFIG.environment].join('-');
 
-      var knex = new Knex(conf[CONFIG.environment]);
+      var knex = model.constructor.knex();
+
       logger.info('Creating ' + name + ' database');
 
-      return knex.raw('CREATE DATABASE "' + name + '";').then(function() {
-        var knex = model.getDatabase();
+      // See if we can find a DB by this name, if yes then don't create new DB
+      return knex.raw('SELECT count(*) FROM "pg_catalog"."pg_database" WHERE datname = ?', [name])
+        .then(function (res) {
+          var count = +res.rows[0].count;
 
-        return model.migrate(knex).then(function() {
-          knex.destroy()
+          if (count > 0) {
+            logger.info('Database ' + name + ' already exists');
+            return Promise.resolve(true); // skip creating new DB
+          } else {
+            return Promise.resolve(false); // create new DB
+          }
+        })
+        .then(function (skip) {
+          var installKnex;
+
+          if (skip) {
+            installKnex = model.getDatabase();
+
+            // migrate, just in case but don't create DB
+            return model.migrate(installKnex)
+              .then(function () {
+                return installKnex.destroy();
+              });
+          }
+
+          return knex.raw('CREATE DATABASE "' + name + '";')
+            .then(function() {
+              installKnex = model.getDatabase();
+
+              return model.migrate(installKnex)
+                .then(function () {
+                  return installKnex.destroy();
+                });
+            });
         });
-      })
     },
 
     migrate : function (knex) {

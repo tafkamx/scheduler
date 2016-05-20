@@ -153,6 +153,12 @@ describe('InstallationManager.InstallationsController', function () {
   describe('#create', function () {
     this.timeout(4000);
 
+    before(function () {
+      return InstallationManager.Installation.query()
+        .delete()
+        .where('name', 'installation-two');
+    });
+
     it('Should create a new Installation', function(done) {
       var data = {
         name : 'installation-two',
@@ -214,114 +220,6 @@ describe('InstallationManager.InstallationsController', function () {
         })
         .catch(function (err) {
           done(err)
-        });
-    });
-
-    it('Should fail to create an Installation if the name contains spaces', function(done) {
-      var data = {
-        name : 'my installation'
-      };
-
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('name must only contain alpha-numeric characters and dashes.');
-          done();
-        });
-    });
-
-    it('Should fail to create an Installation if the name is empty', function(done) {
-      var data = {
-        name : ''
-      };
-
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('The name is required');
-          done();
-        });
-    });
-
-    it('Should fail to create an Installation if the name is undefined', function(done) {
-      var data = {
-        name : undefined
-      };
-
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('The name is required');
-          done();
-        });
-    });
-
-    it('Should fail to create an Installation if the name exists', function(done) {
-      var data = {
-        name : 'installation-one',
-        domain : 'empathia.academy'
-      };
-
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('name already exists.');
-          expect(err.response.body.domain).to.exists;
-          expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
-          done();
-        });
-    });
-
-    it('Should fail to create an Installation if the domain is not a valid domain with TLD', function(done) {
-      var data = {
-        name : 'my-installation',
-        domain : 'myinstallation'
-      };
-
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.domain[0]).to.be.equal('Invalid domain.');
-          done();
-        });
-    });
-
-    it('Should fail if the name is > 128 or domain is > 255', function(done) {
-      agent.post(baseURL + '/InstallationManager/Installations')
-        .set('Accept', 'application/json')
-        .send({
-          name : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfs',
-          domain : 'jansfjknfdskjnfdskjsfndjkndjkdsnkjfnsdjknfjksdnfjkndsfkjndsjknfkjdsnjkfndskjnfjkdsnfjkndsjknfkjdsnfjkndsjknfjkdsnfjkndfsjknfkjdsnfjkndsjkfnjkdsnfjksdnkjfnskjnkjsndkjnjknsdkjfnkjsdnfkjnskjdnfjksdnkjfdnjksnfdjknsdjkfnkjsnfdkjnkjsdnfjkdsnkjnkjdsnjksndkjfndjksndfkjnfkjsdnfjknfsdkjnfkjfnjkfsdnkjfndskfjsnfkjsdnfdskjnfdskjndfskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjnfdskjndfskjndfkjndfkjdfnskjfdsnkjnfdkjndfskjndfskjndfskjndsfkjnfdskjndfskjnfdskjndfskjndfskjnfdskjndfskjndfskjndfskjndfsexample.com',
-          password : '12345678'
-        })
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.name[0]).to.be.equal('The name must not exceed 128 characters long');
-          expect(err.response.body.domain[0]).to.be.equal('The domain must not exceed 255 characters long');
-          done();
         });
     });
 
