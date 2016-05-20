@@ -22,7 +22,9 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       },
       actions : ['index']
     }
-  ].concat(aclBeforeActionsGenerator([
+  ],
+  /*
+  .concat(aclBeforeActionsGenerator([
     'index',
     'show',
     'new',
@@ -31,6 +33,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     'update',
     'destroy'
   ], 'branches')),
+  */
 
   prototype: {
     _loadBranch: function(req, res, next) {

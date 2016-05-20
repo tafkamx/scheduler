@@ -14,16 +14,34 @@ module.exports = function(req, res, next) {
     return next();
   }
 
-  // Search for Account related to current Account and Branch
-  req.container.get('Account')
-    .getByUser(req.user.id, req.branch)
-    .then(function(account) {
-      if(!account) req.role = 'Visitor'; // If not existing, set role to Visitor
-      else req.role = account.type.charAt(0).toUpperCase() + account.type.slice(1); // Capitalize first letter
+  Promise.resolve()
+    .then(function () {
+      return req.container.query('InstallationSettings')
+        .where('franchisor_id', req.user.id);
+    })
+    .then(function (settings) {
+      if (settings.length > 0) {
+        req.role = 'Franchisor';
+      }
+    })
+    .then(function () {
+      if (req.role === 'Franchisor') {
+        return;
+      }
 
-      req.account = account;
+      // Search for Account related to current Account and Branch
+      return req.container.get('Account')
+        .getByUser(req.user.id, req.branch)
+        .then(function(account) {
+          if(!account) req.role = 'Visitor'; // If not existing, set role to Visitor
+          else req.role = account.type.charAt(0).toUpperCase() + account.type.slice(1); // Capitalize first letter
+
+          req.account = account;
+        });
+    })
+    .then(function () {
+      console.log(req.role);
       next();
-    });
-
-  // TODO: Possibly also check to see if User ID is the Installation Franchisor, and set the Role to Franchisor in that case.
+    })
+    .catch(next);
 };
