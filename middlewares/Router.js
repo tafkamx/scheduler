@@ -70,10 +70,8 @@ logger.info('\n');
 
 logger.info('Route Helpers:');
 
-routeMapper.helpers = routeMapper.mappings;
-
 _helpers.forEach(function(fn) {
-  logger.info('  ' + fn + '()');
+  logger.info('  ' + fn + '.url()');
 });
 
 logger.info('\n');
