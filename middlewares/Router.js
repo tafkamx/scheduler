@@ -8,14 +8,16 @@ var router = global.neonode.express.Router();
 logger.info('Loading routes...');
 
 logger.info('Routes')
+
+var _helpers = [];
+
 routeMapper.routes.forEach(function(route) {
+  // save named callback
+  _helpers.push(route.as);
+
   // append given Foo#bar
   if (route.to) {
     route.handler.push(route.to);
-  }
-  // remove last handler segment if its an action
-  if (route.handler[route.handler.length - 1] === route.action) {
-    route.handler.pop();
   }
   var _handler   = route.handler.join('.').split('#');
   var controller = _handler[0];
@@ -23,7 +25,7 @@ routeMapper.routes.forEach(function(route) {
   var verbs      = [route.verb];
 
   verbs.forEach(function(verb) {
-    logger.info(verb + ': ' + route.path + ' ' + controller + '#' + action);
+    logger.info((verb.toUpperCase() + '      ').substr(0, 7) + ' ' + route.path + '   ' + controller + '#' + action);
 
     var controllerMethod = neonode.controllers[controller][action];
     var beforeActions    = neonode.controllers[controller].constructor.beforeActions;
@@ -63,15 +65,17 @@ routeMapper.routes.forEach(function(route) {
   });
 });
 
-// logger.info("---------------------------------");
-// logger.info('\n');
+logger.info("---------------------------------");
+logger.info('\n');
 
-// logger.info('Route Helpers:');
+logger.info('Route Helpers:');
 
-// for (var helper in routeMapper.helpers) {
-//   logger.info(helper)
-// }
+routeMapper.helpers = routeMapper.mappings;
 
-// logger.info('\n');
+_helpers.forEach(function(fn) {
+  logger.info('  ' + fn + '()');
+});
+
+logger.info('\n');
 
 module.exports = router;
