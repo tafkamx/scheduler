@@ -54,7 +54,6 @@ describe('Nonces', function() {
       nonces.clearOldNonces();
       // Disabling this test for now (is sometimes inconsistent)
       //expect(JSON.stringify(global.nonces)).to.equal('{}');
-      expect(1).to.equal(1);
       done();
     });
   });
