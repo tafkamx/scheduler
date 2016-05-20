@@ -18,7 +18,8 @@ module.exports = RouteMapper()
 
   .resources([
     '/Users',
-    '/Branches'
+    '/Branches',
+    '/Accounts'
   ])
 
   .namespace('/InstallationManager', function() {
