@@ -28,6 +28,7 @@ describe('M.Acccount', function() {
     return Promise.all([
       container.get('Teacher').query().delete(),
       container.get('Account').query().delete(),
+      container.get('User').query().delete(),
     ]);
   });
 
