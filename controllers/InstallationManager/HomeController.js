@@ -15,7 +15,7 @@ Class(InstallationManager, 'HomeController').inherits(BaseController)({
       if (!req.user) {
         return res.format({
           html: function () {
-            return res.redirect(urlFor.installationManagerLogin());
+            return res.redirect(urlFor.InstallationManager.login.url());
           },
           json: function () {
             return res.status(403).end();

@@ -5,7 +5,7 @@ var HomeController = Class('HomeController').inherits(BaseController)({
   prototype : {
     _authenticate : function(req, res, next) {
       if (!req.user) {
-        return res.redirect(urlFor.installationManagerLogin());
+        return res.redirect(urlFor.InstallationManager.login.url());
       }
 
       next();
