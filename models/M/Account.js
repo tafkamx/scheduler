@@ -170,6 +170,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         instance.typeInfo = accountData;
         var attributes = M[possibleTypes[instance.type]].attributes;
 
+        // === Property Overloading ===
         attributes.forEach(function(a) {
           if(instance.hasOwnProperty(a)) return; // Only overload properties that are pertinent
 
@@ -182,6 +183,17 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
           });
 
         });
+
+        // === Method Overloading ===
+
+        var methods = M[possibleTypes[instance.type]].prototype;
+
+        for(var method in methods) {
+          if(methods.hasOwnProperty(method)) {
+            instance[method] = methods[method];
+          }
+        }
+
 
         // TODO Create functions within `this.prototype` based on `res.prototype`
       });

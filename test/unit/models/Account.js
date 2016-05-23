@@ -66,7 +66,7 @@ describe('M.Acccount', function() {
       .then(function(res) {
         expect(res[0].active).to.equal(true);
         doneTest();
-      });
-    });
+      }).catch(doneTest);
+    }).catch(doneTest);
   });
 });
