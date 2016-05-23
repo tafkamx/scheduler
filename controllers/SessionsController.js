@@ -20,12 +20,12 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
       passport.authenticate('InstallationTokenStrategy', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
-          return res.redirect(urlFor.login());
+          return res.redirect(urlFor.login.url());
         }
 
         if (!user) {
           req.flash('error', 'Invalid email or password!');
-          return res.redirect(urlFor.login());
+          return res.redirect(urlFor.login.url());
         }
 
         return req.container.update(user.activate())
@@ -37,7 +37,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
               }
 
               req.flash('success', 'Welcome to PatOS Installation');
-              return res.redirect(urlFor.root());
+              return res.redirect(urlFor.root.url());
             });
           })
           .catch(next);
@@ -49,13 +49,13 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
     create : function(req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect(urlFor.root());
+        return res.redirect(urlFor.root.url());
       }
 
       passport.authenticate('Installation', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
-          return res.redirect(urlFor.login());
+          return res.redirect(urlFor.login.url());
         }
 
         req.login(user, function(err) {
@@ -65,7 +65,7 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
           }
 
           req.flash('success', 'Welcome to PatOS Installation');
-          return res.redirect(urlFor.root());
+          return res.redirect(urlFor.root.url());
         });
       })(req, res, next);
     },
@@ -75,13 +75,13 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
       req.flash('success', 'Signed off');
 
       res.clearCookie('guest-user-access-' + req.branch + '-' + req.installationId)// Logs off Guest Users, too.
-      return res.redirect(urlFor.login());
+      return res.redirect(urlFor.login.url());
     },
 
     resetShow: function (req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect(urlFor.root());
+        return res.redirect(urlFor.root.url());
       }
 
       return res.render('sessions/reset.html');

@@ -9,7 +9,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
     new : function(req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect(urlFor.installationManagerRoot());
+        return res.redirect(urlFor.InstallationManager.url());
       }
 
       if (!req.query.token) {
@@ -20,12 +20,12 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
         if (err) {
           req.flash('error', err.message);
 
-          return res.redirect(urlFor.installationManagerLogin());
+          return res.redirect(urlFor.InstallationManager.login.url());
         }
 
         if (!user) {
           req.flash('error', 'Invalid email or password!');
-          return res.redirect(urlFor.installationManagerLogin());
+          return res.redirect(urlFor.InstallationManager.login.url());
         }
 
         user.token = null;
@@ -38,7 +38,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
             }
 
             req.flash('success', 'PatOS Installation Admin');
-            return res.redirect(urlFor.installationManagerRoot());
+            return res.redirect(urlFor.InstallationManager.url());
           });
         }).catch(next);
 
@@ -49,13 +49,13 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
     create : function(req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect(urlFor.installationManagerRoot());
+        return res.redirect(urlFor.InstallationManager.url());
       }
 
       passport.authenticate('InstallationManager', function(err, user, info) {
         if (err) {
           req.flash('error', err.message);
-          return res.redirect(urlFor.installationManagerLogin());
+          return res.redirect(urlFor.InstallationManager.login.url());
         }
 
         req.login(user, function(err) {
@@ -65,7 +65,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
           }
 
           req.flash('success', 'PatOS Installation Admin');
-          return res.redirect(urlFor.installationManagerRoot());
+          return res.redirect(urlFor.InstallationManager.url());
         });
       })(req, res, next);
     },
@@ -73,13 +73,13 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
     destroy : function(req, res, next) {
       req.logout();
       req.flash('success', 'Signed off');
-      return res.redirect(urlFor.installationManagerLogin());
+      return res.redirect(urlFor.InstallationManager.login.url());
     },
 
     resetShow: function (req, res, next) {
       if (req.user) {
         req.flash('info', 'You are already logged in');
-        return res.redirect(urlFor.installationManagerRoot());
+        return res.redirect(urlFor.InstallationManager.url());
       }
 
       return res.render('InstallationManager/sessions/reset.html');

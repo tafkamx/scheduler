@@ -1,7 +1,5 @@
-var routeMapper = new RouteMapper();
-
-routeMapper
-  .root('Home#index')
+module.exports = RouteMapper()
+  .get('/', 'Home#index')
   .get('/login', { to: 'Sessions#new', as: 'login' })
   .get('/logout', { to: 'Sessions#destroy', as: 'logout' })
   .post('/login', { to: 'Sessions#create', as: 'login' })
@@ -19,14 +17,14 @@ routeMapper
   })
 
   .resources([
-    'Users',
-    'Branches',
-    'Accounts'
+    '/Users',
+    '/Branches',
+    '/Accounts'
   ])
 
-  .namespace('InstallationManager', function() {
-    routeMapper
-      .root('Home#index')
+  .namespace('/InstallationManager', function() {
+    return RouteMapper()
+      .get('/', 'Home#index')
       .get('/login', { to: 'Sessions#new' })
       .get('/logout', { to: 'Sessions#destroy' })
       .post('/login', { to: 'Sessions#create' })
@@ -44,9 +42,7 @@ routeMapper
       })
 
       .resources([
-        'Users',
-        'Installations'
+        '/Users',
+        '/Installations'
       ])
   });
-
-module.exports = routeMapper;
