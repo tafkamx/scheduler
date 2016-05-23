@@ -24,6 +24,14 @@ describe('M.Acccount', function() {
     });
   });
 
+  after(function () {
+    return Promise.all([
+      container.get('Teacher').query().delete(),
+      container.get('Account').query().delete(),
+      container.get('User').query().delete(),
+    ]);
+  });
+
   it('Should have typeInfo related to User Type.', function(doneTest) {
      container.get('Account').query()
      .then(function(res) {
