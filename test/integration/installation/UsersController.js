@@ -37,7 +37,7 @@ describe('Users Controller', function() {
   before(function (done) {
     Promise.resolve()
       .then(function (userId) {
-        agent.post(url + urlFor.login())
+        agent.post(url + urlFor.login.url())
           .send({
             email: 'franch@example.com',
             password: '12345678',

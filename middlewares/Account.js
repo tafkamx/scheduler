@@ -40,7 +40,6 @@ module.exports = function(req, res, next) {
         });
     })
     .then(function () {
-      // console.log(req.role);
       next();
     })
     .catch(next);

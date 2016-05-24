@@ -36,7 +36,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
    */
   types: {
     'teacher': 'Teacher',
-    'student': 'Student'
+    'student': 'Student',
+    'franchisee': 'Franchisee',
   },
 
   /**
@@ -56,17 +57,11 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         var account = res[0];
         if(!account) return resolve(false);
 
-        account.getTypeInfo()
+        return account.getTypeInfo()
         .then(function() {
           resolve(account);
-        })
-        .catch(function() {
-          resolve(false);
         });
-      }).catch(function() {
-        resolve(false);
-      });
-
+      }).catch(reject);
     });
   },
 
@@ -84,17 +79,11 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         var account = res[0];
         if(!account) return resolve(false);
 
-        account.getTypeInfo()
+        return account.getTypeInfo()
         .then(function() {
           resolve(account);
-        })
-        .catch(function() {
-          resolve(false);
         });
-      }).catch(function() {
-        resolve(false);
-      });
-
+      }).catch(reject);
     });
   },
 
