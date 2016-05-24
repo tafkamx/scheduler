@@ -47,17 +47,6 @@ var Teacher = Class(M, 'Teacher').inherits(Krypton.Model)({
 
     }
   }
-
-  /*
-  relations: {
-    availability: {
-      type: 'HasOne',
-      relatedModel: TeacherAvailability,
-      ownerCol: 'account_id',
-      relatedCol: 'id'
-    }
-  }
-  */
 });
 
 module.exports = Teacher;

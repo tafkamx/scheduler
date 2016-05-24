@@ -141,9 +141,11 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
       // Calls `typeInfo.save()`
       instance.on('afterSave', function(next) {
-        if(instance.typeInfo)
-          instance._container.update(instance.typeInfo).then(function() { next(); }).catch(next);
-        else next();
+        //if(instance.typeInfo)
+        //  instance._container.update(instance.typeInfo).then(function() { next(); }).catch(next);
+        //else next();
+
+        next();
       });
     },
 
@@ -185,17 +187,14 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         });
 
         // === Method Overloading ===
-
         var methods = M[possibleTypes[instance.type]].prototype;
+        var blacklist = ['init', 'constructor'];
 
         for(var method in methods) {
-          if(methods.hasOwnProperty(method)) {
+          if(methods.hasOwnProperty(method) && blacklist[method] === undefined) {
             instance[method] = methods[method];
           }
         }
-
-
-        // TODO Create functions within `this.prototype` based on `res.prototype`
       });
     }
   }
