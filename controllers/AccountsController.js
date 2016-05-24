@@ -101,7 +101,6 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       }
     },
 
-    /* TODO Edit Page */
     edit: function(req, res, next) {
       res.format({
         html : function() {
@@ -126,7 +125,7 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
       });
     },
 
-    /* Destroys the Account associated with the current-logged-in User */
+    /* Destroys the Account associated with the current request */
     destroy: function(req, res, next) {
       res.format({
         json : function() {
