@@ -112,7 +112,7 @@ describe('InstallationManager.ResetPasswordToken', function () {
   });
 
   after(function () {
-    return Promise.each([
+    return promiseSeries([
       InstallationManager.ResetPasswordToken.query().delete(),
       InstallationManager.User.query().delete(),
     ]);

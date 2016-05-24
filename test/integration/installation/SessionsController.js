@@ -114,7 +114,7 @@ describe('Sessions Controller', function () {
   });
 
   after(function () {
-    return Promise.all([
+    return promiseSeries([
       cont1.get('User').query().delete(),
       cont1.get('ResetPasswordToken').query().delete(),
       cont2.get('User').query().delete(),

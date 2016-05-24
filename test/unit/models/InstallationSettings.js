@@ -32,7 +32,7 @@ describe('M.InstallationSettings', function () {
   });
 
   after(function () {
-    return Promise.each([
+    return promiseSeries([
       container.get('User').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
