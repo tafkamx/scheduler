@@ -298,15 +298,11 @@ describe('Sessions Controller', function () {
 
     describe('#resetCreate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and create a token', function (doneTest) {
@@ -375,15 +371,11 @@ describe('Sessions Controller', function () {
 
     describe('#resetUpdate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and change password if provided valid token', function (doneTest) {
