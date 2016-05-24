@@ -19,15 +19,11 @@ describe('M.ResetPasswordToken', function () {
       .catch(done);
   });
 
-  after(function (done) {
-    Promise.all([
+  after(function () {
+    return Promise.each([
       container.get('User').query().delete(),
       container.get('ResetPasswordToken').query().delete(),
-    ])
-      .then(function () {
-        return done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Relations', function () {

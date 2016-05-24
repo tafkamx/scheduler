@@ -18,14 +18,14 @@ describe('M.BranchSettings', function() {
   });
 
   beforeEach(function () {
-    return Promise.all([
+    return Promise.each([
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
   });
 
   after(function () {
-    return Promise.all([
+    return Promise.each([
       container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
@@ -201,7 +201,7 @@ describe('M.BranchSettings', function() {
       });
 
       after(function () {
-        return Promise.all([
+        return Promise.each([
           container.get('InstallationSettings').query().delete(),
           container.get('User').query().delete(),
         ]);

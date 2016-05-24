@@ -67,15 +67,11 @@ describe('Branches Controller', function () {
   });
 
   // Cleanup
-  after(function (done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       container.get('User').query().delete(),
       container.get('Branch').query().delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   it('Should render /Branches/', function(done) {

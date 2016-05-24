@@ -113,8 +113,8 @@ describe('Sessions Controller', function () {
       .catch(done);
   });
 
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       cont1.get('User').query().delete(),
       cont1.get('ResetPasswordToken').query().delete(),
       cont2.get('User').query().delete(),
@@ -122,11 +122,7 @@ describe('Sessions Controller', function () {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Login', function () {

@@ -25,7 +25,7 @@ describe('M.Acccount', function() {
   });
 
   after(function () {
-    return Promise.all([
+    return Promise.each([
       container.get('Teacher').query().delete(),
       container.get('Account').query().delete(),
       container.get('User').query().delete(),
