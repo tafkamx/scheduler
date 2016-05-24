@@ -137,13 +137,6 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     },
 
     /**
-     * Account-Type-specific data is stored here for overloading and access on afterSave event.
-     */
-    typeInfo: {
-      save: function() { return Promise.resolve(); }
-    },
-
-    /**
      * Retrieve and overload Account Type data based on `Account.type`
      */
     getTypeInfo: function() {
@@ -159,6 +152,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         instance.typeInfo = accountData;
         var attributes = M[possibleTypes[instance.type]].attributes;
 
+        // === Property Overloading ===
         attributes.forEach(function(a) {
           if(instance.hasOwnProperty(a)) return; // Only overload properties that are pertinent
 
@@ -172,7 +166,15 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
         });
 
-        // TODO Create functions within `this.prototype` based on `res.prototype`
+        // === Method Overloading ===
+        var methods = M[possibleTypes[instance.type]].prototype;
+        var blacklist = ['init', 'constructor'];
+
+        for(var method in methods) {
+          if(methods.hasOwnProperty(method) && blacklist[method] === undefined) {
+            instance[method] = methods[method];
+          }
+        }
       });
     }
   }
