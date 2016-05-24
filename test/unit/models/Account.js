@@ -60,13 +60,13 @@ describe('M.Acccount', function() {
     teacherAccount.active = true; // Set in account scope
     expect(teacherAccount.typeInfo.active).to.equal(true); // Check typeInfo for update
 
-    container.update(teacherAccount)
+    return container.update(teacherAccount)
     .then(function() { // Gotta recheck the database for update to Teacher
       container.get('Teacher').query().where('account_id', teacherAccount.id)
       .then(function(res) {
         expect(res[0].active).to.equal(true);
         doneTest();
-      }).catch(doneTest);
+      });
     }).catch(doneTest);
   });
 });
