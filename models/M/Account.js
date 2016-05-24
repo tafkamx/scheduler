@@ -141,19 +141,10 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
       // Calls `typeInfo.save()`
       instance.on('afterSave', function(next) {
-        //if(instance.typeInfo)
-        //  instance._container.update(instance.typeInfo).then(function() { next(); }).catch(next);
-        //else next();
-
-        next();
+        if(instance.typeInfo)
+          instance._container.update(instance.typeInfo).then(function() { next(); }).catch(next);
+        else next();
       });
-    },
-
-    /**
-     * Account-Type-specific data is stored here for overloading and access on afterSave event.
-     */
-    typeInfo: {
-      save: function() { return Promise.resolve(); }
     },
 
     /**
