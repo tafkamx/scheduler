@@ -1,6 +1,6 @@
 <pre><%= JSON.stringify(account, null, 2) %></pre>
 
-<form class="edit-form" action="<%= helpers.urlFor.account(account.id) %>" method="POST">
+<form class="edit-form" action="<%= helpers.urlFor.Accounts.show(account.id) %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
 
