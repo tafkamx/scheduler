@@ -1,7 +1,5 @@
 'use strict';
 
-var agent = sa.agent();
-
 var container = INTE;
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
@@ -13,57 +11,44 @@ describe('Branches Controller', function () {
   var branch;
 
   // Create Branch for tests requiring existing branch
-  before(function (done) {
-    Promise.resolve()
-      .then(function () {
-        return container
-          .create('Branch', {
-            name: 'branch-one',
-          })
-          .then(function (res) {
-            branch = res;
-
-            done();
-          });
+  before(function () {
+    return container
+      .create('Branch', {
+        name: 'branch-one',
       })
-      .catch(done);
+      .then(function (res) {
+        branch = res;
+      });
   });
 
   // Create user for login
-  before(function (done) {
-    Promise.resolve()
-      .then(function () {
-        return container
-          .create('User', {
-            email: 'franch@example.com',
-            password: '12345678',
-          })
-          .then(function (user) {
-            return container.update(user.activate());
-          });
+  before(function () {
+    return container
+      .create('User', {
+        email: 'franch@example.com',
+        password: '12345678',
       })
-      .then(function () {
-        done();
-      })
-      .catch(done);
+      .then(function (user) {
+        return container.update(user.activate());
+      });
   });
 
-  // Login agent
-  before(function (done) {
-    Promise.resolve()
-      .then(function () {
-        agent.post(url + urlFor.login.url())
-          .send({
-            email: 'franch@example.com',
-            password: '12345678',
-          })
-          .end(function (err, res) {
-            if (err) { return done(err); }
+  var agent = sa.agent();
 
-            done();
-          });
-      })
-      .catch(done);
+  // Login agent
+  before(function () {
+    return new Promise(function (resolve, reject) {
+      agent.post(url + urlFor.login.url())
+        .send({
+          email: 'franch@example.com',
+          password: '12345678',
+        })
+        .end(function (err, res) {
+          if (err) { return reject(err); }
+
+          resolve();
+        });
+    });
   });
 
   // Cleanup
