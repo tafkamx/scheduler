@@ -113,8 +113,8 @@ describe('Sessions Controller', function () {
       .catch(done);
   });
 
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return promiseSeries([
       cont1.get('User').query().delete(),
       cont1.get('ResetPasswordToken').query().delete(),
       cont2.get('User').query().delete(),
@@ -122,11 +122,7 @@ describe('Sessions Controller', function () {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Login', function () {
@@ -261,7 +257,7 @@ describe('Sessions Controller', function () {
     describe('#resetShow', function () {
 
       it('Should GET /resetPassword with status code 200', function (doneTest) {
-        sa.get(oneUrl + urlFor.reset())
+        sa.get(oneUrl + urlFor.reset.url())
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
@@ -273,7 +269,7 @@ describe('Sessions Controller', function () {
       it('Should redirect to / with status code 200 if already logged-in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(oneUrl + urlFor.login())
+        agent.post(oneUrl + urlFor.login.url())
           .send({
             email: user1.email,
             password: user1.password
@@ -282,7 +278,7 @@ describe('Sessions Controller', function () {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.get(oneUrl + urlFor.reset())
+            agent.get(oneUrl + urlFor.reset.url())
               .end(function (err, res) {
                 expect(err).to.be.equal(null);
                 expect(res.status).to.be.equal(200);
@@ -298,19 +294,15 @@ describe('Sessions Controller', function () {
 
     describe('#resetCreate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and create a token', function (doneTest) {
-        sa.post(oneUrl + urlFor.reset())
+        sa.post(oneUrl + urlFor.reset.url())
           .send({
             email: user1.email
           })
@@ -332,7 +324,7 @@ describe('Sessions Controller', function () {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(oneUrl + urlFor.login())
+        agent.post(oneUrl + urlFor.login.url())
           .send({
             email: user1.email,
             password: user1.password
@@ -341,7 +333,7 @@ describe('Sessions Controller', function () {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.post(oneUrl + urlFor.reset())
+            agent.post(oneUrl + urlFor.reset.url())
               .send({
                 email: user1.email
               })
@@ -357,7 +349,7 @@ describe('Sessions Controller', function () {
       });
 
       it('Should return 404 with unexistent email', function (doneTest) {
-        sa.post(oneUrl + urlFor.reset())
+        sa.post(oneUrl + urlFor.reset.url())
           .send({
             email: 'unexistent@email.com'
           })
@@ -375,19 +367,15 @@ describe('Sessions Controller', function () {
 
     describe('#resetUpdate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and change password if provided valid token', function (doneTest) {
-        sa.post(oneUrl + urlFor.reset())
+        sa.post(oneUrl + urlFor.reset.url())
           .send({
             email: user1.email
           })
@@ -406,7 +394,7 @@ describe('Sessions Controller', function () {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(oneUrl + urlFor.reset())
+                  sa.put(oneUrl + urlFor.reset.url())
                     .send({
                       password: '12345678',
                       token: token.token
@@ -431,7 +419,7 @@ describe('Sessions Controller', function () {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(oneUrl + urlFor.login())
+        agent.post(oneUrl + urlFor.login.url())
           .send({
             email: user1.email,
             password: user1.password
@@ -440,7 +428,7 @@ describe('Sessions Controller', function () {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.put(oneUrl + urlFor.reset())
+            agent.put(oneUrl + urlFor.reset.url())
               .send({})
               .end(function (err, res) {
                 expect(err).to.not.equal(null);
@@ -454,7 +442,7 @@ describe('Sessions Controller', function () {
       });
 
       it('Should return 404 and a message with unexistent token', function (doneTest) {
-        sa.post(oneUrl + urlFor.reset())
+        sa.post(oneUrl + urlFor.reset.url())
           .send({
             email: user1.email
           })
@@ -473,7 +461,7 @@ describe('Sessions Controller', function () {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(oneUrl + urlFor.reset())
+                  sa.put(oneUrl + urlFor.reset.url())
                     .send({
                       password: '12345678',
                       token: 'invalid token'
@@ -496,7 +484,7 @@ describe('Sessions Controller', function () {
       });
 
       it('Should return 404 and a message with expired token', function (doneTest) {
-        sa.post(oneUrl + urlFor.reset())
+        sa.post(oneUrl + urlFor.reset.url())
           .send({
             email: user1.email
           })
@@ -520,7 +508,7 @@ describe('Sessions Controller', function () {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(oneUrl + urlFor.reset())
+                  sa.put(oneUrl + urlFor.reset.url())
                     .send({
                       password: '12345678',
                       token: token.token

@@ -18,17 +18,13 @@ describe('InstallationManager.SessionsController', function() {
       .catch(done);
   });
 
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
       InstallationManager.User.query().delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Login', function () {
@@ -120,7 +116,7 @@ describe('InstallationManager.SessionsController', function() {
     describe('#resetShow', function () {
 
       it('Should GET /resetPassword with status code 200', function (doneTest) {
-        sa.get(baseURL + urlFor.installationManagerReset())
+        sa.get(baseURL + urlFor.InstallationManager.reset.url())
           .end(function (err, res) {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
@@ -132,7 +128,7 @@ describe('InstallationManager.SessionsController', function() {
       it('Should redirect to / with status code 200 if already logged-in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(baseURL + urlFor.InstallationManager.login.url())
           .send({
             email: adminUser.email,
             password: adminUser.password
@@ -141,7 +137,7 @@ describe('InstallationManager.SessionsController', function() {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.get(baseURL + urlFor.installationManagerReset())
+            agent.get(baseURL + urlFor.InstallationManager.reset.url())
               .end(function (err, res) {
                 expect(err).to.be.equal(null);
                 expect(res.status).to.be.equal(200);
@@ -158,7 +154,7 @@ describe('InstallationManager.SessionsController', function() {
     describe('#resetCreate', function () {
 
       it('Should return 200 and create a token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(baseURL + urlFor.InstallationManager.reset.url())
           .send({
             email: adminUser.email
           })
@@ -183,7 +179,7 @@ describe('InstallationManager.SessionsController', function() {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(baseURL + urlFor.InstallationManager.login.url())
           .send({
             email: adminUser.email,
             password: adminUser.password
@@ -192,7 +188,7 @@ describe('InstallationManager.SessionsController', function() {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.post(baseURL + urlFor.installationManagerReset())
+            agent.post(baseURL + urlFor.InstallationManager.reset.url())
               .send({
                 email: adminUser.email
               })
@@ -208,7 +204,7 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 with unexistent email', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(baseURL + urlFor.InstallationManager.reset.url())
           .send({
             email: 'unexistent@email.com'
           })
@@ -227,7 +223,7 @@ describe('InstallationManager.SessionsController', function() {
     describe('#resetUpdate', function () {
 
       it('Should return 200 and change password if provided valid token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(baseURL + urlFor.InstallationManager.reset.url())
           .send({
             email: adminUser.email
           })
@@ -246,7 +242,7 @@ describe('InstallationManager.SessionsController', function() {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(baseURL + urlFor.InstallationManager.reset.url())
                     .send({
                       password: '12345678',
                       token: token.token
@@ -274,7 +270,7 @@ describe('InstallationManager.SessionsController', function() {
       it('Should return 403 and a message when already logged in', function (doneTest) {
         var agent = sa.agent();
 
-        agent.post(baseURL + urlFor.installationManagerLogin())
+        agent.post(baseURL + urlFor.InstallationManager.login.url())
           .send({
             email: adminUser.email,
             password: adminUser.password
@@ -283,7 +279,7 @@ describe('InstallationManager.SessionsController', function() {
             expect(err).to.equal(null);
             expect(res.status).to.equal(200);
 
-            agent.put(baseURL + urlFor.installationManagerReset())
+            agent.put(baseURL + urlFor.InstallationManager.reset.url())
               .send({})
               .end(function (err, res) {
                 expect(err).to.not.equal(null);
@@ -297,7 +293,7 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 and a message with unexistent token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(baseURL + urlFor.InstallationManager.reset.url())
           .send({
             email: adminUser.email
           })
@@ -316,7 +312,7 @@ describe('InstallationManager.SessionsController', function() {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(baseURL + urlFor.InstallationManager.reset.url())
                     .send({
                       password: '12345678',
                       token: 'invalid token'
@@ -342,7 +338,7 @@ describe('InstallationManager.SessionsController', function() {
       });
 
       it('Should return 404 and a message with expired token', function (doneTest) {
-        sa.post(baseURL + urlFor.installationManagerReset())
+        sa.post(baseURL + urlFor.InstallationManager.reset.url())
           .send({
             email: adminUser.email
           })
@@ -366,7 +362,7 @@ describe('InstallationManager.SessionsController', function() {
               })
               .then(function () {
                 return new Promise(function (resolve, reject) {
-                  sa.put(baseURL + urlFor.installationManagerReset())
+                  sa.put(baseURL + urlFor.InstallationManager.reset.url())
                     .send({
                       password: '12345678',
                       token: token.token

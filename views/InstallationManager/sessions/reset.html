@@ -8,7 +8,7 @@
     if (App.queryParams.token) {
       resetForm = new PAT.InstallationManager.SessionsResetPasswordPasswordForm({
         data: {
-          url: '<%= helpers.urlFor.installationManagerReset() %>',
+          url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
           token: App.queryParams.token,
           csrfToken: '<%= csrfToken %>'
         }
@@ -16,7 +16,7 @@
     } else {
       resetForm = new PAT.InstallationManager.SessionsResetPasswordEmailForm({
         data: {
-          url: '<%= helpers.urlFor.installationManagerReset() %>',
+          url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
           csrfToken: '<%= csrfToken %>'
         }
       });

@@ -172,6 +172,59 @@ describe('InstallationManager.Installation', function () {
 
   });
 
+  describe('Class methods', function () {
+
+    describe('::createInstallation', function () {
+      this.timeout(4000);
+
+      var knex = Knex(CONFIG.database[CONFIG.environment]);
+
+      beforeEach(function () {
+        return Promise.all([
+          InstallationManager.Installation.query()
+            .where('name', 'boop')
+            .delete(),
+          knex.raw('DROP DATABASE IF EXISTS "boop-test"'),
+        ]);
+      });
+
+      after(function () {
+        return Promise
+          .all([
+            InstallationManager.Installation.query()
+              .where('name', 'boop')
+              .delete(),
+            knex.raw('DROP DATABASE IF EXISTS "boop-test"'),
+          ])
+          .then(function () {
+            return knex.destroy();
+          });
+      });
+
+      it('Should create installation', function () {
+        return Promise.resolve()
+          .then(function () {
+            return InstallationManager.Installation.createInstallation({
+              installation: {
+                name: 'boop',
+              },
+              franchisor: {
+                email: 'franchisor@example.com',
+              },
+              baseUrl: 'patos.net',
+              installationSettings : {
+                language: 'en-CA',
+                currency: 'CAD',
+                timezone: 'America/Toronto',
+              },
+            });
+          });
+      });
+
+    });
+
+  });
+
   describe('Methods', function () {
 
     describe('#createDatabase', function () {

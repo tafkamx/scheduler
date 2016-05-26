@@ -18,14 +18,14 @@ describe('M.BranchSettings', function() {
   });
 
   beforeEach(function () {
-    return Promise.all([
+    return promiseSeries([
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
   });
 
   after(function () {
-    return Promise.all([
+    return promiseSeries([
       container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
@@ -187,6 +187,26 @@ describe('M.BranchSettings', function() {
 
     describe('#getInstallationSettings', function () {
 
+      var user;
+
+      before(function () {
+        return container
+          .create('User', {
+            email: 'boop@baaps.com',
+            password: '12345678',
+          })
+          .then(function (res) {
+            user = res;
+          });
+      });
+
+      after(function () {
+        return promiseSeries([
+          container.get('InstallationSettings').query().delete(),
+          container.get('User').query().delete(),
+        ]);
+      });
+
       it('Should create a record from with the same InstallationSettings', function () {
         return Promise.resolve()
           .then(function () {
@@ -195,6 +215,7 @@ describe('M.BranchSettings', function() {
               currency: 'CAD',
               timezone: 'America/Toronto',
               branchId: branch.id,
+              franchisorId: user.id,
             });
           })
           .then(function () {

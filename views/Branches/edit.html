@@ -1,6 +1,6 @@
 <pre><%= JSON.stringify(branch, null, 2) %></pre>
 
-<form class="edit-form" action="<%= helpers.urlFor.branch(branch.id) %>" method="POST">
+<form class="edit-form" action="<%= helpers.urlFor.Branches.show.url(branch.id) %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
 

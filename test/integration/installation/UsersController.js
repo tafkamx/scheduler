@@ -37,7 +37,7 @@ describe('Users Controller', function() {
   before(function (done) {
     Promise.resolve()
       .then(function (userId) {
-        agent.post(url + urlFor.login())
+        agent.post(url + urlFor.login.url())
           .send({
             email: 'franch@example.com',
             password: '12345678',
@@ -140,8 +140,7 @@ describe('Users Controller', function() {
   describe('#create', function () {
 
     it('Should create a new User', function(done) {
-      var user,
-        userInfo;
+      var user;
 
       Promise.resolve()
         .then(function () {
@@ -170,21 +169,6 @@ describe('Users Controller', function() {
 
               user = result[0];
             });
-        })
-        .then(function () {
-          return container.query('UserInfo')
-            .where('user_id', user.id)
-            .then(function (result) {
-              expect(result.length).to.equal(1);
-
-              userInfo = result[0];
-            });
-        })
-        .then(function () {
-          expect(user.id).to.equal(userInfo.userId);
-          expect(userInfo.role).to.equal('staff');
-
-          return Promise.resolve();
         })
         .then(function () {
           return done();
@@ -284,40 +268,6 @@ describe('Users Controller', function() {
               expect(res.body.deleted).to.be.equal(true);
               done();
             })
-        });
-    });
-
-    it('Should destroy UsersInfo record if User is destroyed', function(done) {
-      agent.post(url + '/Users')
-        .send({
-          email: 'temp@example.com',
-          password: '12345678',
-          role: 'student'
-        })
-        .end(function(err, res) {
-          Promise.resolve()
-            .then(function () {
-              return new Promise(function (resolve) {
-                agent.post(url + '/Users/' + res.body.id)
-                  .send({ _method: 'DELETE' })
-                  .set('Accept', 'application/json')
-                  .end(function(err, res) {
-                    expect(err).to.be.eql(null);
-                    expect(res.body.deleted).to.be.equal(true);
-
-                    resolve();
-                  });
-              });
-            })
-            .then(function () {
-              return container.query('UserInfo')
-                .where('user_id', res.id)
-                .then(function (result) {
-                  expect(result.length).to.equal(0);
-                });
-            })
-            .then(done)
-            .catch(done);
         });
     });
 

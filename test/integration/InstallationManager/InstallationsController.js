@@ -3,21 +3,17 @@ describe('InstallationManager.InstallationsController', function () {
   var adminUser;
 
   // Admin user, to login
-  before(function (done) {
+  before(function () {
     adminUser = new InstallationManager.User({
       email: 'test@example.com',
       password: '12345678',
     });
 
-    adminUser
+    return adminUser
       .save()
       .then(function () {
         return adminUser.activate().save();
-      })
-      .then(function () {
-        done();
-      })
-      .catch(done);
+      });
   });
 
   // Agent login
@@ -37,44 +33,39 @@ describe('InstallationManager.InstallationsController', function () {
   var installation;
 
   // Installation, test CRUD stuff
-  before(function (done) {
-    installation = new InstallationManager.Installation({
-      name: 'installation-one',
-    });
+  before(function () {
+    this.timeout(4000);
 
-    installation.save()
-      .then(function () {
-        var installationKnex = installation.getDatabase();
+    var data = {
+      installation: {
+        name: 'installation-one',
+      },
+      franchisor: {
+        email: 'test@example.org',
+        password: '12345678',
+      },
+      installationSettings: {
+        language: 'en-CA',
+        currency: 'CAD',
+        timezone: 'America/Toronto',
+      },
+      baseUrl: 'http://default.installation-one.test-installation.com:3000',
+    };
 
-        var settings = new M.InstallationSettings({
-          language: 'en-CA',
-          currency: 'CAD',
-          timezone: 'America/Toronto',
-        });
-
-        return settings.save(installationKnex)
-          .then(function () {
-            return installationKnex.destroy();
-          });
-      })
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    return InstallationManager.Installation.createInstallation(data)
+      .then(function (res) {
+        installation = res;
+      });
   });
 
   // Cleanup
-  after(function (done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
       InstallationManager.User.query().delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   it('Should render /InstallationManager/Installations/', function(done) {
@@ -153,6 +144,12 @@ describe('InstallationManager.InstallationsController', function () {
   describe('#create', function () {
     this.timeout(4000);
 
+    before(function () {
+      return InstallationManager.Installation.query()
+        .delete()
+        .where('name', 'installation-two');
+    });
+
     it('Should create a new Installation', function(done) {
       var data = {
         name : 'installation-two',
@@ -165,9 +162,7 @@ describe('InstallationManager.InstallationsController', function () {
         }
       };
 
-      var knex,
-        user,
-        userInfo;
+      var knex, user;
 
       Promise.resolve()
         .then(function () {
@@ -188,7 +183,7 @@ describe('InstallationManager.InstallationsController', function () {
           });
         })
         .then(function () {
-          return M.User.query(knex)
+          return InstallationManager.User.query(knex)
             .then(function (result) {
               expect(result.length).to.equal(1);
 
@@ -196,25 +191,9 @@ describe('InstallationManager.InstallationsController', function () {
             });
         })
         .then(function () {
-          return M.UserInfo.query(knex)
-            .then(function (result) {
-              expect(result.length).to.equal(1);
-
-              userInfo = result[0];
-            });
-        })
-        .then(function () {
-          expect(user.id).to.equal(userInfo.userId);
-          expect(userInfo.role).to.equal('franchisor');
-
-          return Promise.resolve();
-        })
-        .then(function () {
           return done();
         })
-        .catch(function (err) {
-          done(err)
-        });
+        .catch(done);
     });
 
   });
