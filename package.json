@@ -9,13 +9,13 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "test": "npm run test:unit && npm run test:integration:manager && npm run test:integration",
-    "test:clean": "scripty",
-    "test:knexreset": "scripty",
+    "test": "scripty",
     "test:unit": "scripty",
     "test:integration": "scripty",
     "test:integration:installation": "scripty",
     "test:integration:manager": "scripty",
+    "utils:resetdb": "scripty",
+    "utils:knexreset": "scripty",
     "report": "scripty",
     "start": "scripty",
     "iron-node": "scripty",

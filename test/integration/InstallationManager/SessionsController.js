@@ -18,17 +18,13 @@ describe('InstallationManager.SessionsController', function() {
       .catch(done);
   });
 
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
       InstallationManager.User.query().delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Login', function () {

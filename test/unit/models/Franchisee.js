@@ -30,7 +30,7 @@ describe('M.Franchisee', function () {
   });
 
   after(function () {
-    return Promise.all([
+    return promiseSeries([
       container.get('Franchisee').query().delete(),
       container.get('Account').query().delete(),
       container.get('User').query().delete(),
