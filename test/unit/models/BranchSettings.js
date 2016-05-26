@@ -19,6 +19,7 @@ describe('M.BranchSettings', function() {
 
   beforeEach(function () {
     return promiseSeries([
+      container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
