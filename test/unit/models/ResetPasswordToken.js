@@ -73,7 +73,7 @@ describe('M.ResetPasswordToken', function () {
 
   });
 
-  describe('Checkit rules', function () {
+  describe('Validations', function () {
 
     it('Should create a proper token with no errors', function (doneTest) {
       Promise.resolve()

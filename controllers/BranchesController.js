@@ -1,5 +1,6 @@
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
+var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));
 
@@ -9,8 +10,21 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     {
       before: ['_loadBranch'],
       actions: ['show', 'edit', 'update', 'destroy']
+    },
+    {
+      before : function(req, res, next) {
+        RESTFulAPI.createMiddleware({
+          queryBuilder : req.container.query('Branch'),
+          filters : {
+            allowedFields : ['name']
+          }
+        })(req, res, next);
+      },
+      actions : ['index']
     }
-  ].concat(aclBeforeActionsGenerator([
+  ],
+  /*
+  .concat(aclBeforeActionsGenerator([
     'index',
     'show',
     'new',
@@ -19,6 +33,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     'update',
     'destroy'
   ], 'branches')),
+  */
 
   prototype: {
     _loadBranch: function(req, res, next) {
@@ -37,20 +52,15 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     },
 
     index: function (req, res, next) {
-      req.container.query('Branch')
-        .then(function (results) {
-          res.locals.branches = results;
 
-          res.format({
-            html: function () {
-              res.render('Branches/index.html');
-            },
-            json: function () {
-              res.json(results);
-            }
-          });
-        })
-        .catch(next);
+      res.format({
+        html: function () {
+          res.render('Branches/index.html', { branches : res.locals.results });
+        },
+        json: function () {
+          res.json(res.locals.results);
+        }
+      });
     },
 
     show: function (req, res, next) {

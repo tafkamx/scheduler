@@ -1,6 +1,6 @@
 <pre><%= JSON.stringify(installation, null, 2) %></pre>
 
-<form class="edit-form" action="<%= helpers.urlFor.installationManagerInstallation(installation.id) %>" method="post">
+<form class="edit-form" action="<%= helpers.urlFor.InstallationManager.Installations.show.url(installation.id) %>" method="post">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
     <label for="name">Name</label> <input type="text" name="name" value="<%= installation.name %>">

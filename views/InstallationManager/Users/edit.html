@@ -15,7 +15,7 @@
 
     var emailForm = new PAT.InstallationManager.UserEditEmailForm({
       data: {
-        url: '<%= helpers.urlFor.installationManagerUser(adminUser.id) %>',
+        url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
         user: adminUser,
         csrfToken: '<%= csrfToken %>'
       }
@@ -25,7 +25,7 @@
 
     var passwordForm = new PAT.InstallationManager.UserEditPasswordForm({
       data: {
-        url: '<%= helpers.urlFor.installationManagerUser(adminUser.id) %>',
+        url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
         csrfToken: '<%= csrfToken %>'
       }
     });
