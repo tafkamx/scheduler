@@ -38,6 +38,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     'teacher': 'Teacher',
     'student': 'Student',
     'franchisee': 'Franchisee',
+    'staff': 'StaffMember',
   },
 
   /**
