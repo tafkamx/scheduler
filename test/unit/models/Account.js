@@ -36,7 +36,7 @@ describe('M.Acccount', function() {
      container.get('Account').query()
      .then(function(res) {
        teacherAccount = res[0];
-       teacherAccount.getTypeInfo() // It works here
+       teacherAccount.getTypeInfo()
        .then(function() {
          expect(teacherAccount).to.have.ownProperty('branchName'); // This is an account-wide property
          expect(teacherAccount).to.have.ownProperty('active'); // bio is a Teacher-specific property.
@@ -47,7 +47,7 @@ describe('M.Acccount', function() {
   });
 
   it('Should work through `container.get(Account).getById`', function(doneTest) {
-    container.get('Account').getById(teacherAccount.id) // Doesn't work within this class method
+    container.get('Account').getById(teacherAccount.id)
     .then(function(account) {
       expect(account).to.have.ownProperty('active'); // This is a Teacher-specific property
       doneTest();

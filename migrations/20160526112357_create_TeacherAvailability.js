@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
       .references('id')
       .inTable('Accounts')
       .onDelete('CASCADE');
+    t.string('branch_name');
     t.integer('monday');
     t.integer('tuesday');
     t.integer('wednesday');
