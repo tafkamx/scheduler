@@ -35,28 +35,6 @@ describe('M.Location', function () {
 
     describe('name', function () {
 
-      it('Should fail if undefined', function (done) {
-        var data = _.clone(preset);
-        data.name = undefined;
-
-        container
-          .create('Location', data)
-          .then(function () {
-            expect.fail('should have rejected');
-          })
-          .catch(function (err) {
-            try {
-              expect(err.message).to.equal('1 invalid values');
-              expect(err.errors).to.have.property('name');
-              expect(err.errors.name.message).to.equal('The name is required');
-            } catch (err) {
-              return done(err);
-            }
-
-            done();
-          });
-      });
-
       it('Should fail if length exceeds 255 characters', function (done) {
         var data = _.clone(preset);
         data.name = _.repeat('a', 256);
@@ -130,28 +108,6 @@ describe('M.Location', function () {
     });
 
     describe('address2', function () {
-
-      it('Should fail if undefined', function (done) {
-        var data = _.clone(preset);
-        data.address2 = undefined;
-
-        container
-          .create('Location', data)
-          .then(function () {
-            expect.fail('should have rejected');
-          })
-          .catch(function (err) {
-            try {
-              expect(err.message).to.equal('1 invalid values');
-              expect(err.errors).to.have.property('address2');
-              expect(err.errors.address2.message).to.equal('The address2 is required');
-            } catch (err) {
-              return done(err);
-            }
-
-            done();
-          });
-      });
 
       it('Should fail if length exceeds 255 characters', function (done) {
         var data = _.clone(preset);

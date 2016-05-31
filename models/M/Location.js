@@ -6,7 +6,6 @@ Class(M, 'Location').inherits(DynamicModel)({
 
   validations: {
     name: [
-      'required',
       'maxLength:255',
     ],
 
@@ -16,7 +15,6 @@ Class(M, 'Location').inherits(DynamicModel)({
     ],
 
     address2: [
-      'required',
       'maxLength:255',
     ],
 
