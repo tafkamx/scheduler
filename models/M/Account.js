@@ -134,7 +134,25 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         query.then(function(res) {
           instance.typeInfo = res[0];
           next();
-        });
+        }).catch(next);
+      });
+
+      // Create Location instance
+      instance.on('afterCreate', function (next) {
+        if (!instance.location) {
+          return next();
+        }
+
+        instance._container.create('Location', instance.location)
+          .then(function (location) {
+            instance.locationId = location.id;
+
+            return instance._container.update(instance);
+          })
+          .then(function () {
+            next();
+          })
+          .catch(next);
       });
 
       // Calls `typeInfo.save()`
