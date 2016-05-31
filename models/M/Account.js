@@ -147,6 +147,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
           .then(function (location) {
             instance.locationId = location.id;
 
+            instance.location = location;
+
             return instance._container.update(instance);
           })
           .then(function () {
