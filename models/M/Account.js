@@ -23,12 +23,6 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     firstName: ['maxLength:125'],
     lastName: ['maxLength:125'],
     dob: ['date'], // TODO test this for compatibility with Knex. This requires a JavaScript date object
-    addressLine1: ['maxLength:255'],
-    addressLine2: ['maxLength:255'],
-    city: ['maxLength:255'],
-    state: ['maxLength:255'],
-    country: ['maxLength:48'],
-    postalCode: ['maxLength:48']
   },
 
   /**
@@ -96,10 +90,6 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     'firstName',
     'lastName',
     'dob',
-    'addressLine1',
-    'addressLine2',
-    'city',
-    'postalCode',
     'createdAt',
     'updatedAt'
   ],
