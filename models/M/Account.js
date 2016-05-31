@@ -23,6 +23,23 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     firstName: ['maxLength:125'],
     lastName: ['maxLength:125'],
     dob: ['date'], // TODO test this for compatibility with Knex. This requires a JavaScript date object
+    locationId: [
+      'uuid',
+      {
+        rule: function (val) {
+          var that = this.target;
+
+          return that._container.query('Location')
+            .where('id', val)
+            .then(function (res) {
+              if (res.length === 0) {
+                throw new Error( 'The locationId is required');
+              }
+            });
+        },
+        message: 'The locationId is required',
+      }
+    ],
   },
 
   /**
@@ -91,7 +108,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     'lastName',
     'dob',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
+    'locationId',
   ],
 
 
