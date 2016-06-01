@@ -1,80 +1,121 @@
+'use strict';
+
 var path = require('path');
-var container = UNIT;
 var uuid = require('uuid');
 
 describe('M.Acccount', function() {
-  var teacherAccount;
 
-  before(function(done) {
+  var container = UNIT;
 
-    container.create('User', {
-      email: 'user-account-test@example.com',
-      password: '12345678'
-    }).then(function(res) {
-      container.create('Account', {
-        userId: res.id,
-        branchName: 'default',
-        type: 'teacher'
-      })
-      .then(function() {
-        return done();
-      })
-      .catch(done);
-
-    });
-  });
-
-  after(function () {
+  var cleanup = function () {
     return promiseSeries([
       container.get('Teacher').query().delete(),
       container.get('Account').query().delete(),
       container.get('User').query().delete(),
     ]);
-  });
+  };
 
-  it('Should have typeInfo related to User Type.', function(doneTest) {
-     container.get('Account').query()
-     .then(function(res) {
-       teacherAccount = res[0];
-       teacherAccount.getTypeInfo() // It works here
-       .then(function() {
-         expect(teacherAccount).to.have.ownProperty('branchName'); // This is an account-wide property
-         expect(teacherAccount).to.have.ownProperty('active'); // bio is a Teacher-specific property.
-         expect(teacherAccount.active).to.equal(false);
-         doneTest();
-       });
-     });
-  });
+  beforeEach(cleanup);
+  after(cleanup);
 
-  it('Should work through `container.get(Account).getById`', function(doneTest) {
-    container.get('Account').getById(teacherAccount.id) // Doesn't work within this class method
-    .then(function(account) {
-      expect(account).to.have.ownProperty('active'); // This is a Teacher-specific property
-      doneTest();
-    });
-  });
-
-
-  it('Should work through `container.get(Account).getByUser`', function(doneTest) {
-    container.get('Account').getByUser(teacherAccount.userId, teacherAccount.branchName) // Doesn't work within this class method
-    .then(function(account) {
-      expect(account).to.have.ownProperty('active'); // This is a Teacher-specific property
-      doneTest();
-    });
-  });
-
-  it('Should save Account Type data on save.', function(doneTest) {
-    expect(teacherAccount.active).to.equal(false);
-    teacherAccount.active = true; // Set in account scope
-    expect(teacherAccount.typeInfo.active).to.equal(true); // Check typeInfo for update
-
-    return container.update(teacherAccount)
-    .then(function() { // Gotta recheck the database for update to Teacher
-      container.get('Teacher').query().where('account_id', teacherAccount.id)
-      .then(function(res) {
-        expect(res[0].active).to.equal(true);
-        doneTest();
+  var createTeacherAccount = function () {
+    return container
+      .create('User', {
+        email: 'user-account-test@example.com',
+        password: '12345678',
+      })
+      .then(function (user) {
+        return container.create('Account', {
+          userId: user.id,
+          branchName: 'default',
+          type: 'teacher',
+        });
       });
-    }).catch(doneTest);
+  };
+
+  describe('Methods', function () {
+
+    beforeEach(createTeacherAccount);
+
+    describe('#getTypeInfo', function () {
+
+      it('Should have typeInfo related to User Type', function () {
+        return container.get('Account').query()
+          .then(function (res) {
+            expect(res.length).to.equal(1);
+
+            return res[0].getTypeInfo();
+          })
+          .then(function (acc) {
+            expect(acc).to.have.ownProperty('branchName');
+            expect(acc).to.have.ownProperty('active');
+            expect(acc.active).to.equal(false);
+          });
+      });
+
+    });
+
   });
+
+  describe('Static methods', function () {
+
+    beforeEach(createTeacherAccount);
+
+    describe('::getById', function () {
+
+      it('Should work through `container.get(Account).getById`', function () {
+        return container.query('Account')
+          .then(function (res) {
+            expect(res.length).to.equal(1);
+
+            return container.get('Account').getById(res[0].id);
+          })
+          .then(function(account) {
+            expect(account).to.have.ownProperty('active');
+          });
+      });
+
+    });
+
+    describe('::getByUser', function () {
+
+      it('Should work through `container.get(Account).getByUser`', function () {
+        return container.query('Account')
+          .then(function (res) {
+            expect(res.length).to.equal(1);
+
+            return container.get('Account').getByUser(res[0].userId, res[0].branchName);
+          })
+          .then(function (acc) {
+            expect(acc).to.have.ownProperty('active');
+          });
+      });
+
+    });
+
+  });
+
+  it('Should save Account Type data on save', function () {
+    return createTeacherAccount()
+      .then(function (acc) {
+        return acc.getTypeInfo();
+      })
+      .then(function (acc) {
+        expect(acc.active).to.equal(false);
+        expect(acc.typeInfo.active).to.equal(false);
+
+        acc.active = true; // should be reflected in acc.typeInfo
+        expect(acc.active).to.equal(true);
+        expect(acc.typeInfo.active).to.equal(true);
+
+        return container.update(acc);
+      })
+      .then(function (acc) {
+        return container.query('Teacher').where('account_id', acc.id);
+      })
+      .then(function (res) {
+        expect(res[0].active).to.equal(true);
+      });
+  });
+
 });
