@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-var uuid = require('uuid');
+var _ = require('lodash');
 
 describe('M.Acccount', function() {
 
@@ -32,6 +32,29 @@ describe('M.Acccount', function() {
         });
       });
   };
+
+  it('Should save Account Type data on save', function () {
+    return createTeacherAccount()
+      .then(function (acc) {
+        return acc.getTypeInfo();
+      })
+      .then(function (acc) {
+        expect(acc.active).to.equal(false);
+        expect(acc.typeInfo.active).to.equal(false);
+
+        acc.active = true; // should be reflected in acc.typeInfo
+        expect(acc.active).to.equal(true);
+        expect(acc.typeInfo.active).to.equal(true);
+
+        return container.update(acc);
+      })
+      .then(function (acc) {
+        return container.query('Teacher').where('account_id', acc.id);
+      })
+      .then(function (res) {
+        expect(res[0].active).to.equal(true);
+      });
+  });
 
   describe('Methods', function () {
 
@@ -95,27 +118,230 @@ describe('M.Acccount', function() {
 
   });
 
-  it('Should save Account Type data on save', function () {
-    return createTeacherAccount()
-      .then(function (acc) {
-        return acc.getTypeInfo();
-      })
-      .then(function (acc) {
-        expect(acc.active).to.equal(false);
-        expect(acc.typeInfo.active).to.equal(false);
+  describe('Validations', function () {
 
-        acc.active = true; // should be reflected in acc.typeInfo
-        expect(acc.active).to.equal(true);
-        expect(acc.typeInfo.active).to.equal(true);
+    describe('userId', function () {
 
-        return container.update(acc);
-      })
-      .then(function (acc) {
-        return container.query('Teacher').where('account_id', acc.id);
-      })
-      .then(function (res) {
-        expect(res[0].active).to.equal(true);
+      it('Should fail if not a UUID', function (done) {
+        container
+          .create('Account', {
+            userId: 'asdf',
+            branchName: 'default',
+            type: 'teacher',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.userId).to.exist;
+              expect(err.errors.userId.message).to.equal('The userId must be a valid uuid');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
       });
+
+    });
+
+    describe('branchName', function () {
+
+      it('Should fail if undefined', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            type: 'teacher',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.branchName).to.exist;
+              expect(err.errors.branchName.message).to.equal('The branchName is required');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+      it('Should fail if length exceeds 255 characters', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: _.repeat('a', 256),
+            type: 'teacher',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.branchName).to.exist;
+              expect(err.errors.branchName.message).to.equal('The branchName must not exceed 255 characters long');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('firstName', function () {
+
+      it('Should fail if length exceeds 125 characters', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: 'default',
+            type: 'teacher',
+            firstName: _.repeat('a', 126),
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.firstName).to.exist;
+              expect(err.errors.firstName.message).to.equal('The firstName must not exceed 125 characters long');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('lastName', function () {
+
+      it('Should fail if length exceeds 125 characters', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: 'default',
+            type: 'teacher',
+            lastName: _.repeat('a', 126),
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.lastName).to.exist;
+              expect(err.errors.lastName.message).to.equal('The lastName must not exceed 125 characters long');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('dob', function () {
+
+      it('Should work if a Date `new Date()` object', function () {
+        return createTeacherAccount()
+          .then(function (acc) {
+            acc.dob = new Date();
+
+            return container.update(acc);
+          })
+      });
+
+      it('Should fail if not a Date object', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: 'default',
+            type: 'teacher',
+            dob: 'asdf'
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.dob).to.exist;
+              expect(err.errors.dob.message).to.equal('The dob must be a Date');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
+    describe('locationId', function () {
+
+      it('Should fail if not a UUID', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: 'default',
+            type: 'teacher',
+            locationId: 'asdf',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.locationId).to.exist;
+              expect(err.errors.locationId.message).to.equal('The locationId must be a valid uuid');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+
+      it('Should fail if Location does not exist', function (done) {
+        container
+          .create('Account', {
+            userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+            branchName: 'default',
+            type: 'teacher',
+            locationId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
+          })
+          .then(function () {
+            expect.fail('should have rejected');
+          })
+          .catch(function (err) {
+            try {
+              expect(err.message).to.equal('1 invalid values');
+              expect(err.errors.locationId).to.exist;
+              expect(err.errors.locationId.message).to.equal('The locationId must exist');
+            } catch (err) {
+              return done(err);
+            }
+
+            done();
+          });
+      });
+
+    });
+
   });
 
 });
