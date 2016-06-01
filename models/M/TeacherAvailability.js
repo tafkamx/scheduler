@@ -32,23 +32,6 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
     'updatedAt'
   ],
 
-  getDefaultObj: function(id) {
-    var a = {
-      id: null,
-      teacherId: id,
-      branch: null,
-      monday: 0,
-      tuesday: 0,
-      wednesday: 0,
-      thursday: 0,
-      friday: 0,
-      saturday: 0,
-      sunday: 0
-    };
-
-    return a;
-  },
-
   /* Retrieves Availability Object for a Teacher Account */
   getTeacher: function(id) {
     var model = this;
@@ -64,22 +47,101 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
           availability[o] = bitmasks.parseToArray(availability[o]);
         });
 
-        resolve(availability); // TODO make this an array of hours the Account is available at.
+        resolve(availability);
       }).catch(reject);
     });
   },
 
   /* Retrieves a list of Teacher Account IDs that are available within the given parameters */
-  getAllAvailable: function(a, b, c) {
+  getAllAvailableOn: function(branchName, days, hours) {
+    var model = this;
+
+    if(hours && typeof days !== 'object') {
+      var d = {};
+      days = days.split(',');
+      days.forEach(function(o) {
+        d[o] = hours;
+      });
+      days = d;
+    }
 
     return new Promise(function(resolve, reject) {
-      //model._container.get('TeacherAvailability').query();
+      if(!days) reject(new Error('No query to run. Days: ' + days));
+
+      var query = model._container.get('TeacherAvailability').query()
+
+      if(branchName) query.where('branch_name', branchName);
+
+      for(var day in days) {
+        if(days.hasOwnProperty(day)) {
+          var bitmask;
+
+          if(Array.isArray(days[day]))
+            bitmask = bitmasks.getBitmask.apply(null, days[day]).toString();
+          else bitmask = bitmasks.getBitmask(days[day]);
+
+          query.whereRaw(bitmask + ' & "' + day + '" = ' + bitmask);
+        }
+      }
+
+      query.then(function (res) {
+        var ids = [];
+        res.forEach(function(o) {
+          ids.push(o.teacherId);
+        });
+
+        resolve(ids);
+      }).catch(reject);
     });
 
   },
 
   /* Determines if a Teacher Account is available wtihin the given parameters */
-  isTeacherAvailable: function(a, b, c) {
+  isTeacherAvailable: function(teacherId, days, hours) {
+    var model = this;
+
+    if(hours && typeof days !== 'object') {
+      var d = {};
+      days = days.split(',');
+      days.forEach(function(o) {
+        d[o] = hours;
+      });
+      days = d;
+    }
+
+    return new Promise(function(resolve, reject) {
+      if(!days) reject(new Error('No query to run. Days: ' + days));
+
+      var query = model._container.get('TeacherAvailability').query()
+
+      query.where('teacher_id', teacherId);
+
+      for(var day in days) {
+        if(days.hasOwnProperty(day)) {
+          var bitmask;
+
+          if(Array.isArray(days[day]))
+            bitmask = bitmasks.getBitmask.apply(null, days[day]).toString();
+          else bitmask = bitmasks.getBitmask(days[day]);
+
+          query.whereRaw(bitmask + ' & "' + day + '" = ' + bitmask);
+        }
+      }
+
+      query.then(function(res) {
+        if(!res.length) resolve(false);
+        else {
+          availability = res[0];
+
+          var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+          days.forEach(function(o) {
+            availability[o] = bitmasks.parseToArray(availability[o]);
+          });
+
+          resolve(availability);
+        }
+      }).catch(reject);
+    });
 
   },
 
