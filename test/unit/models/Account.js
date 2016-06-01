@@ -9,6 +9,7 @@ describe('M.Acccount', function() {
 
   var cleanup = function () {
     return promiseSeries([
+      container.get('Location').query().delete(),
       container.get('Teacher').query().delete(),
       container.get('Account').query().delete(),
       container.get('User').query().delete(),
@@ -53,6 +54,44 @@ describe('M.Acccount', function() {
       })
       .then(function (res) {
         expect(res[0].active).to.equal(true);
+      });
+  });
+
+  it('Should create Location if provided .location property', function () {
+    return container
+      .create('User', {
+        email: 'user-account-test@example.com',
+        password: '12345678',
+      })
+      .then(function (user) {
+        return container
+          .create('Account', {
+            userId: user.id,
+            branchName: 'default',
+            type: 'teacher',
+            location: {
+              name: 'something',
+              address1: 'something',
+              address2: 'something',
+              city: 'something',
+              state: 'something',
+              country: 'something',
+              postalCode: 'something',
+              latitude: 'something',
+              longitude: 'something',
+            },
+          });
+      })
+      .then(function (acc) {
+        expect(acc.location).to.exist;
+        expect(acc.location.id).to.exist;
+
+        return container
+          .query('Location')
+          .where('id', acc.location.id);
+      })
+      .then(function (res) {
+        expect(res.length).to.equal(1);
       });
   });
 
@@ -337,6 +376,52 @@ describe('M.Acccount', function() {
             }
 
             done();
+          });
+      });
+
+    });
+
+  });
+
+  describe('Relations', function () {
+
+    describe('location', function () {
+
+      it('Should return valid M.Location model', function () {
+        return container
+          .create('User', {
+            email: 'user-account-test@example.com',
+            password: '12345678',
+          })
+          .then(function (user) {
+            return container
+              .create('Account', {
+                userId: user.id,
+                branchName: 'default',
+                type: 'teacher',
+                location: {
+                  name: 'something',
+                  address1: 'something',
+                  address2: 'something',
+                  city: 'something',
+                  state: 'something',
+                  country: 'something',
+                  postalCode: 'something',
+                  latitude: 'something',
+                  longitude: 'something',
+                },
+              });
+          })
+          .then(function (acc) {
+            return container
+              .query('Account')
+              .where('id', acc.id)
+              .include('location');
+          })
+          .then(function (res) {
+            expect(res.length).to.equal(1);
+            expect(res[0].location).to.exist;
+            expect(res[0].location.id).to.exist;
           });
       });
 
