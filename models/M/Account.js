@@ -5,7 +5,6 @@
 var Account = Class(M ,'Account').inherits(DynamicModel)({
   tableName: 'Accounts',
 
-  /* Validations for this table are very simple. Everything but the branchId and type is optional. */
   validations: {
     userId: ['uuid'],
     branchName: ['required', 'maxLength:255'],
@@ -22,7 +21,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     ],
     firstName: ['maxLength:125'],
     lastName: ['maxLength:125'],
-    dob: ['date'], // TODO test this for compatibility with Knex. This requires a JavaScript date object
+    dob: ['date'],
     locationId: [
       'uuid',
       {
@@ -33,11 +32,11 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
             .where('id', val)
             .then(function (res) {
               if (res.length === 0) {
-                throw new Error( 'The locationId is required');
+                throw new Error( 'The locationId must exist');
               }
             });
         },
-        message: 'The locationId is required',
+        message: 'The locationId must exist',
       }
     ],
   },
