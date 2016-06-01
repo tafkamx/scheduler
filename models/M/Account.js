@@ -167,6 +167,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
     /**
      * Retrieve and overload Account Type data based on `Account.type`
+     *
+     * Usage note: This function requires to have ._container set in the model.
      */
     getTypeInfo: function() {
       // TODO make sure that `this` is the Account obect
@@ -204,6 +206,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
             instance[method] = methods[method];
           }
         }
+
+        return Promise.resolve(instance);
       });
     }
   }
