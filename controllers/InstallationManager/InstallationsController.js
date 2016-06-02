@@ -69,7 +69,7 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
       var knex = InstallationManager.Installation.knex();
 
       knex('pg_timezone_names').then(function(result) {
-        res.locals.timezones = result;
+        res.locals.timezones = result.sort((a, b) => a > b);
 
         next();
       }).catch(next);
