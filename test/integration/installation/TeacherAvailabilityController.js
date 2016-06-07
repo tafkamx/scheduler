@@ -90,10 +90,10 @@ describe('TeacherAvailability Controller', function() {
 
   });
 
-  describe('#edit', function() {
+  describe('#new', function() {
 
-    it('Should render /TeacherAvailability/:id/edit', function(done) {
-      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit').set('Accept', 'text/html')
+    it('Should render /TeacherAvailability/new', function(done) {
+      agent.get(url + '/TeacherAvailability/new').set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -104,5 +104,59 @@ describe('TeacherAvailability Controller', function() {
 
   });
 
+  describe('#create', function() {
+
+    it('Should create a new TeacherAvailability instance', function(done) {
+      agent.post(url + '/TeacherAvailability')
+        .set('Accept', 'application/json')
+        .send({ teacherId: account1.id, branchName: 'default', monday: (2 + 4 + 8) })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.eql(200);
+          expect(res.body.branchName).to.be.equal('default');
+          expect(res.body.monday).to.equal(14);
+          done();
+        });
+    });
+
+  });
+
+  describe('#edit', function() {
+
+    it('Should render /TeacherAvailability/:id/edit (currently does not work without passing via GET). Bug?', function(done) {
+      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit?id=' + account1.id).set('Accept', 'text/html')
+      .end(function(err, res) {
+        expect(err).to.be.equal(null);
+        expect(res.status).to.equal(200);
+
+        done();
+      });
+    });
+
+  });
+
+  describe('#update', function() {
+
+    it('Should update a TeacherAvailability instance');
+    it('Should fail with invalid teacherId');
+    it('Should fail with invalid branchId');
+    it('Should fail with invalid bitmasks/array');
+
+  });
+
+  describe('#destroy', function() {
+
+    it('Should destroy the Availability related to the request', function(done) {
+        agent.post(url + '/TeacherAvailability/' + account1.id)
+        .send({ _method: 'DELETE' })
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+          expect(err).to.be.eql(null);
+          expect(res.body.deleted).to.be.equal(true);
+          done();
+        });
+      });
+
+  });
 
 });

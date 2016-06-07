@@ -1,9 +1,10 @@
 <pre><%= JSON.stringify(availability, null, 2) %></pre>
 
-<form class="edit-form" action="<%= helpers.urlFor.TeacherAvailability.show.url(availability.teacherId) %>" method="POST">
+<form class="edit-form" action="<%= helpers.urlFor.TeacherAvailability.edit.url(availability.teacherId) %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
 
+    <input type="hidden" name="id" value="<%= availability.id %>">
     <label for="teacherId">Account ID</label> <input type="text" name="teacherId"  value="<%= availability.teacherId %>">
     <label for="branchId">Branch ID</label> <input type="text" name="branchId" value="<%= availability.branchId %>">
     <label for="monday">Monday Bitmask</label> <input type="text" name="monday" value="<%= availability.monday %>">

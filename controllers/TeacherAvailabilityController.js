@@ -102,7 +102,7 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
     create: function(req, res, next) {
       res.format({
         json: function () {
-          req.container.create('Account', req.body)
+          req.container.create('TeacherAvailability', req.body)
             .then(function (account) {
               res.json(account);
             })
@@ -113,20 +113,19 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
 
     // ===
     edit: function(req, res, next) {
-      req.container.get('TeacherAvailability').getTeacher(id)
+      req.container.get('TeacherAvailability').getTeacher(req.query.id) // TODO `res.locals.id is not getting set. Bug?`
       .then(function(availability) {
         res.locals.availability = availability;
-      });
 
-      res.format({
-        json: function() {
-          var id = res.locals.id;
-          res.json(res.locals.availability);
-        },
-        html: function() {
-          res.render('TeacherAvailability/edit.html');
-        }
-      });
+        res.format({
+          json: function() {
+            res.json(res.locals.availability);
+          },
+          html: function() {
+            res.render('TeacherAvailability/edit.html');
+          }
+        });
+      }).catch(next);
     },
 
     // ===

@@ -35,4 +35,13 @@ describe('Availability Bitmasks Utilities', function() {
     done();
   });
 
+  it('Should provide a method to parse Array of true/false values into bitmask', function(done) {
+    var bitmask = bitmasks.getBitmask(11, 13);
+    var array = bitmasks.parseToArray(bitmask);
+    var newBitmask = bitmasks.parseToBitmask(array);
+
+    expect(newBitmask).to.equal(bitmask);
+    done();
+  });
+
 });

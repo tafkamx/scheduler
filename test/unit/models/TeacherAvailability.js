@@ -156,16 +156,4 @@ describe('M.TeacherAvailability', function() {
 
   });
 
-  // ======================================================================================
-
-  describe('#update', function() {
-
-    it('Should update a TeacherAvailability Object');
-
-    it('Should automatically convert to bitmask');
-
-    it('Should support updating all TeacherAvailability for an Account using an Object as main paramter')
-
-  });
-
 });
