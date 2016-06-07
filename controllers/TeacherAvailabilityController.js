@@ -7,7 +7,7 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
   beforeActions: [
     {
       before: ['_loadAccount'],
-      actions: ['edit', 'update', 'destroy']
+      actions: ['create', 'edit', 'update', 'destroy']
     }
   ],
 
@@ -37,35 +37,69 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
             res.render('TeacherAvailability/getTeacher.html');
           }
         });
-      });
+      }).catch(next);
     },
 
+    /**
+     * `TeacherAvailability.getAllAvailableOn` takes up to 3 arguments: `branchName`, `days`, and `hours`
+     * Users of this Controller can send these parameters via HTTP POST or GET
+     */
     getAllAvailableOn: function(req, res, next) {
-      res.format({
-        json: function() {
-          res.json(res.locals.availability);
-        },
-        html: function() {
-          res.render('TeacherAvailability/getAllAvailableOn.html');
-        }
-      });
+      res.locals.branchName = req.query.branchName || false;
+      res.locals.days = req.query.days;
+      res.locals.hours = req.query.hours.split(',');
+
+      req.container.get('TeacherAvailability').getAllAvailableOn(res.locals.branchName, res.locals.days, res.locals.hours)
+      .then(function(ids) {
+        res.locals.availability = ids;
+
+        res.format({
+          json: function() {
+            res.json(res.locals.availability);
+          },
+          html: function() {
+            res.render('TeacherAvailability/getAllAvailableOn.html');
+          }
+        });
+      }).catch(next);
     },
 
+    /**
+     * `TeacherAvailability.isTeacherAvailable` takes up to 3 arguments: `id`, `days`, and `hours`
+     * Users of this Controller can set these parameters via HTTP POST or GET
+     */
     isTeacherAvailable: function(req, res, next) {
-      res.format({
-        json: function() {
-          res.json(res.locals.availability);
-        },
-        html: function() {
-          res.render('TeacherAvailability/isTeacherAvailable.html');
-        }
-      });
+      res.locals.id = req.query.id;
+      res.locals.days = req.query.days;
+      res.locals.hours = req.query.hours.split(',');
+
+      req.container.get('TeacherAvailability').isTeacherAvailable(res.locals.id, res.locals.days, res.locals.hours)
+      .then(function(availability) {
+        res.locals.availability = availability;
+
+        res.format({
+          json: function() {
+            res.json(res.locals.availability);
+          },
+          html: function() {
+            res.render('TeacherAvailability/isTeacherAvailable.html');
+          }
+        });
+
+      }).catch(next);
     },
 
+    /**
+     *
+     */
     edit: function(req, res, next) {
       res.format({
         json: function() {
-          res.json(res.locals.availability);
+          var id = res.locals.id;
+          req.container.get('TeacherAvailability').getTeacher(id)
+          .then(function(availability) {
+            res.json(res.locals.availability);
+          });
         },
         html: function() {
           res.render('TeacherAvailability/edit.html');
@@ -77,18 +111,16 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
       // TODO
     },
 
+    /**
+     * Functions as expected from all Controllers
+     */
     destroy: function(req, res, next) {
-      // TODO
-
       res.format({
         json : function() {
-
-          req.container.destroy(res.locals.availability)
-            .then(function() {
-              res.json({ deleted: true });
-            })
-            .catch(next);
-
+          req.container.get('TeacherAvailability').query().where('teacher_id', res.locals.id).delete()
+          .then(function() {
+            res.json({ deleted: true });
+          }).catch(next);
         }
       });
     }

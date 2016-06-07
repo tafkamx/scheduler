@@ -4,6 +4,7 @@ var container = INTE;
 var path = require('path');
 var urlFor = CONFIG.router.helpers;
 var url = container.props.url;
+var bitmasks = require(path.join(process.cwd(), 'lib', 'utils', 'availability-bitmasks.js'));
 
 describe('TeacherAvailability Controller', function() {
 
@@ -12,15 +13,27 @@ describe('TeacherAvailability Controller', function() {
   /* === Before/After Actions === */
   before(function(done) {
     // Creating account1 (Teacher)
-    container.create('Account', {
+    var c = container.create('Account', {
       branchName: 'default',
       type: 'teacher'
-    }).then(function() {
+    });
+
+    c.then(function() {
       container.get('Account').query()
       .then(function(res) {
         account1 = res[0];
-        done();
+
+        container.create('TeacherAvailability', {
+          teacherId: account1.id,
+          branchName: account1.branchName,
+          monday: bitmasks.getBitmask(2),
+          tuesday: bitmasks.getBitmask(4)
+        }).then(function() {
+          done();
+        }).catch(done);
+
       }).catch(done);
+
     }).catch(done);
   });
 
@@ -37,7 +50,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#getTeacher', function() {
 
     it('Should render /TeacherAvailability/getTeacher', function(done) {
-      agent.get(url + '/TeacherAvailability/getTeacher').set('Accept', 'application/json')
+      agent.get(url + '/TeacherAvailability/getTeacher?id=' + account1.id).set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -52,7 +65,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#getAllAvailableOn', function() {
 
     it('Should render /TeacherAvailability/getAllAvailableOn', function(done) {
-      agent.get(url + '/TeacherAvailability/getAllAvailableOn').set('Accept', 'application/json')
+      agent.get(url + '/TeacherAvailability/getAllAvailableOn?days=monday&hours=2').set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -66,7 +79,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#isTeacherAvailable', function() {
 
     it('Should render /TeacherAvailability/isTeacherAvailable', function(done) {
-      agent.get(url + '/TeacherAvailability/isTeacherAvailable').set('Accept', 'application/json')
+      agent.get(url + '/TeacherAvailability/isTeacherAvailable?id=' + account1.id + '&days=monday&hours=2').set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
