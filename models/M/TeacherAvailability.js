@@ -145,26 +145,6 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
 
   },
 
-  /* Update a Teacher's Availability on a particular day, many days, or all days */
-  update: function(teacher_id, days, hours) {
-    var model = this;
-
-    /*
-    if(hours && typeof days !== 'object') {
-      var d = {};
-      days = days.split(',');
-      days.forEach(function(o) {
-        d[o] = hours;
-      });
-      days = d;
-    }
-    */
-
-    // TODO based on what Controller needs
-
-
-  },
-
   prototype: {
 
     init: function(config) {

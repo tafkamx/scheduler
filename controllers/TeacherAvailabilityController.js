@@ -7,7 +7,7 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
   beforeActions: [
     {
       before: ['_loadAccount'],
-      actions: ['create', 'edit', 'update', 'destroy']
+      actions: ['new', 'create', 'edit', 'update', 'destroy']
     }
   ],
 
@@ -89,17 +89,39 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
       }).catch(next);
     },
 
-    /**
-     *
-     */
+    // ===
+    new: function(req, res, next) {
+      res.format({
+        html: function() {
+          res.render('TeacherAvailability/new.html');
+        }
+      });
+    },
+
+    // ===
+    create: function(req, res, next) {
+      res.format({
+        json: function () {
+          req.container.create('Account', req.body)
+            .then(function (account) {
+              res.json(account);
+            })
+            .catch(next);
+        }
+      });
+    },
+
+    // ===
     edit: function(req, res, next) {
+      req.container.get('TeacherAvailability').getTeacher(id)
+      .then(function(availability) {
+        res.locals.availability = availability;
+      });
+
       res.format({
         json: function() {
           var id = res.locals.id;
-          req.container.get('TeacherAvailability').getTeacher(id)
-          .then(function(availability) {
-            res.json(res.locals.availability);
-          });
+          res.json(res.locals.availability);
         },
         html: function() {
           res.render('TeacherAvailability/edit.html');
@@ -107,13 +129,37 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
       });
     },
 
+    // ===
     update: function(req, res, next) {
-      // TODO
+      obj = {};
+
+      var d = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      d.forEach(function(o) {
+        obj[o] = [];
+
+        for(var i = 0; i <= 23; i++)
+          if(req.query[o][i])
+            obj[o].push(i);
+
+        obj[o] = bitmasks.parseToBitmask(obj[o]);
+      });
+
+      req.container.get('TeacherAvailability').query('teacher_id', res.locals.id)
+      .then(function(availability) {
+
+        req.container.update(availability, obj)
+        .then(function() {
+          res.format({
+            json: function() {
+              res.json(res.locals.availability);
+            }
+          });
+        });
+
+      }).catch(next);
     },
 
-    /**
-     * Functions as expected from all Controllers
-     */
+    // ===
     destroy: function(req, res, next) {
       res.format({
         json : function() {

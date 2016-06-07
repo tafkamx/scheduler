@@ -92,8 +92,8 @@ describe('TeacherAvailability Controller', function() {
 
   describe('#edit', function() {
 
-    it('Should render /TeacherAvailability/edit', function(done) {
-      agent.get(url + '/TeacherAvailability/1/edit').set('Accept', 'application/json')
+    it('Should render /TeacherAvailability/:id/edit', function(done) {
+      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit').set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);

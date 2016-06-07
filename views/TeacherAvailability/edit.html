@@ -1,0 +1,18 @@
+<pre><%= JSON.stringify(availability, null, 2) %></pre>
+
+<form class="edit-form" action="<%= helpers.urlFor.TeacherAvailability.show.url(availability.teacherId) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="teacherId">Account ID</label> <input type="text" name="teacherId"  value="<%= availability.teacherId %>">
+    <label for="branchId">Branch ID</label> <input type="text" name="branchId" value="<%= availability.branchId %>">
+    <label for="monday">Monday Bitmask</label> <input type="text" name="monday" value="<%= availability.monday %>">
+    <label for="tuesday">Tuesday Bitmask</label> <input type="text" name="tuesday" value="<%= availability.tuesday %>">
+    <label for="wednesday">Wednesday Bitmask</label> <input type="text" name="wednesday" value="<%= availability.wednesday %>">
+    <label for="thursday">Thursday Bitmask</label> <input type="text" name="thursday" value="<%= availability.thursday %>">
+    <label for="friday">Friday Bitmask</label> <input type="text" name="friday" value="<%= availability.friday %>">
+    <label for="saturday">Saturday Bitmask</label> <input type="text" name="saturday" value="<%= availability.saturday %>">
+    <label for="sunday">Sunday Bitmask</label> <input type="text" name="sunday" value="<%= availability.sunday %>">
+
+    <input type="submit" value="Submit">
+</form>
