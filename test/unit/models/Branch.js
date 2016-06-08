@@ -5,14 +5,14 @@ describe('M.Branch', function() {
   var container = UNIT;
 
   beforeEach(function () {
-    return Promise.all([
+    return promiseSeries([
       container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
     ]);
   });
 
   after(function () {
-    return Promise.all([
+    return promiseSeries([
       container.get('Branch').query().delete(),
       container.get('BranchSettings').query().delete(),
     ]);

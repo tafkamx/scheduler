@@ -4,6 +4,8 @@ global.Promise = require('bluebird');
 
 var path = require('path');
 
+global.promiseSeries = require(path.join(process.cwd(), 'lib', 'utils', 'promise-all-series.js'));
+
 var DomainContainer = require('domain-container');
 
 var glob = require('glob');

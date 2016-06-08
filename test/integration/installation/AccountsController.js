@@ -75,13 +75,35 @@ describe('Accounts Controller', function() {
     it('Should create an Account', function(done) {
       agent.post(url + '/Accounts')
         .set('Accept', 'application/json')
-        .send({branchName: 'default', type: 'teacher'})
+        .send({
+          branchName: 'default',
+          type: 'teacher',
+          location: {
+            name: 'something',
+            address1: 'something',
+            address2: 'something',
+            city: 'something',
+            state: 'something',
+            country: 'something',
+            postalCode: 'something',
+            latitude: 'something',
+            longitude: 'something',
+          },
+        })
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.eql(200);
           expect(res.body.branchName).to.be.equal('default');
           expect(res.body.type).to.be.equal('teacher');
-          done();
+
+          container.query('Account')
+            .where('id', res.body.id)
+            .include('location')
+            .then(function (res) {
+              expect(res[0].location).to.exist;
+              expect(res[0].location.id).to.exist;
+              done();
+            });
         });
     });
 

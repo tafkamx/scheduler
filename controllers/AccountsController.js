@@ -51,7 +51,7 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
     },
 
     index: function(req, res, next) {
-      req.container.get('Account').query()
+      req.container.query('Account')
       .then(function(results) {
         res.locals.accounts = results;
 

@@ -33,14 +33,10 @@ describe('InstallationManager.UsersController', function () {
   });
 
   // Cleanup
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return Promise.all([
       InstallationManager.User.query().delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   it('Should render /InstallationManager/Users/', function(done) {
