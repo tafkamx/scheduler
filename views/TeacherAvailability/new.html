@@ -1,0 +1,16 @@
+<form class="edit-form" action="<%= helpers.urlFor.TeacherAvailability.edit.url() %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="teacherId">Account ID</label> <input type="text" name="teacherId">
+    <label for="branchId">Branch ID</label> <input type="text" name="branchId">
+    <label for="monday">Monday Bitmask</label> <input type="text" name="monday">
+    <label for="tuesday">Tuesday Bitmask</label> <input type="text" name="tuesday">
+    <label for="wednesday">Wednesday Bitmask</label> <input type="text" name="wednesday">
+    <label for="thursday">Thursday Bitmask</label> <input type="text" name="thursday">
+    <label for="friday">Friday Bitmask</label> <input type="text" name="friday">
+    <label for="saturday">Saturday Bitmask</label> <input type="text" name="saturday">
+    <label for="sunday">Sunday Bitmask</label> <input type="text" name="sunday">
+
+    <input type="submit" value="Submit">
+</form>

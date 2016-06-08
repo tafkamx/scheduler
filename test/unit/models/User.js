@@ -22,7 +22,6 @@ describe('M.User', function () {
   after(function () {
     return Promise.all([
       container.get('User').query().delete(),
-      // UserInfo deleted automatically by PostgreSQL
     ]);
   });
 
@@ -31,14 +30,12 @@ describe('M.User', function () {
     beforeEach(function () {
       return Promise.all([
         container.get('User').query().delete(),
-        // UserInfo deleted automatically by PostgreSQL
       ]);
     });
 
     after(function () {
       return Promise.all([
         container.get('User').query().delete(),
-        // UserInfo deleted automatically by PostgreSQL
       ]);
     });
 

@@ -113,8 +113,8 @@ describe('Sessions Controller', function () {
       .catch(done);
   });
 
-  after(function(done) {
-    Promise.all([
+  after(function () {
+    return promiseSeries([
       cont1.get('User').query().delete(),
       cont1.get('ResetPasswordToken').query().delete(),
       cont2.get('User').query().delete(),
@@ -122,11 +122,7 @@ describe('Sessions Controller', function () {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-    ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+    ]);
   });
 
   describe('Login', function () {
@@ -298,15 +294,11 @@ describe('Sessions Controller', function () {
 
     describe('#resetCreate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and create a token', function (doneTest) {
@@ -375,15 +367,11 @@ describe('Sessions Controller', function () {
 
     describe('#resetUpdate', function () {
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         return Promise.all([
           cont1.get('ResetPasswordToken').query().delete(),
           cont2.get('ResetPasswordToken').query().delete(),
-        ])
-          .then(function () {
-            done();
-          })
-          .catch(done);
+        ]);
       });
 
       it('Should return 200 and change password if provided valid token', function (doneTest) {

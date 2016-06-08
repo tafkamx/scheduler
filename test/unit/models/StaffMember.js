@@ -2,7 +2,7 @@
 
 var Promise = require('bluebird');
 
-describe('M.Franchisee', function () {
+describe('M.StaffMember', function () {
 
   var container = UNIT;
 
@@ -20,7 +20,7 @@ describe('M.Franchisee', function () {
         return container.create('Account', {
           userId: user.id,
           branchName: 'default',
-          type: 'franchisee',
+          type: 'staff',
         });
       })
       .then(function (res) {
@@ -30,7 +30,7 @@ describe('M.Franchisee', function () {
 
   after(function () {
     return promiseSeries([
-      container.get('Franchisee').query().delete(),
+      container.get('StaffMember').query().delete(),
       container.get('Account').query().delete(),
       container.get('User').query().delete(),
     ]);
@@ -41,7 +41,7 @@ describe('M.Franchisee', function () {
     describe('account_id', function () {
 
       it('Should fail if undefined', function (done) {
-        container.create('Franchisee', {})
+        container.create('StaffMember', {})
           .then(function () {
             expect.fail('should have rejected');
           })
@@ -58,7 +58,7 @@ describe('M.Franchisee', function () {
       });
 
       it('Should fail if accountId does not exist', function (done) {
-        container.create('Franchisee', {
+        container.create('StaffMember', {
           accountId: '57621C7A-2133-11E6-AD2F-334F78850C6D',
         })
           .then(function () {

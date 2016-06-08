@@ -36,15 +36,18 @@ var Teacher = Class(M, 'Teacher').inherits(Krypton.Model)({
     },
 
     getAvailability: function() {
-
+      var instance = this;
+      return instance._container.get('TeacherAvailability').getTeacher(instance.id);
     },
 
     isAvailable: function(days, hours) {
-
+      var instance = this;
+      return instance._container.get('TeacherAvailability').isTeacherAvailable(instance.id, days, hours);
     },
 
     updateAvailability: function(days, hours) {
-
+      var instance = this;
+      return instance._container.get('TeacherAvailability').update(instance.id, days, hours);
     }
   }
 });

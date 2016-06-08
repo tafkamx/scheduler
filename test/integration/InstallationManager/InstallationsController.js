@@ -193,9 +193,7 @@ describe('InstallationManager.InstallationsController', function () {
         .then(function () {
           return done();
         })
-        .catch(function (err) {
-          done(err)
-        });
+        .catch(done);
     });
 
   });

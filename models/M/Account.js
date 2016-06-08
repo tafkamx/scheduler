@@ -5,7 +5,6 @@
 var Account = Class(M ,'Account').inherits(DynamicModel)({
   tableName: 'Accounts',
 
-  /* Validations for this table are very simple. Everything but the branchId and type is optional. */
   validations: {
     userId: ['uuid'],
     branchName: ['required', 'maxLength:255'],
@@ -22,13 +21,24 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     ],
     firstName: ['maxLength:125'],
     lastName: ['maxLength:125'],
-    dob: ['date'], // TODO test this for compatibility with Knex. This requires a JavaScript date object
-    addressLine1: ['maxLength:255'],
-    addressLine2: ['maxLength:255'],
-    city: ['maxLength:255'],
-    state: ['maxLength:255'],
-    country: ['maxLength:48'],
-    postalCode: ['maxLength:48']
+    dob: ['date'],
+    locationId: [
+      'uuid',
+      {
+        rule: function (val) {
+          var that = this.target;
+
+          return that._container.query('Location')
+            .where('id', val)
+            .then(function (res) {
+              if (res.length === 0) {
+                throw new Error( 'The locationId must exist');
+              }
+            });
+        },
+        message: 'The locationId must exist',
+      }
+    ],
   },
 
   /**
@@ -38,6 +48,7 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     'teacher': 'Teacher',
     'student': 'Student',
     'franchisee': 'Franchisee',
+    'staff': 'StaffMember',
   },
 
   /**
@@ -95,12 +106,9 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
     'firstName',
     'lastName',
     'dob',
-    'addressLine1',
-    'addressLine2',
-    'city',
-    'postalCode',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
+    'locationId',
   ],
 
 
@@ -125,7 +133,27 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
         query.then(function(res) {
           instance.typeInfo = res[0];
           next();
-        });
+        }).catch(next);
+      });
+
+      // Create Location instance
+      instance.on('afterCreate', function (next) {
+        if (!instance.location) {
+          return next();
+        }
+
+        instance._container.create('Location', instance.location)
+          .then(function (location) {
+            instance.locationId = location.id;
+
+            instance.location = location;
+
+            return instance._container.update(instance);
+          })
+          .then(function () {
+            next();
+          })
+          .catch(next);
       });
 
       // Calls `typeInfo.save()`
@@ -138,6 +166,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
 
     /**
      * Retrieve and overload Account Type data based on `Account.type`
+     *
+     * Usage note: This function requires to have ._container set in the model.
      */
     getTypeInfo: function() {
       // TODO make sure that `this` is the Account obect
@@ -175,6 +205,8 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
             instance[method] = methods[method];
           }
         }
+
+        return Promise.resolve(instance);
       });
     }
   }
