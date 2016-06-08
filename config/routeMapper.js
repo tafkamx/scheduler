@@ -22,10 +22,10 @@ module.exports = RouteMapper()
     '/Accounts'
   ])
 
-  .resources('/TeacherAvailability', { except: ['index', 'show'] })
   .get('/TeacherAvailability/getTeacher', { to: 'TeacherAvailability#getTeacher' })
   .get('/TeacherAvailability/getAllAvailableOn', { to: 'TeacherAvailability#getAllAvailableOn' })
   .get('/TeacherAvailability/isTeacherAvailable', { to: 'TeacherAvailability#isTeacherAvailable' })
+  .resources('/TeacherAvailability')
 
   .namespace('/InstallationManager', function() {
     return RouteMapper()

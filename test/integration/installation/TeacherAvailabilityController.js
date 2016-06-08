@@ -123,8 +123,8 @@ describe('TeacherAvailability Controller', function() {
 
   describe('#edit', function() {
 
-    it('Should render /TeacherAvailability/:id/edit (currently does not work without passing via GET). Bug?', function(done) {
-      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit?id=' + account1.id).set('Accept', 'text/html')
+    it('Should render /TeacherAvailability/:id/edit', function(done) {
+      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit').set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -137,10 +137,38 @@ describe('TeacherAvailability Controller', function() {
 
   describe('#update', function() {
 
-    it('Should update a TeacherAvailability instance');
-    it('Should fail with invalid teacherId');
-    it('Should fail with invalid branchId');
-    it('Should fail with invalid bitmasks/array');
+    it('Should update a TeacherAvailability instance', function(done) {
+
+      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+        .send({ monday: 4 })
+        .end(function(err, res) {
+          expect(err).to.be.eql(null);
+          expect(res.body.errors).to.be.undefined;
+          expect(res.status).to.be.eql(200);
+          expect(res.body.teacherId).to.be.equal(account1.id);
+          expect(res.body.monday).to.be.equal(4);
+          done();
+        });
+    });
+
+    it('Should fail with invalid teacherId', function(done) {
+      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+        .send({ teacherId: 'id' })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          done();
+        });
+    });
+
+    it('Should fail with invalid bitmask/Array', function(done) {
+      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+        .send({ monday: 'false' })
+        .end(function(err, res) {
+          expect(err).to.be.instanceof(Error);
+          done();
+        });
+    });
+
 
   });
 

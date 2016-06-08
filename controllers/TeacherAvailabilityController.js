@@ -113,7 +113,7 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
 
     // ===
     edit: function(req, res, next) {
-      req.container.get('TeacherAvailability').getTeacher(req.query.id) // TODO `res.locals.id is not getting set. Bug?`
+      req.container.get('TeacherAvailability').getTeacher(res.locals.account.id)
       .then(function(availability) {
         res.locals.availability = availability;
 
@@ -132,30 +132,36 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
     update: function(req, res, next) {
       obj = {};
 
-      var d = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      d.forEach(function(o) {
-        obj[o] = [];
+      res.format({
+        json: function() {
 
-        for(var i = 0; i <= 23; i++)
-          if(req.query[o][i])
-            obj[o].push(i);
+          var d = ['teacherId', 'branchName', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+          d.forEach(function(o) {
+            if(req.body[o] && Array.isArray(req.body[o])) {
+              obj[o] = [];
 
-        obj[o] = bitmasks.parseToBitmask(obj[o]);
-      });
+              for(var i = 0; i <= 23; i++)
+                if(req.body[o][i])
+                  obj[o].push(i);
 
-      req.container.get('TeacherAvailability').query('teacher_id', res.locals.id)
-      .then(function(availability) {
-
-        req.container.update(availability, obj)
-        .then(function() {
-          res.format({
-            json: function() {
-              res.json(res.locals.availability);
+              obj[o] = bitmasks.parseToBitmask(obj[o]);
             }
-          });
-        });
 
-      }).catch(next);
+            else if(req.body[o]) obj[o] = req.body[o];
+          });
+
+          req.container.get('TeacherAvailability').query().where('teacher_id', res.locals.account.id)
+          .then(function(q) {
+            var availability = q[0];
+
+            req.container.update(availability, obj)
+            .then(function(availability) {
+              res.json(availability);
+            }).catch(next);
+          }).catch(next);
+
+        }
+      });
     },
 
     // ===
