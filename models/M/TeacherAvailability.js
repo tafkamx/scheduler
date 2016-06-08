@@ -6,7 +6,25 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
 
   validations: {
     id: ['natural'],
-    teacherId: ['uuid', 'required'], // Related to Account ID TODO: Do something similar to what Eduan did in Staff Members
+    teacherId: [
+      'uuid',
+      'required',
+      {
+        rule: function (val) {
+          var that = this.target;
+
+          var query = that._container.query('Account')
+            .where('id', val);
+
+          return query.then(function (res) {
+            if (res.length === 0) {
+              throw new Error( 'The teacherId does not exist.');
+            }
+          })
+        },
+        message: 'The teacherId does not exist.',
+      }
+    ],
     branchName: ['alphaDash', 'required'],
     monday: ['numeric'],
     tuesday: ['numeric'],

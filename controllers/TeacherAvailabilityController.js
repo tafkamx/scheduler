@@ -6,16 +6,12 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
 
   beforeActions: [
     {
-      before: ['_loadAccount'],
+      before: [ neonode.controllers['Accounts']._loadAccount ],
       actions: ['new', 'create', 'edit', 'update', 'destroy']
     }
   ],
 
   prototype: {
-
-    _loadAccount: function(req, res, next) { // This function does not get called for the first 3 action functions, due to how they are queued.
-      return AccountsController.prototype._loadAccount(req, res, next); // Reusing Accounts Controller Code
-    },
 
     /**
      * `TeacherAvailability.getTeacher()` only supports one parameter; `id`.
@@ -135,24 +131,24 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
       res.format({
         json: function() {
 
-          var d = ['teacherId', 'branchName', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-          d.forEach(function(o) {
-            if(req.body[o] && Array.isArray(req.body[o])) {
-              obj[o] = [];
+          var days = ['teacherId', 'branchName', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+          days.forEach(function(day) {
+            if(req.body[day] && Array.isArray(req.body[day])) {
+              obj[day] = [];
 
               for(var i = 0; i <= 23; i++)
-                if(req.body[o][i])
-                  obj[o].push(i);
+                if(req.body[day][i])
+                  obj[day].push(i);
 
-              obj[o] = bitmasks.parseToBitmask(obj[o]);
+              obj[day] = bitmasks.parseToBitmask(obj[day]);
             }
 
-            else if(req.body[o]) obj[o] = req.body[o];
+            else if(req.body[day]) obj[day] = req.body[day];
           });
 
           req.container.get('TeacherAvailability').query().where('teacher_id', res.locals.account.id)
-          .then(function(q) {
-            var availability = q[0];
+          .then(function(availability) {
+            availability = availability[0];
 
             req.container.update(availability, obj)
             .then(function(availability) {
