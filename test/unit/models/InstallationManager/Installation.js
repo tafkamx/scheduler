@@ -212,11 +212,16 @@ describe('InstallationManager.Installation', function () {
                 email: 'franchisor@example.com',
               },
               baseUrl: 'patos.net',
-              installationSettings : {
+              installationSettings: {
                 language: 'en-CA',
                 currency: 'CAD',
                 timezone: 'America/Toronto',
               },
+              defaultBranchSettings: {
+                language: 'en-CA',
+                currency: 'CAD',
+                timezone: 'America/Toronto',
+              }
             });
           });
       });
