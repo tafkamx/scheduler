@@ -223,7 +223,16 @@ describe('InstallationManager.Installation', function () {
                 timezone: 'America/Toronto',
               }
             });
-          });
+          })
+          .then(function (installation) {
+            var knex = installation.getDatabase();
+
+            return knex('Branches')
+              .then(function (res) {
+                expect(res.length).to.equal(1);
+              })
+              .then(knex.destroy);
+          })
       });
 
     });
