@@ -95,7 +95,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
     try {
       config.franchisor.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
-      config.franchisor.role = 'franchisor'; // TODO: Remove
       newInstallation = new InstallationManager.Installation(config.installation);
     } catch (err) {
       return Promise.reject(err);
@@ -126,8 +125,14 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
         return container.create('InstallationSettings', config.installationSettings);
       })
-      // Create default Branch
-      // Create BranchSettings for Branch (based on config.defaultBranchSettings)
+      .then(function () {
+        return container.create('Branch', { name: 'default' });
+      })
+      .then(function (branch) {
+        config.defaultBranchSettings.branchId = branch.id;
+
+        return container.create('BranchSettings', config.defaultBranchSettings);
+      })
       .then(function () {
         return container.cleanup();
       })
