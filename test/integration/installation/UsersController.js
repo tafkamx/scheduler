@@ -65,7 +65,7 @@ describe('Users Controller', function() {
   });
 
   it('Should render /Users/', function(done) {
-    agent.get(url + '/Users')
+    agent.get(url + urlFor.Users.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -75,7 +75,7 @@ describe('Users Controller', function() {
   });
 
   it('Should get the Users Array from /Users', function(done) {
-    agent.get(url + '/Users')
+    agent.get(url + urlFor.Users.url())
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -86,7 +86,7 @@ describe('Users Controller', function() {
   });
 
   it('Should render /Users/:id', function(done) {
-    agent.get(url + '/Users/' + user.id)
+    agent.get(url + urlFor.Users.show.url(user.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -96,7 +96,7 @@ describe('Users Controller', function() {
   });
 
   it('Should return 404 when User.id doesnt exists in /Users/:id', function(done) {
-    agent.get(url + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(url + urlFor.Users.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -106,7 +106,7 @@ describe('Users Controller', function() {
   });
 
   it('Should get /Users/:id', function(done) {
-    agent.get(url + '/Users/' + user.id)
+    agent.get(url + urlFor.Users.show.url(user.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -118,7 +118,7 @@ describe('Users Controller', function() {
   });
 
   it('Should fail to get if id doesnt exists /Users/:id', function(done) {
-    agent.get(url + '/Users/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+    agent.get(url + urlFor.Users.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -128,7 +128,7 @@ describe('Users Controller', function() {
   });
 
   it('Should render /Users/new', function(done) {
-    agent.get(url + '/Users/new')
+    agent.get(url + urlFor.Users.new.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -145,7 +145,7 @@ describe('Users Controller', function() {
       Promise.resolve()
         .then(function () {
           return new Promise(function (resolve) {
-            agent.post(url + '/Users')
+            agent.post(url + urlFor.Users.url())
               .set('Accept', 'application/json')
               .send({
                 email : 'test1@example.com',
@@ -179,7 +179,7 @@ describe('Users Controller', function() {
   });
 
   it('Should render /Users/:id/edit', function(done) {
-    agent.get(url + '/Users/' + user.id + '/edit')
+    agent.get(url + urlFor.Users.edit.url(user.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -189,7 +189,7 @@ describe('Users Controller', function() {
   });
 
   it('Should get the user object /Users/:id/edit', function(done) {
-    agent.get(url + '/Users/' + user.id + '/edit')
+    agent.get(url + urlFor.Users.edit.url(user.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -202,7 +202,7 @@ describe('Users Controller', function() {
   describe('#update', function () {
 
     it('Should update user attributes', function(done) {
-      agent.put(url + '/Users/' + user.id)
+      agent.put(url + urlFor.Users.update.url(user.id))
         .set('Accept', 'application/json')
         .send({
           email : 'email@example.com',
@@ -219,7 +219,7 @@ describe('Users Controller', function() {
     });
 
     it('Should update user attributes if its the same email', function(done) {
-      agent.put(url + '/Users/' + user.id)
+      agent.put(url + urlFor.Users.update.url(user.id))
         .set('Accept', 'application/json')
         .send({
           password : 'abcdefghi'
@@ -235,7 +235,7 @@ describe('Users Controller', function() {
     });
 
     it('Should fail update if password doesnt validate', function(done) {
-      agent.put(url + '/Users/' + user.id)
+      agent.put(url + urlFor.Users.update.url(user.id))
         .set('Accept', 'application/json')
         .send({
           password : 'abcd'
@@ -254,13 +254,13 @@ describe('Users Controller', function() {
   describe('#destroy', function () {
 
     it('Should destroy a record', function(done) {
-      agent.post(url + '/Users')
+      agent.post(url + urlFor.Users.create.url())
         .send({
           email : 'temp@example.com',
           password : '12345678',
           role: 'student'
         }).end(function(err, res) {
-          agent.post(url + '/Users/' + res.body.id)
+          agent.post(url + urlFor.Users.destroy.url(res.body.id))
             .send({'_method' : 'DELETE'})
             .set('Accept', 'application/json')
             .end(function(err, res) {
@@ -272,7 +272,7 @@ describe('Users Controller', function() {
     });
 
     it('Should fail if id doesnt exist when destroy a record', function(done) {
-      agent.post(url + '/Users/' + user.id + '1')
+      agent.post(url + urlFor.Users.destroy.url(user.id + '1'))
         .send({'_method' : 'DELETE'})
         .set('Accept', 'application/json')
         .end(function(err, res) {

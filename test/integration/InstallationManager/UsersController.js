@@ -1,3 +1,4 @@
+var urlFor = CONFIG.router.helpers;
 describe('InstallationManager.UsersController', function () {
 
   var adminUser;
@@ -24,7 +25,7 @@ describe('InstallationManager.UsersController', function () {
 
   // Login agent
   before(function (done) {
-    agent.post(baseURL + '/InstallationManager/login')
+    agent.post(baseURL + urlFor.InstallationManager.login.url())
       .send({
         email: adminUser.email,
         password: adminUser.password,
@@ -40,7 +41,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should render /InstallationManager/Users/', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users')
+    agent.get(baseURL + urlFor.InstallationManager.Users.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -50,7 +51,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should get the Users Array from /InstallationManager/Users/', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users')
+    agent.get(baseURL + urlFor.InstallationManager.Users.url())
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -61,7 +62,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should render /InstallationManager/Users/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.get(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -71,7 +72,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should fail when a adminUser.id doesnt exists /InstallationManager/Users/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+    agent.get(baseURL + urlFor.InstallationManager.Users.show.url('4f2b4747-4996-4542-bf54-7bc3247faa71'))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -82,7 +83,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should get /InstallationManager/Users/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.get(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -94,7 +95,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should fail when a adminUser.id doesnt exists /InstallationManager/Users/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+    agent.get(baseURL + urlFor.InstallationManager.Users.show.url('4f2b4747-4996-4542-bf54-7bc3247faa71'))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -104,7 +105,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should render /InstallationManager/Users/new', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/new')
+    agent.get(baseURL + urlFor.InstallationManager.Users.new.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -114,7 +115,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should create a new User', function(done) {
-    agent.post(baseURL + '/InstallationManager/Users')
+    agent.post(baseURL + urlFor.InstallationManager.Users.url())
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -129,7 +130,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should render /InstallationManager/Users/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id + '/edit')
+    agent.get(baseURL + urlFor.InstallationManager.Users.edit.url(adminUser.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -139,7 +140,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should get the adminUser object /InstallationManager/Users/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationManager/Users/' + adminUser.id + '/edit')
+    agent.get(baseURL + urlFor.InstallationManager.Users.edit.url(adminUser.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -150,7 +151,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should update adminUser attributes', function(done) {
-    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'application/json')
       .send({
         email : 'email@example.com',
@@ -167,7 +168,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should update adminUser attributes if its the same email', function(done) {
-    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'application/json')
       .send({
         password : 'abcdefghi'
@@ -183,7 +184,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should fail update if email exists', function(done) {
-    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'application/json')
       .send({
         email : 'test2@example.com',
@@ -199,7 +200,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should fail update if password doesnt validate', function(done) {
-    agent.put(baseURL + '/InstallationManager/Users/' + adminUser.id)
+    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
       .set('Accept', 'application/json')
       .send({
         password : 'abcd'
@@ -214,12 +215,12 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationManager/Users/')
+    agent.post(baseURL + urlFor.InstallationManager.Users.create.url())
       .send({
         email : 'temp@example.com',
         password : '12345678'
       }).end(function(err, res) {
-        agent.post(baseURL + '/InstallationManager/Users/' + res.body.id)
+        agent.post(baseURL + urlFor.InstallationManager.Users.destroy.url(res.body.id))
         .send({'_method' : 'DELETE'})
           .set('Accept', 'application/json')
           .end(function(err, res) {
@@ -231,7 +232,7 @@ describe('InstallationManager.UsersController', function () {
   });
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
-    agent.post(baseURL + '/InstallationManager/Users/' + adminUser.id + '1')
+    agent.post(baseURL + urlFor.InstallationManager.Users.destroy.url(adminUser.id + '1'))
       .send({'_method' : 'DELETE'})
       .set('Accept', 'application/json')
       .end(function(err, res) {

@@ -34,7 +34,7 @@ describe('Accounts Controller', function() {
 
   /* === Expect Statements === */
   it('Should render /Accounts', function(done) {
-    agent.get(url + '/Accounts').set('Accept', 'text/html')
+    agent.get(url + urlFor.Accounts.url()).set('Accept', 'text/html')
     .end(function(err, res) {
       expect(err).to.be.equal(null);
       expect(res.status).to.equal(200);
@@ -44,7 +44,7 @@ describe('Accounts Controller', function() {
   });
 
   it('Should render Accounts#show as 404 when no accountId', function(done) {
-    agent.get(url + '/Accounts/show').set('Accept', 'text/html')
+    agent.get(url + urlFor.Accounts.show.url('undefined')).set('Accept', 'text/html')
     .end(function(err, res) {
       expect(err).to.be.instanceof(Error);
       expect(res.status).to.equal(404);
@@ -53,7 +53,7 @@ describe('Accounts Controller', function() {
   });
 
   it('Should render /Accounts/:id as JSON Object', function(done) {
-    agent.get(url + '/Accounts/' + account1.id).set('Accept', 'application/json')
+    agent.get(url + urlFor.Accounts.show.url(account1.id)).set('Accept', 'application/json')
     .end(function(err, res) {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
@@ -62,8 +62,9 @@ describe('Accounts Controller', function() {
   });
 
   it('Should render /Accounts/new', function(done) {
-    agent.get(url + '/Accounts/new').set('Accept', 'text/html')
+    agent.get(url + urlFor.Accounts.new.url()).set('Accept', 'text/html')
     .end(function(err, res) {
+      console.log(err.response.error.text);
       expect(err).to.be.eql(null);
       expect(res.status).to.equal(200);
       done();
@@ -73,7 +74,7 @@ describe('Accounts Controller', function() {
   describe('#create', function() {
 
     it('Should create an Account', function(done) {
-      agent.post(url + '/Accounts')
+      agent.post(url + urlFor.Accounts.create.url())
         .set('Accept', 'application/json')
         .send({
           branchName: 'default',
@@ -108,7 +109,7 @@ describe('Accounts Controller', function() {
     });
 
     it('Should fail if no branchName specified', function(done) {
-      agent.post(url + '/Accounts')
+      agent.post(url + urlFor.Accounts.create.url())
         .set('Accept', 'application/json')
         .send({type: 'teacher'})
         .end(function(err, res) {
@@ -119,7 +120,7 @@ describe('Accounts Controller', function() {
     });
 
     it('Should fail if no type specified', function(done) {
-      agent.post(url + '/Accounts')
+      agent.post(url + urlFor.Accounts.create.url())
       .set('Accept', 'application/json')
       .send({branchName: 'default'})
       .end(function(err, res) {
@@ -134,8 +135,9 @@ describe('Accounts Controller', function() {
   describe('#edit', function() {
 
     it('Should render /Accounts/:id/edit', function(done) {
-      agent.get(url + '/Accounts/' + account1.id + '/edit').set('Accept', 'text/html')
+      agent.get(url + urlFor.Accounts.edit.url(account1.id)).set('Accept', 'text/html')
       .end(function(err, res) {
+        console.log(err.response.error.text);
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         done();
@@ -143,7 +145,7 @@ describe('Accounts Controller', function() {
     });
 
     it('Should get the Account object /accounts/:id/edit', function(done) {
-      agent.get(url + '/Accounts/' + account1.id + '/edit').set('Accept', 'application/json')
+      agent.get(url + urlFor.Accounts.edit.url(account1.id)).set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
@@ -155,7 +157,7 @@ describe('Accounts Controller', function() {
     });
 
     it('Should update Account attributes', function(done) {
-      agent.put(url + '/Accounts/' + account1.id)
+      agent.put(url + urlFor.Accounts.update.url(account1.id))
         .set('Accept', 'application/json')
         .send({ id: account1.id, firstName: 'Debra', type: 'teacher', branchName: 'default' })
         .end(function(err, res) {
@@ -168,7 +170,7 @@ describe('Accounts Controller', function() {
     });
 
     it('Should support Account Type variable overloading', function(done) {
-      agent.put(url + '/Accounts/' + account1.id)
+      agent.put(url + urlFor.Accounts.update.url(account1.id))
         .set('Accept', 'application/json')
         .send({ active: true })
         .end(function(err, res) {
@@ -185,7 +187,7 @@ describe('Accounts Controller', function() {
   describe('#create', function() {
 
     it('Should destroy the Account related to the request', function(done) {
-        agent.post(url + '/Accounts/' + account1.id)
+        agent.post(url + urlFor.Accounts.destroy.url(account1.id))
         .send({ _method: 'DELETE' })
         .set('Accept', 'application/json')
         .end(function(err, res) {

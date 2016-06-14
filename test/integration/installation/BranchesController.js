@@ -61,7 +61,7 @@ describe('Branches Controller', function () {
 
   it('Should render /Branches/', function(done) {
     agent
-      .get(url + '/Branches')
+      .get(url + urlFor.Branches.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -72,7 +72,7 @@ describe('Branches Controller', function () {
 
   it('Should get the Branches Array from /Branches', function(done) {
     agent
-      .get(url + '/Branches')
+      .get(url + urlFor.Branches.url())
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -84,7 +84,7 @@ describe('Branches Controller', function () {
 
   it('Should render /Branches/:id', function(done) {
     agent
-      .get(url + '/Branches/' + branch.id)
+      .get(url + urlFor.Branches.show.url(branch.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
@@ -95,7 +95,7 @@ describe('Branches Controller', function () {
 
   it('Should return 404 when Branch.id doesnt exists in /Branches/:id', function(done) {
     agent
-      .get(url + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+      .get(url + urlFor.Branches.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -106,7 +106,7 @@ describe('Branches Controller', function () {
 
   it('Should get /Branches/:id', function(done) {
     agent
-      .get(url + '/Branches/' + branch.id)
+      .get(url + urlFor.Branches.show.url(branch.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -119,7 +119,7 @@ describe('Branches Controller', function () {
 
   it('Should fail to get if id doesnt exists /Branches/:id', function(done) {
     agent
-      .get(url + '/Branches/5f4e4bdc-cd56-4287-afe1-167f8709f0d7')
+      .get(url + urlFor.Branches.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -130,7 +130,7 @@ describe('Branches Controller', function () {
 
   it('Should render /Branches/new', function(done) {
     agent
-      .get(url + '/Branches/new')
+      .get(url + urlFor.Branches.new.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -143,7 +143,7 @@ describe('Branches Controller', function () {
 
     it('Should create a new Branch', function(done) {
       agent
-        .post(url + '/Branches')
+        .post(url + urlFor.Branches.url())
         .set('Accept', 'application/json')
         .send({
           name: 'branch-two'
@@ -160,7 +160,7 @@ describe('Branches Controller', function () {
 
   it('Should render /Branches/:id/edit', function(done) {
     agent
-      .get(url + '/Branches/' + branch.id + '/edit')
+      .get(url + urlFor.Branches.edit.url(branch.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -171,7 +171,7 @@ describe('Branches Controller', function () {
 
   it('Should get the branch object /Branches/:id/edit', function(done) {
     agent
-      .get(url + '/Branches/' + branch.id + '/edit')
+      .get(url + urlFor.Branches.edit.url(branch.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -185,7 +185,7 @@ describe('Branches Controller', function () {
 
   it('Should update branch attributes', function(done) {
     agent
-      .put(url + '/Branches/' + branch.id)
+      .put(url + urlFor.Branches.update.url(branch.id))
       .set('Accept', 'application/json')
       .send({
         name: 'branch-1',
@@ -202,13 +202,13 @@ describe('Branches Controller', function () {
 
   it('Should destroy a record', function(done) {
     agent
-      .post(url + '/Branches')
+      .post(url + urlFor.Branches.create.url())
       .send({
         name: 'branch-temp'
       })
       .end(function(err, res) {
         agent
-          .post(url + '/Branches/' + res.body.id)
+          .post(url + urlFor.Branches.destroy.url(res.body.id))
           .send({
             _method: 'DELETE'
           })
@@ -223,7 +223,7 @@ describe('Branches Controller', function () {
 
   it('Should fail if id doesnt exist when destroy a record', function(done) {
     agent
-      .post(url + '/Branches/' + branch.id + '1')
+      .post(url + urlFor.Branches.destroy.url(branch.id + '1'))
       .send({
         _method: 'DELETE'
       })

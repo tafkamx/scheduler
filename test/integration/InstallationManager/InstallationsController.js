@@ -1,3 +1,4 @@
+var urlFor = CONFIG.router.helpers;
 describe('InstallationManager.InstallationsController', function () {
 
   var adminUser;
@@ -20,7 +21,7 @@ describe('InstallationManager.InstallationsController', function () {
   var agent = sa.agent();
 
   before(function (done) {
-    agent.post(baseURL + '/InstallationManager/login')
+    agent.post(baseURL + urlFor.InstallationManager.login.url())
       .send({
         email: adminUser.email,
         password: adminUser.password,
@@ -69,7 +70,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should render /InstallationManager/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -79,7 +80,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should get the Installations Array from /InstallationManager/Installations/', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.url())
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -90,7 +91,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should render /InstallationManager/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
+    agent.get(baseURL + urlFor.InstallationManager.Installations.show.url(installation.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -100,7 +101,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.show.url('4f2b4747-4996-4542-bf54-7bc3247faa71'))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -110,7 +111,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should get /InstallationManager/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id)
+    agent.get(baseURL + urlFor.InstallationManager.Installations.show.url(installation.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -122,7 +123,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should fail when a installation.id doesnt exists /InstallationManager/Installations/:id', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + '4f2b4747-4996-4542-bf54-7bc3247faa71')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.show.url('4f2b4747-4996-4542-bf54-7bc3247faa71'))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.instanceof(Error);
@@ -132,7 +133,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should render /InstallationManager/Installations/new', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/new')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.new.url())
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -167,7 +168,7 @@ describe('InstallationManager.InstallationsController', function () {
       Promise.resolve()
         .then(function () {
           return new Promise(function (resolve, reject) {
-            agent.post(baseURL + '/InstallationManager/Installations')
+            agent.post(baseURL + urlFor.InstallationManager.Installations.create.url())
               .set('Accept', 'application/json')
               .send(data)
               .end(function(err, res) {
@@ -199,7 +200,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should render /InstallationManager/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.edit.url(installation.id))
       .set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -209,7 +210,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   it('Should get the installation object /InstallationManager/Installations/:id/edit', function(done) {
-    agent.get(baseURL + '/InstallationManager/Installations/' + installation.id + '/edit')
+    agent.get(baseURL + urlFor.InstallationManager.Installations.edit.url(installation.id))
       .set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.eql(null);
@@ -231,7 +232,7 @@ describe('InstallationManager.InstallationsController', function () {
         }
       };
 
-      agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
+      agent.put(baseURL + urlFor.InstallationManager.Installations.update.url(installation.id))
         .set('Accept', 'application/json')
         .send(data)
         .end(function(err, res) {
@@ -250,7 +251,7 @@ describe('InstallationManager.InstallationsController', function () {
         domain : 'delagarza.io'
       };
 
-      agent.put(baseURL + '/InstallationManager/Installations/' + installation.id)
+      agent.put(baseURL + urlFor.InstallationManager.Installations.update.url(installation.id))
         .set('Accept', 'application/json')
         .send(data)
         .end(function(err, res) {
@@ -272,7 +273,7 @@ describe('InstallationManager.InstallationsController', function () {
             domain : 'delagarza.io'
           };
 
-          agent.put(baseURL + '/InstallationManager/Installations/' + result[0].id)
+          agent.put(baseURL + urlFor.InstallationManager.Installations.update.url(result[0].id))
             .set('Accept', 'application/json')
             .send(data)
             .end(function(err, res) {
@@ -293,7 +294,7 @@ describe('InstallationManager.InstallationsController', function () {
     this.timeout(4000);
 
     it('Should destroy a record', function(done) {
-      agent.post(baseURL + '/InstallationManager/Installations/')
+      agent.post(baseURL + urlFor.InstallationManager.Installations.url())
         .send({
           name: 'three',
           franchisorEmail: 'test@example.com',
@@ -304,7 +305,7 @@ describe('InstallationManager.InstallationsController', function () {
           }
         })
         .end(function(err, res) {
-          agent.post(baseURL + '/InstallationManager/Installations/' + res.body.id)
+          agent.post(baseURL + urlFor.InstallationManager.Installations.destroy.url(res.body.id))
             .send({ _method: 'DELETE'})
             .set('Accept', 'application/json')
             .end(function(err, res) {
@@ -316,7 +317,7 @@ describe('InstallationManager.InstallationsController', function () {
     });
 
     it('Should fail if id doesnt exist when destroying a record', function(done) {
-      agent.post(baseURL + '/InstallationManager/Installations/' + installation.id + '1')
+      agent.post(baseURL + urlFor.InstallationManager.Installations.destroy.url(installation.id + '1'))
         .send({ _method: 'DELETE'})
         .set('Accept', 'application/json')
         .end(function(err, res) {

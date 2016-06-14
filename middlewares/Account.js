@@ -2,6 +2,7 @@
  * This middleware is for setting the request Account (if applicable) and Role (based on that account).
  */
 var Promise = require('bluebird');
+var urlFor = CONFIG.router.helpers;
 
 module.exports = function(req, res, next) {
 
@@ -9,7 +10,7 @@ module.exports = function(req, res, next) {
   if(!req.user) {
     req.role = 'Visitor'; // Default role is Visitor when there is no Account
     return next();
-  } else if(req.url.match(/^(\/InstallationManager)/) !== null) {
+  } else if(req.url.indexOf(urlFor.InstallationManager.url()) === 0) {
     req.role = 'Admin'; // If the User is logged in within the InstallationManager, they are an Administrative User.
     return next();
   }
