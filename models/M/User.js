@@ -37,9 +37,29 @@ Class(M, 'User').inherits(DynamicModel)({
 
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
 
+  // This function needs to be called from a container.get() model
+  createWithAccount: function (user, account) {
+    var result = {};
+
+    var that = this;
+
+    return this._container.create('User', user)
+      .then(function (res) {
+        account.userId = res.id;
+
+        result.user = res;
+
+        return that._container.create('Account', account);
+      })
+      .then(function (res) {
+        result.account = res;
+
+        return result;
+      });
+  },
+
   prototype : {
     password: null,
-    role: null,
     _oldEmail: null,
     _skipPasswordEmail: false,
 
