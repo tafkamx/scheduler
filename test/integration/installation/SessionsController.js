@@ -13,7 +13,7 @@ var Promise = require('bluebird');
 var agent1 = sa.agent();
 var agent2 = sa.agent();
 
-var urlFor = CONFIG.router.helpers;
+
 
 describe('Sessions Controller', function () {
 

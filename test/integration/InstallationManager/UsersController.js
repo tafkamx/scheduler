@@ -1,4 +1,4 @@
-var urlFor = CONFIG.router.helpers;
+
 describe('InstallationManager.UsersController', function () {
 
   var adminUser;

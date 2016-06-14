@@ -2,7 +2,7 @@
 
 var container = INTE;
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 
 var url = container.props.url;
 

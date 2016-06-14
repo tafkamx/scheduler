@@ -2,7 +2,7 @@
  * This middleware is for setting the request Account (if applicable) and Role (based on that account).
  */
 var Promise = require('bluebird');
-var urlFor = CONFIG.router.helpers;
+
 
 module.exports = function(req, res, next) {
 

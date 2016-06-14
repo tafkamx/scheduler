@@ -2,7 +2,7 @@ var agent = sa.agent();
 
 var container = INTE;
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 var url = container.props.url;
 var bitmasks = require(path.join(process.cwd(), 'lib', 'utils', 'availability-bitmasks.js'));
 

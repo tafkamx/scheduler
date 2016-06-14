@@ -6,7 +6,7 @@ var adminUser = new InstallationManager.User({
   password: '12345678',
 });
 
-var urlFor = CONFIG.router.helpers;
+
 
 describe('InstallationManager.SessionsController', function() {
 
