@@ -50,7 +50,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#getTeacher', function() {
 
     it('Should render /TeacherAvailability/getTeacher', function(done) {
-      agent.get(url + '/TeacherAvailability/getTeacher?id=' + account1.id).set('Accept', 'application/json')
+      agent.get(url + urlFor.TeacherAvailability.getTeacher.url() + '?id=' + account1.id).set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -65,7 +65,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#getAllAvailableOn', function() {
 
     it('Should render /TeacherAvailability/getAllAvailableOn', function(done) {
-      agent.get(url + '/TeacherAvailability/getAllAvailableOn?days=monday&hours=2').set('Accept', 'application/json')
+      agent.get(url + urlFor.TeacherAvailability.getAllAvailableOn.url() + '?days=monday&hours=2').set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -79,7 +79,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#isTeacherAvailable', function() {
 
     it('Should render /TeacherAvailability/isTeacherAvailable', function(done) {
-      agent.get(url + '/TeacherAvailability/isTeacherAvailable?id=' + account1.id + '&days=monday&hours=2').set('Accept', 'application/json')
+      agent.get(url + urlFor.TeacherAvailability.isTeacherAvailable.url() + '?id=' + account1.id + '&days=monday&hours=2').set('Accept', 'application/json')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -93,7 +93,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#new', function() {
 
     it('Should render /TeacherAvailability/new', function(done) {
-      agent.get(url + '/TeacherAvailability/new').set('Accept', 'text/html')
+      agent.get(url + urlFor.TeacherAvailability.new.url()).set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -107,7 +107,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#create', function() {
 
     it('Should create a new TeacherAvailability instance', function(done) {
-      agent.post(url + '/TeacherAvailability')
+      agent.post(url + urlFor.TeacherAvailability.create.url())
         .set('Accept', 'application/json')
         .send({ teacherId: account1.id, branchName: 'default', monday: (2 + 4 + 8) })
         .end(function(err, res) {
@@ -124,7 +124,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#edit', function() {
 
     it('Should render /TeacherAvailability/:id/edit', function(done) {
-      agent.get(url + '/TeacherAvailability/' + account1.id + '/edit').set('Accept', 'text/html')
+      agent.get(url + urlFor.TeacherAvailability.edit.url(account1.id)).set('Accept', 'text/html')
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.equal(200);
@@ -139,7 +139,7 @@ describe('TeacherAvailability Controller', function() {
 
     it('Should update a TeacherAvailability instance', function(done) {
 
-      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+      agent.put(url + urlFor.TeacherAvailability.update.url(account1.id)).set('Accept', 'application/json')
         .send({ monday: 4 })
         .end(function(err, res) {
           expect(err).to.be.eql(null);
@@ -152,7 +152,7 @@ describe('TeacherAvailability Controller', function() {
     });
 
     it('Should fail with invalid teacherId', function(done) {
-      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+      agent.put(url + urlFor.TeacherAvailability.update.url(account1.id)).set('Accept', 'application/json')
         .send({ teacherId: 'id' })
         .end(function(err, res) {
           expect(err).to.be.instanceof(Error);
@@ -161,7 +161,7 @@ describe('TeacherAvailability Controller', function() {
     });
 
     it('Should fail with invalid bitmask/Array', function(done) {
-      agent.put(url + '/TeacherAvailability/' + account1.id).set('Accept', 'application/json')
+      agent.put(url + urlFor.TeacherAvailability.update.url(account1.id)).set('Accept', 'application/json')
         .send({ monday: 'false' })
         .end(function(err, res) {
           expect(err).to.be.instanceof(Error);
@@ -175,7 +175,7 @@ describe('TeacherAvailability Controller', function() {
   describe('#destroy', function() {
 
     it('Should destroy the Availability related to the request', function(done) {
-        agent.post(url + '/TeacherAvailability/' + account1.id)
+        agent.post(url + urlFor.TeacherAvailability.destroy.url(account1.id))
         .send({ _method: 'DELETE' })
         .set('Accept', 'application/json')
         .end(function(err, res) {

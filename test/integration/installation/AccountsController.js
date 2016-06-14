@@ -64,7 +64,6 @@ describe('Accounts Controller', function() {
   it('Should render /Accounts/new', function(done) {
     agent.get(url + urlFor.Accounts.new.url()).set('Accept', 'text/html')
     .end(function(err, res) {
-      console.log(err.response.error.text);
       expect(err).to.be.eql(null);
       expect(res.status).to.equal(200);
       done();
@@ -137,7 +136,6 @@ describe('Accounts Controller', function() {
     it('Should render /Accounts/:id/edit', function(done) {
       agent.get(url + urlFor.Accounts.edit.url(account1.id)).set('Accept', 'text/html')
       .end(function(err, res) {
-        console.log(err.response.error.text);
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         done();
