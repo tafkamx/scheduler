@@ -13,7 +13,7 @@ var Promise = require('bluebird');
 var agent1 = sa.agent();
 var agent2 = sa.agent();
 
-var urlFor = CONFIG.router.helpers;
+
 
 describe('Sessions Controller', function () {
 
@@ -128,7 +128,7 @@ describe('Sessions Controller', function () {
   describe('Login', function () {
 
     it('Should fail login because the account has not been activated', function(done) {
-      sa.agent().post(oneUrl + '/login')
+      sa.agent().post(oneUrl + urlFor.login.url())
         .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
           expect(err).to.be.equal(null);
@@ -139,7 +139,7 @@ describe('Sessions Controller', function () {
     });
 
     it('Should login and activate with the users token', function(done) {
-      sa.agent().get(oneUrl + '/login?email=false&token=' + user1.token)
+      sa.agent().get(oneUrl + urlFor.login.url() + '?email=false&token=' + user1.token)
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
@@ -150,7 +150,7 @@ describe('Sessions Controller', function () {
     });
 
     it('Should login with the email/password', function(done) {
-      sa.agent().post(oneUrl + '/login')
+      sa.agent().post(oneUrl + urlFor.login.url())
         .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
           expect(err).to.be.equal(null);
@@ -162,12 +162,12 @@ describe('Sessions Controller', function () {
 
     it('Should not let a logged in user login', function(done) {
       var agent = sa.agent();
-      agent.post(oneUrl + '/login')
+      agent.post(oneUrl + urlFor.login.url())
         .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
           expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
-          agent.get(oneUrl + '/login')
+          agent.get(oneUrl + urlFor.login.url())
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);
@@ -181,7 +181,7 @@ describe('Sessions Controller', function () {
     it('Should not be logged-in in other installations', function(done) {
       var agent = sa.agent();
 
-      agent.post(oneUrl + '/login')
+      agent.post(oneUrl + urlFor.login.url())
         .send({
           email : user1.email,
           password : user1.password
@@ -191,7 +191,7 @@ describe('Sessions Controller', function () {
           expect(res.status).to.be.equal(200);
           expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
 
-          agent.get(twoUrl + '/login')
+          agent.get(twoUrl + urlFor.login.url())
             .end(function(err, res) {
               expect(err).to.be.equal(null);
               expect(res.status).to.be.equal(200);
@@ -204,7 +204,7 @@ describe('Sessions Controller', function () {
     it('Should be able to login to more than one installation', function(done) {
       var agent = sa.agent();
 
-      agent.post(oneUrl + '/login')
+      agent.post(oneUrl + urlFor.login.url())
         .send({
           email : user1.email,
           password : user1.password
@@ -213,7 +213,7 @@ describe('Sessions Controller', function () {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
 
-          agent.post(twoUrl + '/login')
+          agent.post(twoUrl + urlFor.login.url())
             .send({
               email : user2.email,
               password : user2.password
@@ -233,13 +233,13 @@ describe('Sessions Controller', function () {
 
     it('Should logout', function(done) {
       var agent = sa.agent();
-      agent.post(oneUrl + '/login')
+      agent.post(oneUrl + urlFor.login.url())
         .send({ email: user1.email, password: user1.password})
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.equal(200);
           expect(res.text.search('"success": "Welcome to PatOS Installation"')).to.not.equal(-1);
-          agent.get(oneUrl + '/logout')
+          agent.get(oneUrl + urlFor.logout.url())
           .end(function(err, res) {
             expect(err).to.be.equal(null);
             expect(res.status).to.be.equal(200);

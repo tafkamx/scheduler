@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));

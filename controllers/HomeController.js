@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 
 var HomeController = Class('HomeController').inherits(BaseController)({
   prototype : {

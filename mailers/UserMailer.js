@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 var _ = require('lodash');
 
 var base = path.join(process.cwd(), 'views', 'mailers', 'UserMailer');
