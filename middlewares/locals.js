@@ -1,7 +1,7 @@
 // Use this middleware to set res.locals variables
 
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 var _ = require('lodash');
 
 var getCurrentInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-current-installation-url.js'));

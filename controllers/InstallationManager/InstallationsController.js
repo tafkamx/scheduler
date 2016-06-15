@@ -1,5 +1,5 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
+
 var DomainContainer = require('domain-container');
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 

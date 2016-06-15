@@ -6,7 +6,7 @@ var adminUser = new InstallationManager.User({
   password: '12345678',
 });
 
-var urlFor = CONFIG.router.helpers;
+
 
 describe('InstallationManager.SessionsController', function() {
 
@@ -30,7 +30,7 @@ describe('InstallationManager.SessionsController', function() {
   describe('Login', function () {
 
     it('Should fail login because the account has not been activated', function(done) {
-      sa.agent().post(baseURL + '/InstallationManager/login')
+      sa.agent().post(baseURL + urlFor.InstallationManager.login.url())
         .send({
           email: adminUser.email,
           password: adminUser.password
@@ -43,7 +43,7 @@ describe('InstallationManager.SessionsController', function() {
     });
 
     it('Should login and activate with the users token', function(done) {
-      sa.agent().get(baseURL + '/InstallationManager/login?email=false&token=' + adminUser.token)
+      sa.agent().get(baseURL + urlFor.InstallationManager.login.url() + '?email=false&token=' + adminUser.token)
         .end(function(err, res) {
           expect(err).to.equal(null);
           expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
@@ -52,7 +52,7 @@ describe('InstallationManager.SessionsController', function() {
     });
 
     it('Should login with the email/password', function(done) {
-      sa.agent().post(baseURL + '/InstallationManager/login')
+      sa.agent().post(baseURL + urlFor.InstallationManager.login.url())
         .send({
           email: adminUser.email,
           password: adminUser.password
@@ -67,7 +67,7 @@ describe('InstallationManager.SessionsController', function() {
     it('Should not let a logged in user login', function(done) {
       var agent = sa.agent();
 
-      agent.post(baseURL + '/InstallationManager/login')
+      agent.post(baseURL + urlFor.InstallationManager.login.url())
         .send({
           email: adminUser.email,
           password: adminUser.password
@@ -76,7 +76,7 @@ describe('InstallationManager.SessionsController', function() {
           expect(err).to.equal(null);
           expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
 
-          agent.get(baseURL + '/InstallationManager/login')
+          agent.get(baseURL + urlFor.InstallationManager.login.url())
             .end(function(err, res) {
               expect(err).to.equal(null);
               expect(res.text.search('"info": "You are already logged in"')).to.not.equal(-1);
@@ -91,7 +91,7 @@ describe('InstallationManager.SessionsController', function() {
 
     it('Should logout', function(done) {
       var agent = sa.agent();
-      agent.post(baseURL + '/InstallationManager/login')
+      agent.post(baseURL + urlFor.InstallationManager.login.url())
         .send({
           email: adminUser.email,
           password: adminUser.password
@@ -100,7 +100,7 @@ describe('InstallationManager.SessionsController', function() {
           expect(err).to.equal(null);
           expect(res.text.search('"success": "PatOS Installation Admin"')).to.not.equal(-1);
 
-          agent.get(baseURL + '/InstallationManager/logout')
+          agent.get(baseURL + urlFor.InstallationManager.logout.url())
           .end(function(err, res) {
             expect(err).to.equal(null);
             expect(res.text.search('"success": "Signed off"')).to.not.equal(-1);

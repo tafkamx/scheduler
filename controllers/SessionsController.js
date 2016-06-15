@@ -3,7 +3,7 @@ var passport = require(path.join(process.cwd(), 'lib', 'passport', 'Installation
 passport = require(path.join(process.cwd(), 'lib', 'passport', 'InstallationTokenStrategy.js'))(passport);
 var moment = require('moment');
 
-var urlFor = CONFIG.router.helpers;
+
 
 var SessionsController = Class('SessionsController').inherits(BaseController)({
   prototype : {
