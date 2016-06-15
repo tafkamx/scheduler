@@ -4,6 +4,7 @@ var path = require('path');
 var Promise = require('bluebird');
 var DomainContainer = require('domain-container');
 var bcrypt = require('bcrypt-node');
+var _ = require('lodash');
 
 Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
@@ -129,6 +130,10 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
         return container.create('Branch', { name: 'default' });
       })
       .then(function (branch) {
+        if (!config.defaultBranchSettings) {
+          config.defaultBranchSettings = _.clone(config.installationSettings);
+        }
+
         config.defaultBranchSettings.branchId = branch.id;
 
         return container.create('BranchSettings', config.defaultBranchSettings);
