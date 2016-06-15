@@ -221,7 +221,36 @@ describe('InstallationManager.Installation', function () {
                 language: 'en-CA',
                 currency: 'CAD',
                 timezone: 'America/Toronto',
-              }
+              },
+            });
+          })
+          .then(function (installation) {
+            var knex = installation.getDatabase();
+
+            return knex('Branches')
+              .then(function (res) {
+                expect(res.length).to.equal(1);
+              })
+              .then(knex.destroy);
+          })
+      });
+
+      it('Should create installation even when not provided defaultBranchSettings', function () {
+        return Promise.resolve()
+          .then(function () {
+            return InstallationManager.Installation.createInstallation({
+              installation: {
+                name: 'boop',
+              },
+              franchisor: {
+                email: 'franchisor@example.com',
+              },
+              baseUrl: 'patos.net',
+              installationSettings: {
+                language: 'en-CA',
+                currency: 'CAD',
+                timezone: 'America/Toronto',
+              },
             });
           })
           .then(function (installation) {
