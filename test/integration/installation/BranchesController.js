@@ -78,6 +78,7 @@ describe('Branches Controller', function () {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
         expect(res.body.length).to.be.equal(1);
+        expect(res.body[0].settings).to.not.equal(undefined);
         done();
       });
   });
@@ -98,7 +99,7 @@ describe('Branches Controller', function () {
       .get(url + urlFor.Branches.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'text/html')
       .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
+        expect(err).to.be.not.equal(null);
         expect(res.status).to.be.equal(404);
         done();
       });
@@ -113,6 +114,7 @@ describe('Branches Controller', function () {
         expect(res.status).to.be.eql(200);
         expect(res.body).to.be.an.object;
         expect(res.body.name).to.be.equal(branch.name);
+        expect(res.body.settings).to.not.equal(undefined);
         done();
       });
   });
@@ -122,7 +124,7 @@ describe('Branches Controller', function () {
       .get(url + urlFor.Branches.show.url('5f4e4bdc-cd56-4287-afe1-167f8709f0d7'))
       .set('Accept', 'application/json')
       .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
+        expect(err).to.not.equal(null);
         expect(res.status).to.be.eql(404);
         done();
       });

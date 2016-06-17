@@ -14,7 +14,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     {
       before : function(req, res, next) {
         RESTFulAPI.createMiddleware({
-          queryBuilder : req.container.query('Branch'),
+          queryBuilder : req.container.query('Branch').include('settings'),
           filters : {
             allowedFields : ['name']
           }
@@ -39,6 +39,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     _loadBranch: function(req, res, next) {
       req.container.query('Branch')
         .where({ id: req.params.id })
+        .include('settings')
         .then(function (result) {
           if (result.length === 0) {
             throw new NotFoundError('Branch ' + req.params.id + ' not found');
