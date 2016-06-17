@@ -98,21 +98,14 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
             .then(function (res) {
               branch = res;
 
-              return req.container.create('User', user);
-            })
-            .then(function (user) {
-              account.userId = user.id;
               account.branchName = branch.name;
               account.type = 'franchisee';
 
-              branch._franchiseeUser = user;
-
-              if (Object.keys(account).length > 0) {
-                return req.container.create('Account', account);
-              }
+              return req.container.get('User').createWithAccount(user, account);
             })
-            .then(function (account) {
-              branch._franchiseeAccount = account;
+            .then(function (user) {
+              branch._franchiseeUser = user.user;
+              branch._franchiseeAccount = user.account;
 
               res.json(branch);
             })
