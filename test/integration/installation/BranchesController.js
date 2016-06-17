@@ -148,13 +148,40 @@ describe('Branches Controller', function () {
         .post(url + urlFor.Branches.url())
         .set('Accept', 'application/json')
         .send({
-          name: 'branch-two'
+          name: 'branch-two',
+          settings: { // BranchSettings
+            language: 'en-CA',
+            currency: 'CAD',
+            timezone: 'America/Toronto',
+          },
+          franchiseeUser: {
+            email: 'boop@holy.com',
+            password: '12345678',
+          },
+          franchiseeAccount: {
+            // branchName
+            // type
+            // ^ these are done by the endpoint
+            // here we could send dob, firstName, lastName etc.
+          },
         })
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.eql(200);
           expect(res.body.name).to.be.equal('branch-two');
-          done();
+          expect(res.body).to.have.property('_franchiseeUser');
+          expect(res.body).to.have.property('_franchiseeAccount');
+          expect(res.body._franchiseeUser).to.have.property('id');
+          expect(res.body._franchiseeAccount).to.have.property('id');
+
+          promiseSeries([
+            container.get('User').query().where('id', res.body._franchiseeUser.id).delete(),
+            container.get('Account').query().where('id', res.body._franchiseeAccount.id).delete(),
+          ])
+            .then(function () {
+              done();
+            })
+            .catch(done);
         })
     });
 
@@ -203,14 +230,13 @@ describe('Branches Controller', function () {
   });
 
   it('Should destroy a record', function(done) {
-    agent
-      .post(url + urlFor.Branches.create.url())
-      .send({
-        name: 'branch-temp'
+    container
+      .create('Branch', {
+        name: 'branch-temp',
       })
-      .end(function(err, res) {
+      .then(function (branch) {
         agent
-          .post(url + urlFor.Branches.destroy.url(res.body.id))
+          .post(url + urlFor.Branches.destroy.url(branch.id))
           .send({
             _method: 'DELETE'
           })

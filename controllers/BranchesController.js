@@ -86,8 +86,34 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     create: function (req, res, next) {
       res.format({
         json: function () {
+          var user = req.body.franchiseeUser;
+          var account = req.body.franchiseeAccount || {};
+
+          delete req.body.franchiseeUser;
+          delete req.body.franchiseeAccount;
+
+          var branch;
+
           req.container.create('Branch', req.body)
-            .then(function (branch) {
+            .then(function (res) {
+              branch = res;
+
+              return req.container.create('User', user);
+            })
+            .then(function (user) {
+              account.userId = user.id;
+              account.branchName = branch.name;
+              account.type = 'franchisee';
+
+              branch._franchiseeUser = user;
+
+              if (Object.keys(account).length > 0) {
+                return req.container.create('Account', account);
+              }
+            })
+            .then(function (account) {
+              branch._franchiseeAccount = account;
+
               res.json(branch);
             })
             .catch(next);
