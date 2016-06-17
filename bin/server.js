@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+process.on('uncaughtException', function (err) {
+  logger.error(err.stack || err);
+  console.log(err);
+  process.exit(1);
+});
+
 var path = require('path');
 var nodemailer = require('nodemailer');
 var mailgun = require('nodemailer-mailgun-transport');
