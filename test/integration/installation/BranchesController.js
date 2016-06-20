@@ -212,21 +212,79 @@ describe('Branches Controller', function () {
       });
   });
 
-  it('Should update branch attributes', function(done) {
-    agent
-      .put(url + urlFor.Branches.update.url(branch.id))
-      .set('Accept', 'application/json')
-      .send({
-        name: 'branch-1',
-      })
-      .end(function(err, res) {
-        expect(err).to.be.eql(null);
-        expect(res.body.errors).to.be.undefined;
-        expect(res.status).to.be.eql(200);
-        expect(res.body.id).to.be.equal(branch.id);
-        expect(res.body.name).to.be.equal('branch-1');
-        done();
-      });
+  describe('#update', function () {
+
+    it('Should update plain Branch\'s attributes', function(done) {
+      agent
+        .put(url + urlFor.Branches.update.url(branch.id))
+        .set('Accept', 'application/json')
+        .send({
+          name: 'branch-1',
+        })
+        .end(function(err, res) {
+          expect(err).to.be.eql(null);
+          expect(res.body.errors).to.be.undefined;
+          expect(res.status).to.be.eql(200);
+          expect(res.body.id).to.be.equal(branch.id);
+          expect(res.body.name).to.be.equal('branch-1');
+          done();
+        });
+    });
+
+    it('Should update #create created Branch\'s attributes', function(done) {
+      agent
+        .post(url + urlFor.Branches.url())
+        .set('Accept', 'application/json')
+        .send({
+          name: 'branch-something',
+          settings: {
+            language: 'en-CA',
+            currency: 'CAD',
+            timezone: 'America/Toronto',
+          },
+          franchiseeUser: {
+            email: 'boop@holy.com',
+            password: '12345678',
+          },
+        })
+        .end(function(err, res) {
+          expect(err).to.be.equal(null);
+          expect(res.status).to.be.eql(200);
+
+          promiseSeries([
+            container.get('User').query().where('id', res.body._franchiseeUser.id).delete(),
+            container.get('Account').query().where('id', res.body._franchiseeAccount.id).delete(),
+          ])
+            .then(function () {
+              agent
+                .put(url + urlFor.Branches.update.url(res.body.id))
+                .set('Accept', 'application/json')
+                .send({
+                  settings: {
+                    timezone: 'America/Mexico_City',
+                  },
+                })
+                .end(function (err, res) {
+                  expect(err).to.be.equal(null);
+                  expect(res.status).to.be.eql(200);
+
+                  expect(res.body).to.have.property('id');
+                  expect(res.body).to.have.property('settings');
+                  expect(res.body.settings).to.have.property('id');
+                  expect(res.body.settings).to.have.property('timezone');
+                  expect(res.body.settings.timezone).to.equal('America/Mexico_City');
+
+                  promiseSeries([
+                    container.get('Branch').query().where(res.body.id).delete(),
+                  ])
+                    .then(function () {
+                      done();
+                    })
+                    .catch(done);
+                });
+            });
+        });
+    });
   });
 
   it('Should destroy a record', function(done) {
