@@ -275,7 +275,7 @@ describe('Branches Controller', function () {
                   expect(res.body.settings.timezone).to.equal('America/Mexico_City');
 
                   promiseSeries([
-                    container.get('Branch').query().where(res.body.id).delete(),
+                    container.get('Branch').query().where('id', res.body.id).delete(),
                   ])
                     .then(function () {
                       done();

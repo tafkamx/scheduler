@@ -129,6 +129,22 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       res.format({
         json: function () {
           req.container.update(res.locals.branch, req.body)
+            .then(function () {
+              if (!req.body.settings) {
+                return;
+              }
+
+              return Promise.resolve()
+                .then(function () {
+                  return req.container.query('BranchSettings')
+                    .where('branch_id', res.locals.branch.id);
+                })
+                .then(function (settings) {
+                  res.locals.branch.settings = settings[0];
+
+                  return req.container.update(res.locals.branch.settings, req.body.settings);
+                });
+            })
             .then(function (val) {
               res.json(res.locals.branch);
             })
