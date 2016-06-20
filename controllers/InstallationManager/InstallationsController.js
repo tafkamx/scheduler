@@ -3,10 +3,6 @@ var path = require('path');
 var DomainContainer = require('domain-container');
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
-// Requiring here because otherwise neonode.controllers['InstallationManager.Home']
-// is not defined and thus the beforeActions crash
-neonode.controllers['InstallationManager.Home'] = require('./HomeController.js');
-
 Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
 
   beforeActions: [

@@ -5,10 +5,6 @@ var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));
 
-// Requiring here because otherwise neonode.controllers['InstallationManager.Installations']
-// is not defined and thus the beforeActions crash
-neonode.controllers['InstallationManager.Installations'] = require('./InstallationManager/InstallationsController.js');
-
 var BranchesController = Class('BranchesController').inherits(BaseController)({
 
   beforeActions: [
@@ -28,7 +24,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       actions : ['index']
     },
     {
-      before : [neonode.controllers['InstallationManager.Installations']._loadTimezones],
+      before : ['_loadTimezones'],
       actions : ['new', 'edit']
     },
   ],
@@ -59,6 +55,17 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
           next();
         })
         .catch(next);
+    },
+
+    // Copy paste of InstallationManager.Installation#_loadTimezones
+    _loadTimezones : function(req, res, next) {
+      var knex = InstallationManager.Installation.knex();
+
+      knex('pg_timezone_names').then(function(result) {
+        res.locals.timezones = result.sort((a, b) => a > b);
+
+        next();
+      }).catch(next);
     },
 
     index: function (req, res, next) {
