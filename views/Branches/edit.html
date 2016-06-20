@@ -4,7 +4,43 @@
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="_method" value="PUT">
 
+    <h2>Branch details fields</h2>
+
     <label for="name">Name</label> <input type="text" name="name" value="<%= branch.name %>">
+
+    <h2>Branch Settings fields</h2>
+
+    <div>
+        <label for="settings[language]">Language</label>
+        <select name="settings[language]">
+            <% for (var language in M.InstallationSettings.LANGUAGES) {
+                 if (language == branch.settings.language) { %>
+                    <option value="<%= language %>" selected><%= M.InstallationSettings.LANGUAGES[language] %></option>
+                <% } else { %>
+                    <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
+                <% } %>
+            <% } %>
+        </select>
+    </div>
+
+    <div>
+        <label for="settings[currency]">Currency</label>
+        <select name="settings[currency]">
+            <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
+                <option value="<%= currency %>" <%= currency === branch.settings.currency ? "selected" : "" %>><%= currency %></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div>
+        <label for="settings[timezone]">Timezone</label>
+        <select name="settings[timezone]">
+            <option value="">Select</option>
+            <% timezones.forEach(function (tz) { %>
+                <option value="<%= tz.name %>" <%= tz.name === branch.settings.timezone ? "selected" : "" %>><%= tz.name %></option>
+            <% }) %>
+        </select>
+    </div>
 
     <input type="submit" value="Submit">
 </form>

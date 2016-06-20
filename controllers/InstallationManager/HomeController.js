@@ -1,6 +1,5 @@
 var path = require('path');
 
-
 Class(InstallationManager, 'HomeController').inherits(BaseController)({
 
   beforeActions: [

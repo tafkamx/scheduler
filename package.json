@@ -16,6 +16,7 @@
     "test:integration:manager": "scripty",
     "utils:resetdb": "scripty",
     "utils:knexreset": "scripty",
+    "utils:migrate": "knex --knexfile=knexinstallationmanager.js migrate:latest",
     "report": "scripty",
     "start": "scripty",
     "iron-node": "scripty",

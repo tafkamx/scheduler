@@ -1,8 +1,13 @@
 var path = require('path');
+var bcrypt = require('bcrypt-node');
 
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
 var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));
+
+// Requiring here because otherwise neonode.controllers['InstallationManager.Installations']
+// is not defined and thus the beforeActions crash
+neonode.controllers['InstallationManager.Installations'] = require('./InstallationManager/InstallationsController.js');
 
 var BranchesController = Class('BranchesController').inherits(BaseController)({
 
@@ -21,7 +26,11 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
         })(req, res, next);
       },
       actions : ['index']
-    }
+    },
+    {
+      before : [neonode.controllers['InstallationManager.Installations']._loadTimezones],
+      actions : ['new', 'edit']
+    },
   ],
   /*
   .concat(aclBeforeActionsGenerator([
@@ -97,6 +106,8 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
           req.container.create('Branch', req.body)
             .then(function (res) {
               branch = res;
+
+              user.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
 
               account.branchName = branch.name;
               account.type = 'franchisee';
