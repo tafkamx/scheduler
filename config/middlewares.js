@@ -28,6 +28,10 @@ var middlewares = [
     path: 'middlewares/domain-container.js',
   },
   {
+    name: 'Branch ID',
+    path: 'middlewares/branch.js',
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
