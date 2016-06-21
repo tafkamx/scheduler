@@ -1,7 +1,51 @@
 <form class="edit-form" action="<%= helpers.urlFor.Branches.url() %>" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
+    <h2>Branch details fields</h2>
+
     <label for="name">Name</label> <input type="text" name="name" value="">
+
+    <h2>Branch Settings fields</h2>
+
+    <div>
+        <label for="settings[language]">Language</label>
+        <select class="" name="settings[language]">
+            <% for (var language in M.InstallationSettings.LANGUAGES) { %>
+                <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div>
+        <label for="settings[currency]">Currency</label>
+        <select class="" name="settings[currency]">
+            <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
+                <option value="<%= currency %>"><%= currency %></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div>
+        <label for="settings[timezone]">Timezone</label>
+        <select class="" name="settings[timezone]">
+            <option value="">Select</option>
+            <% timezones.forEach(function (tz) { %>
+                <option value="<%= tz.name %>"><%= tz.name %></option>
+            <% }) %>
+        </select>
+    </div>
+
+    <h2>Franchisee User fields</h2>
+
+    <label for="franchiseeUser[email]">
+    <input type="email" name="franchiseeUser[email]">
+
+    <!--
+    <h2>Franchisee Account fields</h2>
+
+    There's plenty of fields that can go here, but ATM none of them are
+    necessary so I won't put them.
+    -->
 
     <input type="submit" value="Submit">
 </form>

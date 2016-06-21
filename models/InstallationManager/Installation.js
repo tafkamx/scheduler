@@ -4,6 +4,7 @@ var path = require('path');
 var Promise = require('bluebird');
 var DomainContainer = require('domain-container');
 var bcrypt = require('bcrypt-node');
+var _ = require('lodash');
 
 Class(InstallationManager, 'Installation').inherits(InstallationManager.InstallationManagerModel)({
   tableName : 'Installations',
@@ -95,7 +96,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
     try {
       config.franchisor.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
-      config.franchisor.role = 'franchisor'; // TODO: Remove
       newInstallation = new InstallationManager.Installation(config.installation);
     } catch (err) {
       return Promise.reject(err);
@@ -126,8 +126,18 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
 
         return container.create('InstallationSettings', config.installationSettings);
       })
-      // Create default Branch
-      // Create BranchSettings for Branch (based on config.defaultBranchSettings)
+      .then(function () {
+        return container.create('Branch', { name: 'default' });
+      })
+      .then(function (branch) {
+        if (!config.defaultBranchSettings) {
+          config.defaultBranchSettings = _.clone(config.installationSettings);
+        }
+
+        config.defaultBranchSettings.branchId = branch.id;
+
+        return container.create('BranchSettings', config.defaultBranchSettings);
+      })
       .then(function () {
         return container.cleanup();
       })

@@ -1,6 +1,5 @@
 module.exports = function(err, req, res, next) {
-  logger.error(err);
-  logger.error(err.stack);
+  logger.error(err, err.stack);
 
   if (err.name) {
     switch (err.name) {
