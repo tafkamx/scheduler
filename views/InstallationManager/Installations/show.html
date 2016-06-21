@@ -1,1 +1,11 @@
-<pre><%= JSON.stringify(installation, null, 2) %></pre>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= renderPartial('partials/head.html', {
+      title: 'Installations Show'
+    }) %>
+  </head>
+  <body>
+    <pre><%= JSON.stringify(installation, null, 2) %></pre>
+  </body>
+</html>

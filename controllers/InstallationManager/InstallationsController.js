@@ -79,7 +79,8 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
       res.format({
         html: function () {
           res.render('InstallationManager/Installations/index.html', {
-            installations : res.locals.results
+            installations : res.locals.results,
+            layout: false
           });
         },
         json: function () {
@@ -91,7 +92,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     show: function (req, res, next) {
       res.format({
         html: function () {
-          res.render('InstallationManager/Installations/show.html');
+          res.render('InstallationManager/Installations/show.html', {
+            layout: false
+          });
         },
         json: function () {
           res.json(res.locals.installation);
@@ -102,7 +105,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     new: function(req, res, next) {
       return res.format({
         html: function () {
-          res.render('InstallationManager/Installations/new.html');
+          res.render('InstallationManager/Installations/new.html', {
+            layout: false
+          });
         }
       });
     },
@@ -136,7 +141,9 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
     edit: function (req, res, next) {
       res.format({
         html: function () {
-          res.render('InstallationManager/Installations/edit.html');
+          res.render('InstallationManager/Installations/edit.html', {
+            layout: false
+          });
         },
         json: function () {
           res.json(res.locals.installation);
