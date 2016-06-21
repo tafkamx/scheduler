@@ -1,1 +1,11 @@
-<pre><%= JSON.stringify(adminUser, null, 2) %></pre>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= renderPartial('partials/head.html', {
+      title: 'InstallationManager / Users / show'
+      }) %>
+  </head>
+  <body>
+    <pre><%= JSON.stringify(adminUser, null, 2) %></pre>
+  </body>
+</html>

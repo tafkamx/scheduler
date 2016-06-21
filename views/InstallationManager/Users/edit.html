@@ -1,34 +1,34 @@
-<pre><%= JSON.stringify(adminUser, null, 2) %></pre>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= renderPartial('partials/head.html', {
+      title: 'InstallationManager / Users / edit'
+    }) %>
+  </head>
+  <body>
+    <pre><%= JSON.stringify(adminUser, null, 2) %></pre>
+    <h2>Update email</h2>
+    <div class="edit-email"></div>
+    <h2>Update password</h2>
+    <div class="edit-password"></div>
+    <script src="/build/javascripts/installation-manager_users_edit.js"></script>
+    <script>
+      var adminUser = <%= JSON.stringify(adminUser) %>;
 
-<h2>Update email</h2>
+      window.emailForm = new editEmailForm({
+        data: {
+          url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
+          user: adminUser,
+          csrfToken: '<%= csrfToken %>'
+        }
+      }).render(document.querySelector('.edit-email'));
 
-<div class="edit-email"></div>
-
-<h2>Update password</h2>
-
-<div class="edit-password"></div>
-
-<script>
-    var App = new PAT.App().setup();
-
-    var adminUser = <%= JSON.stringify(helpers.filters.users(adminUser)) %>;
-
-    var emailForm = new PAT.InstallationManager.UserEditEmailForm({
-      data: {
-        url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
-        user: adminUser,
-        csrfToken: '<%= csrfToken %>'
-      }
-    });
-
-    emailForm.render(document.querySelector('.edit-email'));
-
-    var passwordForm = new PAT.InstallationManager.UserEditPasswordForm({
-      data: {
-        url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
-        csrfToken: '<%= csrfToken %>'
-      }
-    });
-
-    passwordForm.render(document.querySelector('.edit-password'));
-</script>
+      window.passwordForm = new editPasswordForm({
+        data: {
+          url: '<%= helpers.urlFor.InstallationManager.Users.show.url(adminUser.id) %>',
+          csrfToken: '<%= csrfToken %>'
+        }
+      }).render(document.querySelector('.edit-password'));
+    </script>
+  </body>
+</html>
