@@ -60,6 +60,7 @@ npm-debug.log
 tmp
 .tmp
 dist
+public/build
 
 config.js
 knexfile.js
