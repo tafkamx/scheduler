@@ -82,7 +82,9 @@ var UsersController = Class('UsersController').inherits(BaseController)({
     edit : function (req, res, next) {
       res.format({
         html : function() {
-          res.render('Users/edit.html');
+          res.render('Users/edit.html', {
+            layout: false
+          });
         },
         json : function() {
           res.json(res.locals.user);
