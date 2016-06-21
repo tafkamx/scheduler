@@ -1,6 +1,10 @@
 'use strict';
 
 module.exports = function (req, res, next) {
+  if (CONFIG.environment === 'test') {
+    return next();
+  }
+
   Promise.resolve()
     .then(function () {
       return req.container.query('Branch')
