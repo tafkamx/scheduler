@@ -59,6 +59,14 @@ routeMapper.routes.forEach(function(route) {
       });
     }
 
+    // TODO: route-mappings should provide this detail!
+    var resourceName = route.handler[route.handler.length - 1];
+
+    // append built middleware for this resource
+    if (ACL.resources[resourceName]) {
+      args.push(ACL.middlewares[resourceName]);
+    }
+
     args.push(controllerMethod);
 
     router.route(route.path)[verb](args);
