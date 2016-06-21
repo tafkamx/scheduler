@@ -1,6 +1,6 @@
 import Widget from '../../../lib/widget/Widget';
 
-export default class ditPasswordForm extends Widget {
+export default class editPasswordForm extends Widget {
   constructor(config = {}) {
     super(config);
     this.element.setAttribute('action', this.data.url);

@@ -1,26 +1,35 @@
-<div class="reset-password"></div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= renderPartial('partials/head.html', {
+      title: 'InstallationManager / Sessions / Reset'
+    }) %>
+  </head>
+  <body>
+    <div class="reset-password"></div>
+    <script src="/build/javascripts/installation-manager_session_reset.js"></script>
+    <script>
+      var App = new App().setup();
+      var resetForm;
 
-<script>
-    var App = new PAT.App().setup();
+      if (App.queryParams.token) {
+        resetForm = new resetPassword({
+          data: {
+            url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
+            token: App.queryParams.token,
+            csrfToken: '<%= csrfToken %>'
+          }
+        });
+      } else {
+        resetForm = new resetEmail({
+          data: {
+            url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
+            csrfToken: '<%= csrfToken %>'
+          }
+        });
+      }
 
-    var resetForm;
-
-    if (App.queryParams.token) {
-      resetForm = new PAT.InstallationManager.SessionsResetPasswordPasswordForm({
-        data: {
-          url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
-          token: App.queryParams.token,
-          csrfToken: '<%= csrfToken %>'
-        }
-      });
-    } else {
-      resetForm = new PAT.InstallationManager.SessionsResetPasswordEmailForm({
-        data: {
-          url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
-          csrfToken: '<%= csrfToken %>'
-        }
-      });
-    }
-
-    resetForm.render(document.querySelector('.reset-password'));
-</script>
+      resetForm.render(document.querySelector('.reset-password'));
+    </script>
+  </body>
+</html>
