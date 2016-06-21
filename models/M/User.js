@@ -38,6 +38,7 @@ Class(M, 'User').inherits(DynamicModel)({
   attributes : ['id', 'email', 'encryptedPassword', 'token', 'createdAt', 'updatedAt'],
 
   // This function needs to be called from a container.get() model
+  // account can optionally be an empty object
   createWithAccount: function (user, account) {
     var result = {};
 
@@ -48,6 +49,10 @@ Class(M, 'User').inherits(DynamicModel)({
         account.userId = res.id;
 
         result.user = res;
+
+        if (Object.keys(account).length === 0) {
+          return null;
+        }
 
         return that._container.create('Account', account);
       })

@@ -33,8 +33,6 @@ neonode._serverStart();
 
 // When there's an unhandled rejection just log the error and stop the process
 process.on('unhandledRejection', function (err, promise) {
-  logger.error(err);
-  logger.error(err.stack);
-  logger.error(promise);
-  process.exit(1);
+  logger.error('Unhandled rejection', err, err.stack, promise);
+  //process.exit(1);
 });
