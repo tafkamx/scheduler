@@ -18,6 +18,16 @@ describe('Branches Controller', function () {
       })
       .then(function (res) {
         branch = res;
+
+        return container.create('BranchSettings', {
+          language: 'en-US',
+          currency: 'CAD',
+          timezone: 'America/Toronto',
+          branchId: branch.id,
+        });
+      })
+      .then(function (settings) {
+        branch.settings = settings;
       });
   });
 
@@ -142,6 +152,7 @@ describe('Branches Controller', function () {
   });
 
   describe('#create', function () {
+    this.timeout(4000);
 
     it('Should create a new Branch', function(done) {
       agent
@@ -206,13 +217,12 @@ describe('Branches Controller', function () {
         expect(err).to.be.eql(null);
         expect(res.status).to.be.eql(200);
         expect(res.body.id).to.be.equal(branch.id);
-        expect(res.body.encryptedPassword).to.be.undefined;
-        expect(res.body.token).to.be.undefined;
         done();
       });
   });
 
   describe('#update', function () {
+    this.timeout(4000);
 
     it('Should update plain Branch\'s attributes', function(done) {
       agent
