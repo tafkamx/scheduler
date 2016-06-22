@@ -1,26 +1,21 @@
-<div class="reset-password"></div>
-
-<script>
-    var App = new PAT.App().setup();
-
-    var resetForm;
-
-    if (App.queryParams.token) {
-      resetForm = new PAT.InstallationManager.SessionsResetPasswordPasswordForm({
-        data: {
-          url: '<%= helpers.urlFor.reset.url() %>',
-          token: App.queryParams.token,
-          csrfToken: '<%= csrfToken %>'
-        }
-      });
-    } else {
-      resetForm = new PAT.InstallationManager.SessionsResetPasswordEmailForm({
-        data: {
-          url: '<%= helpers.urlFor.reset.url() %>',
-          csrfToken: '<%= csrfToken %>'
-        }
-      });
-    }
-
-    resetForm.render(document.querySelector('.reset-password'));
-</script>
+<% if (!query.token) { %>
+  <div>
+    <p>Please enter your new email:</p>
+    <form action="<%= helpers.urlFor.reset.url() %>" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" name="email" value="">
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+<% } else { %>
+  <div>
+    <p>Please enter your new password:</p>
+    <form action="<%= helpers.urlFor.reset.url() %>" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="token" value="<%= query.token %>">
+      <input type="password" name="password" value="">
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+<% } %>
