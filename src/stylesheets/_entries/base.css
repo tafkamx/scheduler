@@ -1,0 +1,23 @@
+@import 'normalize.css';
+
+:root {
+  font-size: 13px;
+  line-height: 1.618;
+}
+
+.tmp-message {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #FFEB3B;
+}
+
+.flash {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #ffc107;
+}
+
+.yield {
+  padding: 1rem;
+  background-color: #EEE;
+}

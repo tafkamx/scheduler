@@ -82,7 +82,9 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
         return res.redirect(urlFor.InstallationManager.url());
       }
 
-      return res.render('InstallationManager/sessions/reset.html');
+      return res.render('InstallationManager/sessions/reset.html', {
+        query: req.query
+      });
     },
 
     resetCreate: function (req, res, next) {

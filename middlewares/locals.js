@@ -26,7 +26,6 @@ module.exports = function(req, res, next) {
         urlFor: urlFor,
 
         filters: {
-          users: require(path.join(process.cwd(), 'public', 'js', 'filters', 'users.js'))
         },
 
         req: req,

@@ -84,7 +84,9 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
         return res.redirect(urlFor.root.url());
       }
 
-      return res.render('sessions/reset.html');
+      return res.render('sessions/reset.html', {
+        query: req.query
+      });
     },
 
     resetCreate: function (req, res, next) {
