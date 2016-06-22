@@ -1,35 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <%= renderPartial('partials/head.html', {
-      title: 'InstallationManager / Sessions / Reset'
-    }) %>
-  </head>
-  <body>
-    <div class="reset-password"></div>
-    <script src="/build/javascripts/installation-manager_session_reset.js"></script>
-    <script>
-      var App = new App().setup();
-      var resetForm;
-
-      if (App.queryParams.token) {
-        resetForm = new resetPassword({
-          data: {
-            url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
-            token: App.queryParams.token,
-            csrfToken: '<%= csrfToken %>'
-          }
-        });
-      } else {
-        resetForm = new resetEmail({
-          data: {
-            url: '<%= helpers.urlFor.InstallationManager.reset.url() %>',
-            csrfToken: '<%= csrfToken %>'
-          }
-        });
-      }
-
-      resetForm.render(document.querySelector('.reset-password'));
-    </script>
-  </body>
-</html>
+<% if (!query.token) { %>
+  <div>
+    <p>Please enter your new email:</p>
+    <form action="<%= helpers.urlFor.InstallationManager.reset.url() %>" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" name="email" value="">
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+<% } else { %>
+  <div>
+    <p>Please enter your new password:</p>
+    <form action="<%= helpers.urlFor.InstallationManager.reset.url() %>" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="token" value="<%= query.token %>">
+      <input type="password" name="password" value="">
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+<% } %>

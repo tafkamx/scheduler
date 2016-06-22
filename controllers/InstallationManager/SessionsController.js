@@ -13,9 +13,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
       }
 
       if (!req.query.token) {
-        return res.render('InstallationManager/sessions/new.html', {
-          layout: false
-        });
+        return res.render('InstallationManager/sessions/new.html');
       }
 
       passport.authenticate('InstallationManagerTokenStrategy', function(err, user, info) {
@@ -85,7 +83,7 @@ Class(InstallationManager, 'SessionsController').inherits(BaseController)({
       }
 
       return res.render('InstallationManager/sessions/reset.html', {
-        layout: false
+        query: req.query
       });
     },
 
