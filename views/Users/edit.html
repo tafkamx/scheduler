@@ -1,34 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <%= renderPartial('partials/head.html', {
-      title: 'Users / edit'
-    }) %>
-  </head>
-  <body>
-    <pre><%= JSON.stringify(user, null, 2) %></pre>
-    <h2>Update email</h2>
-    <div class="edit-email"></div>
-    <h2>Update password</h2>
-    <div class="edit-password"></div>
-    <script src="/build/javascripts/user_edit.js"></script>
-    <script>
-      var user = <%= JSON.stringify(user) %>;
+<pre><%= JSON.stringify(user, null, 2) %></pre>
 
-      var emailForm = new editEmailForm({
-        data: {
-          url: '<%= helpers.urlFor.InstallationManager.Users.show.url(user.id) %>',
-          user: user,
-          csrfToken: '<%= csrfToken %>'
-        }
-      }).render(document.querySelector('.edit-email'));
+<h2>Update email</h2>
+<div>
+  <form action="<%= helpers.urlFor.InstallationManager.Users.show.url(user.id) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+    <label for="email">Email</label>
+    <input type="text" name="email" value="<%= user.email %>">
+    <input type="submit" value="Submit">
+  </form>
+</div>
 
-      var passwordForm = new editPasswordForm({
-        data: {
-          url: '<%= helpers.urlFor.InstallationManager.Users.show.url(user.id) %>',
-          csrfToken: '<%= csrfToken %>'
-        }
-      }).render(document.querySelector('.edit-password'));
-    </script>
-  </body>
-</html>
+<h2>Update password</h2>
+<div>
+  <form action="<%= helpers.urlFor.InstallationManager.Users.show.url(user.id) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="_method" value="PUT">
+    <label for="password">Password</label>
+    <input type="password" name="password" value="">
+    <input type="submit" value="Submit">
+  </form>
+</div>
