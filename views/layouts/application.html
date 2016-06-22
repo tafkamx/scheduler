@@ -10,13 +10,17 @@
     <link rel="stylesheet" href="/build/stylesheets/base.css"/>
   </head>
   <body>
-    <div style="font-size: 0.75rem; color: black; background-color: yellow; padding: 1rem;">
+    <div class="tmp-message">
       This is the default layout/application.
       <b>If you need to run some JS set the <code>layout: false</code> and create a new entry point.</b>
       This is a temporary message while the final visual desing is delivered.
     </div>
+
+    <div class="flash">
+      <pre style="margin: 0;"><%= JSON.stringify(flash, null, 2) %></pre>
+    </div>
+
     <div class="yield">
-      <pre><%= JSON.stringify(flash, null, 2) %></pre>
       <%= yield %>
     </div>
   </body>

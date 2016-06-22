@@ -84,6 +84,7 @@
     "neon": "2.0.0",
     "nodemailer": "1.11.0",
     "nodemailer-mailgun-transport": "1.0.1",
+    "normalize.css": "^4.1.1",
     "object-getprototypesof": "1.0.1",
     "passport": "0.3.2",
     "passport-local": "1.0.0",

@@ -46,8 +46,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
       res.format({
         html : function() {
           res.render('InstallationManager/Users/index.html', {
-            adminUsers: res.locals.results,
-            layout: false
+            adminUsers: res.locals.results
           });
         },
         json : function() {
@@ -59,9 +58,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     show : function (req, res) {
       res.format({
         html : function() {
-          res.render('InstallationManager/Users/show.html', {
-            layout: false
-          });
+          res.render('InstallationManager/Users/show.html');
         },
         json : function() {
           res.json(res.locals.adminUser);
@@ -72,9 +69,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     new : function(req, res) {
       return res.format({
         html: function () {
-          res.render('InstallationManager/Users/new.html', {
-            layout: false
-          });
+          res.render('InstallationManager/Users/new.html');
         }
       });
     },
@@ -97,9 +92,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
     edit : function (req, res) {
       res.format({
         html : function() {
-          res.render('InstallationManager/Users/edit.html', {
-            layout: false
-          });
+          res.render('InstallationManager/Users/edit.html');
         },
         json : function() {
           res.json(res.locals.adminUser);

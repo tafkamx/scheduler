@@ -1,35 +1,23 @@
-body {
-  font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
-  color: gray;
+@import 'normalize.css';
+
+:root {
+  font-size: 13px;
+  line-height: 1.618;
 }
 
-h1 {
-  border-bottom: 1px solid  #CCC;
-  text-align : center;
+.tmp-message {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #FFEB3B;
 }
 
-h1 span {
-  margin : 0 0 0 20px;
+.flash {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #ffc107;
 }
 
 .yield {
-  margin : 20px;
-  padding : 20px;
-  font-size : 13px;
-  background : #EEE;
-  border-radius : 6px;
-}
-
-footer {
-  border-top: 1px solid #CCC;
-  text-align: center;
-  font-size : 12px;
-}
-
-footer a {
-  color : #333;
-}
-
-.edit-form input {
-  display: block;
+  padding: 1rem;
+  background-color: #EEE;
 }
