@@ -35,7 +35,7 @@
     <select class="" name="timezone">
       <option value="">Select</option>
       <% timezones.forEach(function(tz) { %>
-      <option value="<%= tz.name %>"<%= tz.name === installationSettings.timezone ? "selected" : "" %>><%= tz.name %></option>
+        <option value="<%= tz.name %>"<%= tz.name === installationSettings.timezone ? "selected" : "" %>><%= tz.name %></option>
       <% }) %>
     </select>
   </div>
