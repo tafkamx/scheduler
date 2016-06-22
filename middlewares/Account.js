@@ -3,13 +3,14 @@
  */
 var Promise = require('bluebird');
 
+
 module.exports = function(req, res, next) {
 
   // Let's get the easy stuff out of the way first
   if(!req.user) {
     req.role = 'Visitor'; // Default role is Visitor when there is no Account
     return next();
-  } else if(req.url.match(/^(\/InstallationManager)/) !== null) {
+  } else if(req.url.indexOf(urlFor.InstallationManager.url()) === 0) {
     req.role = 'Admin'; // If the User is logged in within the InstallationManager, they are an Administrative User.
     return next();
   }

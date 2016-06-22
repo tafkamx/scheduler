@@ -27,8 +27,17 @@ routeMapper.routes.forEach(function(route) {
   verbs.forEach(function(verb) {
     logger.info((verb.toUpperCase() + '      ').substr(0, 7) + ' ' + route.path + '   ' + controller + '#' + action);
 
-    var controllerMethod = neonode.controllers[controller][action];
-    var beforeActions    = neonode.controllers[controller].constructor.beforeActions;
+    var controllerObject = neonode.controllers[controller];
+    var controllerMethod = controllerObject && controllerObject[action];
+    var beforeActions    = controllerObject && controllerObject.constructor.beforeActions || [];
+
+    if (!controllerObject) {
+      throw new Error('Controller `' + controller + '` is missing');
+    }
+
+    if (!controllerMethod) {
+      throw new Error('Action `' + action + '` for `' + controller + '` is missing');
+    }
 
     var args = [];
 
@@ -57,6 +66,14 @@ routeMapper.routes.forEach(function(route) {
           throw new Error('Invalid BeforeAction ' + filter);
         }
       });
+    }
+
+    // TODO: route-mappings should provide this detail!
+    var resourceName = route.handler[route.handler.length - 1];
+
+    // append built middleware for this resource
+    if (ACL.resources[resourceName]) {
+      args.push(ACL.middlewares[resourceName]);
     }
 
     args.push(controllerMethod);

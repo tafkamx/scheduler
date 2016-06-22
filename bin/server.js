@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+process.on('uncaughtException', function (err) {
+  logger.error(err.stack || err);
+  console.log(err);
+  process.exit(1);
+});
+
 var path = require('path');
 var nodemailer = require('nodemailer');
 var mailgun = require('nodemailer-mailgun-transport');
@@ -27,8 +33,6 @@ neonode._serverStart();
 
 // When there's an unhandled rejection just log the error and stop the process
 process.on('unhandledRejection', function (err, promise) {
-  logger.error(err);
-  logger.error(err.stack);
-  logger.error(promise);
-  process.exit(1);
+  logger.error('Unhandled rejection', err, err.stack, promise);
+  //process.exit(1);
 });

@@ -16,6 +16,7 @@
     "test:integration:manager": "scripty",
     "utils:resetdb": "scripty",
     "utils:knexreset": "scripty",
+    "utils:migrate": "knex --knexfile=knexinstallationmanager.js migrate:latest",
     "report": "scripty",
     "start": "scripty",
     "iron-node": "scripty",
@@ -51,7 +52,6 @@
     "method-override": "2.3.5",
     "methods": "1.1.1",
     "mkdirp": "0.5.1",
-    "mocha": "2.5.3",
     "moment": "2.12.0",
     "morgan": "1.6.1",
     "mysql": "2.10.0",
@@ -69,7 +69,7 @@
     "redis": "2.4.2",
     "req-flash": "0.0.2",
     "rimraf": "2.5.0",
-    "route-mappings": "0.1.2",
+    "route-mappings": "0.2.0",
     "scandium-express": "0.0.3",
     "scripty": "1.5.0",
     "style-loader": "0.13.0",
@@ -84,7 +84,7 @@
     "chai": "3.4.1",
     "istanbul": "0.4.2",
     "istanbul-combine": "0.3.0",
-    "mocha": "2.3.4",
+    "mocha": "2.5.3",
     "nodemailer-stub-transport": "1.0.0",
     "superagent": "1.6.1"
   }

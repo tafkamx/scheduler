@@ -47,9 +47,30 @@ Class(M, 'Branch').inherits(DynamicModel)({
     'updatedAt'
   ],
 
-  relations: {},
+  prototype: {
+    init: function (config) {
+      DynamicModel.prototype.init.call(this, config);
 
-  prototype: {}
+      var that = this;
+
+      that.on('afterCreate', function (done) {
+        if (!that.settings) {
+          return done();
+        }
+
+        that.settings.branchId = that.id;
+
+        return that._container
+          .create('BranchSettings', that.settings)
+          .then(function (res) {
+            that.settings = res;
+
+            return done();
+          })
+          .catch(done);
+      });
+    },
+  },
 });
 
 module.exports = M.Branch;

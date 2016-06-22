@@ -151,4 +151,30 @@ describe('M.Branch', function() {
 
   });
 
+  describe('Events', function () {
+
+    describe('beforeCreate', function () {
+
+      it('Should create M.BranchSettings instance if provided .settings', function () {
+        return container
+          .create('Branch', {
+            name: 'something',
+            settings: {
+              language: 'en-CA',
+              currency: 'CAD',
+              timezone: 'America/Toronto',
+            },
+          })
+          .then(function (res) {
+            expect(res).to.have.property('id');
+            expect(res.settings).to.have.property('id');
+            expect(res.settings).to.have.property('branchId');
+            expect(res.settings.branchId).to.equal(res.id);
+          });
+      });
+
+    });
+
+  });
+
 });

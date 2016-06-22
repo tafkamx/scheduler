@@ -1,5 +1,4 @@
 var path = require('path');
-var urlFor = CONFIG.router.helpers;
 
 Class(InstallationManager, 'HomeController').inherits(BaseController)({
 
