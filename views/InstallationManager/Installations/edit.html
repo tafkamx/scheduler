@@ -1,54 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <%= renderPartial('partials/head.html', {
-      csrfToken: csrfToken,
-      title: 'Installations Edit'
-    }) %>
-  </head>
-  <body>
-    <pre><%= JSON.stringify(installation, null, 2) %></pre>
+<pre><%= JSON.stringify(installation, null, 2) %></pre>
 
-    <form class="edit-form" action="<%= helpers.urlFor.InstallationManager.Installations.show.url(installation.id) %>" method="post">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <input type="hidden" name="_method" value="PUT">
-      <label for="name">Name</label> <input type="text" name="name" value="<%= installation.name %>">
-      <label for="domain">Domain</label><input type="text" name="domain" value="<%= installation.domain || '' %>">
+<form class="edit-form" action="<%= helpers.urlFor.InstallationManager.Installations.show.url(installation.id) %>" method="post">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="_method" value="PUT">
+  <label for="name">Name</label> <input type="text" name="name" value="<%= installation.name %>">
+  <label for="domain">Domain</label><input type="text" name="domain" value="<%= installation.domain || '' %>">
 
-      <h2>Installation Settings</h2>
+  <h2>Installation Settings</h2>
 
-      <div class="">
-        <label for="language">Language</label>
-        <select class="" name="language">
-          <% for (var language in M.InstallationSettings.LANGUAGES) {
-                         if (language == installationSettings.language) { %>
-                         <option value="<%= language %>" selected><%= M.InstallationSettings.LANGUAGES[language] %></option>
-                         <% } else { %>
-                         <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
-                         <% } %>
-                         <% } %>
-        </select>
-      </div>
+  <div class="">
+    <label for="language">Language</label>
+    <select class="" name="language">
+      <% for (var language in M.InstallationSettings.LANGUAGES) {
+        if (language == installationSettings.language) { %>
+          <option value="<%= language %>" selected><%= M.InstallationSettings.LANGUAGES[language] %></option>
+        <% } else { %>
+          <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
+        <% } %>
+      <% } %>
+    </select>
+  </div>
 
-      <div class="">
-        <label for="currency">Currency</label>
-        <select class="" name="currency">
-          <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
-          <option value="<%= currency %>" <%= currency === installationSettings.currency ? "selected" : "" %>><%= currency %></option>
-          <% } %>
-        </select>
-      </div>
+  <div class="">
+    <label for="currency">Currency</label>
+    <select class="" name="currency">
+      <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
+      <option value="<%= currency %>" <%= currency === installationSettings.currency ? "selected" : "" %>><%= currency %></option>
+      <% } %>
+    </select>
+  </div>
 
-      <div class="">
-        <label for="timezone">Timezone</label>
-        <select class="" name="timezone">
-          <option value="">Select</option>
-          <% timezones.forEach(function(tz) { %>
-          <option value="<%= tz.name %>"<%= tz.name === installationSettings.timezone ? "selected" : "" %>><%= tz.name %></option>
-          <% }) %>
-        </select>
-      </div>
-      <input type="submit" value="Submit">
-    </form>
-  </body>
-</html>
+  <div class="">
+    <label for="timezone">Timezone</label>
+    <select class="" name="timezone">
+      <option value="">Select</option>
+      <% timezones.forEach(function(tz) { %>
+      <option value="<%= tz.name %>"<%= tz.name === installationSettings.timezone ? "selected" : "" %>><%= tz.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <input type="submit" value="Submit">
+</form>

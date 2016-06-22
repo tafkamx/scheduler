@@ -1,54 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <%= renderPartial('partials/head.html', {
-      csrfToken: csrfToken,
-      title: 'InstallationManager / Installations / new'
-    }) %>
-  </head>
-  <body>
-    <form class="edit-form" action="<%= helpers.urlFor.InstallationManager.Installations.url() %>" method="post">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<form class="edit-form" action="<%= helpers.urlFor.InstallationManager.Installations.url() %>" method="post">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-      <h2>Installation info</h2>
-      <label for="name">Name</label> <input type="text" name="name" value="">
-      <label for="domain">Domain</label> <input type="text" name="domain" value="">
+  <h2>Installation info</h2>
+  <label for="name">Name</label> <input type="text" name="name" value="">
+  <label for="domain">Domain</label> <input type="text" name="domain" value="">
 
-      <h2>Installation Settings</h2>
+  <h2>Installation Settings</h2>
 
-      <div class="">
-        <label for="installationSettings[language]">Language</label>
-        <select class="" name="installationSettings[language]">
-          <% for (var language in M.InstallationSettings.LANGUAGES) { %>
-          <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
-          <% } %>
-        </select>
-      </div>
+  <div>
+    <label for="installationSettings[language]">Language</label>
+    <select class="" name="installationSettings[language]">
+      <% for (var language in M.InstallationSettings.LANGUAGES) { %>
+      <option value="<%= language %>"><%= M.InstallationSettings.LANGUAGES[language] %></option>
+      <% } %>
+    </select>
+  </div>
 
-      <div class="">
-        <label for="installationSettings[currency]">Currency</label>
-        <select class="" name="installationSettings[currency]">
-          <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
-          <option value="<%= currency %>"><%= currency %></option>
-          <% } %>
-        </select>
-      </div>
+  <div>
+    <label for="installationSettings[currency]">Currency</label>
+    <select class="" name="installationSettings[currency]">
+      <% for (var currency in M.InstallationSettings.CURRENCIES) { %>
+      <option value="<%= currency %>"><%= currency %></option>
+      <% } %>
+    </select>
+  </div>
 
-      <div class="">
-        <label for="installationSettings[timezone]">Timezone</label>
-        <select class="" name="installationSettings[timezone]">
-          <option value="">Select</option>
-          <% timezones.forEach(function(tz) { %>
-          <option value="<%= tz.name %>"><%= tz.name %></option>
-          <% }) %>
-        </select>
-      </div>
+  <div>
+    <label for="installationSettings[timezone]">Timezone</label>
+    <select class="" name="installationSettings[timezone]">
+      <option value="">Select</option>
+      <% timezones.forEach(function(tz) { %>
+      <option value="<%= tz.name %>"><%= tz.name %></option>
+      <% }) %>
+    </select>
+  </div>
 
-      <h2>Franchisor info</h2>
-      <label for="franchisorEmail">Email</label> <input type="text" name="franchisorEmail" placeholder="example@example.com">
+  <h2>Franchisor info</h2>
+  <label for="franchisorEmail">Email</label> <input type="text" name="franchisorEmail" placeholder="example@example.com">
 
-      <input type="submit" value="Submit">
-    </form>
-    <pre><%= JSON.stringify(timezones, null, 2) %></pre>
-  </body>
-</html>
+  <input type="submit" value="Submit">
+</form>
+
+<pre><%= JSON.stringify(timezones, null, 2) %></pre>
