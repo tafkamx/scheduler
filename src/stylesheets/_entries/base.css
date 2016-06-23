@@ -1,9 +1,28 @@
 @import 'normalize.css';
 @import 'basscss';
 
+@import './../base/utils';
+@import './../components/header';
+
 :root {
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.618;
+  color: #3f4450;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background: #f7f6f6;
+}
+
+main {
+  height: calc(100vh - 60px);
+  padding: 20px;
+  overflow: auto;
 }
 
 .tmp-message {
@@ -20,5 +39,5 @@
 
 .yield {
   padding: 1rem;
-  background-color: #EEE;
+  background-color: #fff;
 }
