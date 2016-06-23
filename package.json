@@ -13,6 +13,7 @@
     "watch": "tarima -wdVP localhost:3000",
     "lint": "eslint *.js src bin config models controllers middlewares",
     "svg": "svg-sprite -s --symbol-dest=svg --symbol-prefix=.svg- --ss=sprite.svg --si --sx --shape-id-generator=svg-%s --dest=views/partials public/svg/*.svg",
+    "pretest": "npm run svg",
     "test": "scripty",
     "test:unit": "scripty",
     "test:integration": "scripty",
