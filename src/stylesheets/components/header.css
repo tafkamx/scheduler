@@ -21,3 +21,28 @@
   width: 28px;
   height: 28px;
 }
+
+.Header__menu {
+  margin-left: 4.5rem;
+}
+
+.Header__menu-list-item {
+  display: inline-block;
+  margin: 0 1rem;
+}
+
+.Header__menu-anchor {
+  display: block;
+  line-height: 60px;
+  padding: 0 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--light-gray);
+}
+.Header__menu-anchor:hover {
+  color: var(--text-color);
+}
+.Header__menu-anchor.active {
+  color: var(--text-color);
+  box-shadow: inset 0 -5px 0px var(--brand-color);
+}
