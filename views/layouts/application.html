@@ -14,17 +14,32 @@
     <header class="Header flex relative">
       <div class="flex flex-auto items-center">
         <img src="/images/temporal/main-logo.png"/>
-        <div class="Header__divider">&nbsp;</div>
-        <svg class="-s16 mr3">
-          <use xlink:href="#svg-grid"/>
-        </svg>
-        <p class="Header__title">Sample Title</p>
+        <div class="flex items-center">
+          <div class="Header__divider">&nbsp;</div>
+          <svg class="-s16 mr3 -gray">
+            <use xlink:href="#svg-grid"/>
+          </svg>
+          <p class="Header__title -font-light">Sample Title</p>
+        </div>
+        <nav role="navigation" class="Header__menu -full-height">
+          <ul class="list-reset m0">
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor active" href="#">Dashboard</a>
+            </li>
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor" href="#">Branch Manager</a>
+            </li>
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor" href="#">Franchise Settings</a>
+            </li>
+          </ul>
+        </nav>
       </div>
       <div class="flex flex-auto items-center justify-end">
-        <svg class="-s16 mx2">
+        <svg class="-s16 mx2 -light-gray">
           <use xlink:href="#svg-search"/>
         </svg>
-        <svg class="-s16 ml2">
+        <svg class="-s16 ml2 -light-gray">
           <use xlink:href="#svg-help"/>
         </svg>
         <div class="Header__divider">&nbsp;</div>
