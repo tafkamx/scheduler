@@ -69,6 +69,6 @@ Promise.resolve()
     });
   })
   .catch(function (err) {
-    console.error(err);
-    console.error(err.stack);
+    logger.error(err, err.stack);
+    process.exit(1);
   });

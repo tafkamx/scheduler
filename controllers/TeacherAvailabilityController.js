@@ -37,15 +37,15 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
     },
 
     /**
-     * `TeacherAvailability.getAllAvailableOn` takes up to 3 arguments: `branchName`, `days`, and `hours`
+     * `TeacherAvailability.getAllAvailableOn` takes up to 3 arguments: `branchId`, `days`, and `hours`
      * Users of this Controller can send these parameters via HTTP POST or GET
      */
     getAllAvailableOn: function(req, res, next) {
-      res.locals.branchName = req.query.branchName || false;
+      res.locals.branchId = req.query.branchId || false;
       res.locals.days = req.query.days;
       res.locals.hours = req.query.hours.split(',');
 
-      req.container.get('TeacherAvailability').getAllAvailableOn(res.locals.branchName, res.locals.days, res.locals.hours)
+      req.container.get('TeacherAvailability').getAllAvailableOn(res.locals.branchId, res.locals.days, res.locals.hours)
       .then(function(ids) {
         res.locals.availability = ids;
 
@@ -131,7 +131,7 @@ var TeacherAvailabilityController = Class('TeacherAvailabilityController').inher
       res.format({
         json: function() {
 
-          var days = ['teacherId', 'branchName', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+          var days = ['teacherId', 'branchId', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
           days.forEach(function(day) {
             if(req.body[day] && Array.isArray(req.body[day])) {
               obj[day] = [];

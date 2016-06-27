@@ -25,7 +25,7 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
         message: 'The teacherId does not exist.',
       }
     ],
-    branchName: ['alphaDash', 'required'],
+    branchId: ['uuid', 'required'],
     monday: ['numeric'],
     tuesday: ['numeric'],
     wednesday: ['numeric'],
@@ -38,7 +38,7 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
   attributes: [
     'id',
     'teacherId',
-    'branchName',
+    'branchId',
     'monday',
     'tuesday',
     'wednesday',
@@ -71,7 +71,7 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
   },
 
   /* Retrieves a list of Teacher Account IDs that are available within the given parameters */
-  getAllAvailableOn: function(branchName, days, hours) {
+  getAllAvailableOn: function(branchId, days, hours) {
     var model = this;
 
     if(hours && typeof days !== 'object') {
@@ -88,7 +88,7 @@ var TeacherAvailability = Class(M, 'TeacherAvailability').inherits(Krypton.Model
 
       var query = model._container.get('TeacherAvailability').query()
 
-      if(branchName) query.where('branch_name', branchName);
+      if(branchId) query.where('branch_id', branchId);
 
       for(var day in days) {
         if(days.hasOwnProperty(day)) {
