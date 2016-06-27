@@ -201,7 +201,7 @@ describe('M.User', function () {
             email: 'boop@mcgoo.net',
             password: '12345678',
           }, {
-            branchName: branch.name,
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
           })
           .then(function (res) {
