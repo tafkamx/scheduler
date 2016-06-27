@@ -60,6 +60,14 @@ Promise.resolve()
     });
   })
   .then(function () {
+    return INTE.create('Branch', {
+      name: 'default',
+    });
+  })
+  .then(function (res) {
+    INTE.props.defaultBranchId = res.id;
+  })
+  .then(function () {
     // run Mocha
     mocha.run(function (failures) {
       process.on('exit', function () {
