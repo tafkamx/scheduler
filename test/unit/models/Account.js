@@ -28,7 +28,7 @@ describe('M.Acccount', function() {
       .then(function (user) {
         return container.create('Account', {
           userId: user.id,
-          branchName: 'default',
+          branchId: container.props.defaultBranchId,
           type: 'teacher',
         });
       });
@@ -67,7 +67,7 @@ describe('M.Acccount', function() {
         return container
           .create('Account', {
             userId: user.id,
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             location: {
               name: 'something',
@@ -109,7 +109,7 @@ describe('M.Acccount', function() {
             return res[0].getTypeInfo();
           })
           .then(function (acc) {
-            expect(acc).to.have.ownProperty('branchName');
+            expect(acc).to.have.ownProperty('branchId');
             expect(acc).to.have.ownProperty('active');
             expect(acc.active).to.equal(false);
           });
@@ -146,7 +146,7 @@ describe('M.Acccount', function() {
           .then(function (res) {
             expect(res.length).to.equal(1);
 
-            return container.get('Account').getByUser(res[0].userId, res[0].branchName);
+            return container.get('Account').getByUser(res[0].userId, res[0].branchId);
           })
           .then(function (acc) {
             expect(acc).to.have.ownProperty('active');
@@ -165,7 +165,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: 'asdf',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
           })
           .then(function () {
@@ -186,7 +186,7 @@ describe('M.Acccount', function() {
 
     });
 
-    describe('branchName', function () {
+    describe('branchId', function () {
 
       it('Should fail if undefined', function (done) {
         container
@@ -200,8 +200,8 @@ describe('M.Acccount', function() {
           .catch(function (err) {
             try {
               expect(err.message).to.equal('1 invalid values');
-              expect(err.errors.branchName).to.exist;
-              expect(err.errors.branchName.message).to.equal('The branchName is required');
+              expect(err.errors.branchId).to.exist;
+              expect(err.errors.branchId.message).to.equal('The branchId is required');
             } catch (err) {
               return done(err);
             }
@@ -210,11 +210,11 @@ describe('M.Acccount', function() {
           });
       });
 
-      it('Should fail if length exceeds 255 characters', function (done) {
+      it('Should fail if not a valid UUID', function (done) {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: _.repeat('a', 256),
+            branchId: 'asdfasdfasdf',
             type: 'teacher',
           })
           .then(function () {
@@ -223,8 +223,8 @@ describe('M.Acccount', function() {
           .catch(function (err) {
             try {
               expect(err.message).to.equal('1 invalid values');
-              expect(err.errors.branchName).to.exist;
-              expect(err.errors.branchName.message).to.equal('The branchName must not exceed 255 characters long');
+              expect(err.errors.branchId).to.exist;
+              expect(err.errors.branchId.message).to.equal('The branchId must be a valid uuid');
             } catch (err) {
               return done(err);
             }
@@ -241,7 +241,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             firstName: _.repeat('a', 126),
           })
@@ -269,7 +269,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             lastName: _.repeat('a', 126),
           })
@@ -306,7 +306,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             dob: 'asdf'
           })
@@ -334,7 +334,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             locationId: 'asdf',
           })
@@ -359,7 +359,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            branchName: 'default',
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
             locationId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
           })
@@ -397,7 +397,7 @@ describe('M.Acccount', function() {
             return container
               .create('Account', {
                 userId: user.id,
-                branchName: 'default',
+                branchId: container.props.defaultBranchId,
                 type: 'teacher',
                 location: {
                   name: 'something',
