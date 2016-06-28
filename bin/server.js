@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 process.on('uncaughtException', function (err) {
-  logger.error(err.stack || err);
-  console.log(err);
-  process.exit(1);
+  logger.error('Uncaught exception', err, err.stack);
+  //process.exit(1);
 });
 
 var path = require('path');

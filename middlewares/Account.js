@@ -32,7 +32,7 @@ module.exports = function(req, res, next) {
 
       // Search for Account related to current Account and Branch
       return req.container.get('Account')
-        .getByUser(req.user.id, req.branch)
+        .getByUser(req.user.id, req.branchId)
         .then(function(account) {
           if(!account) req.role = 'Visitor'; // If not existing, set role to Visitor
           else req.role = account.type.charAt(0).toUpperCase() + account.type.slice(1); // Capitalize first letter
