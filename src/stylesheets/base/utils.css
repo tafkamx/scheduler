@@ -1,0 +1,20 @@
+/* Layout */
+.-full-height {height: 100%}
+
+.-s16 {
+  width: 16px;
+  height: 16px;
+}
+
+/* Typography */
+.-font-thin {font-weight: 100}
+.-font-extra-light {font-weight: 200}
+.-font-light {font-weight: 300}
+.-font-normal {font-weight: 400}
+.-font-semi-bold {font-weight: 600}
+.-font-bold {font-weight: 700}
+.-font-ultra-bold {font-weight: 900}
+
+/* Colors */
+.-gray {color: var(--gray)}
+.-light-gray {color: var(--light-gray)}

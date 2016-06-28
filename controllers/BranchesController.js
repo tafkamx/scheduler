@@ -3,8 +3,6 @@ var bcrypt = require('bcrypt-node');
 
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
-var aclBeforeActionsGenerator = require(path.join(process.cwd(), 'lib', 'utils', 'acl-before-actions-generator.js'));
-
 var BranchesController = Class('BranchesController').inherits(BaseController)({
 
   beforeActions: [
@@ -28,17 +26,6 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
       actions : ['new', 'edit']
     },
   ],
-  /*
-  .concat(aclBeforeActionsGenerator([
-    'index',
-    'show',
-    'new',
-    'create',
-    'edit',
-    'update',
-    'destroy'
-  ], 'branches')),
-  */
 
   prototype: {
     _loadBranch: function(req, res, next) {

@@ -60,6 +60,8 @@ npm-debug.log
 tmp
 .tmp
 dist
+public/build
+views/partials/svg/
 
 config.js
 knexfile.js

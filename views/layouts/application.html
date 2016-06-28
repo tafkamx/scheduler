@@ -1,28 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <% if (CONFIG.environment !== 'test') { %>
     <meta content="<%= csrfToken %>" name="csrf-token" />
     <% } %>
     <title>PatOS - Installation Admin</title>
-    <link rel="icon" type="image/gif" href="/img/favicon.gif" />
-
-    <!-- webpack -d -->
-    <script src="/dist/bundle.js"></script>
-</head>
-
-<body>
-    <header>
+    <link rel="icon" type="image/gif" href="/images/favicon.gif" />
+    <link rel="stylesheet" href="/build/stylesheets/base.css"/>
+  </head>
+  <body>
+    <%= renderPartial('partials/svg/sprite.svg') %>
+    <header class="Header flex relative">
+      <div class="flex flex-auto items-center">
+        <img src="/images/temporal/main-logo.png"/>
+        <div class="flex items-center">
+          <div class="Header__divider">&nbsp;</div>
+          <svg class="-s16 mr3 -gray">
+            <use xlink:href="#svg-grid"/>
+          </svg>
+          <p class="Header__title -font-light">Sample Title</p>
+        </div>
+        <nav role="navigation" class="Header__menu -full-height">
+          <ul class="list-reset m0">
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor active" href="#">Dashboard</a>
+            </li>
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor" href="#">Branch Manager</a>
+            </li>
+            <li class="Header__menu-list-item">
+              <a class="Header__menu-anchor" href="#">Franchise Settings</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="flex flex-auto items-center justify-end">
+        <svg class="-s16 mx2 -light-gray">
+          <use xlink:href="#svg-search"/>
+        </svg>
+        <svg class="-s16 ml2 -light-gray">
+          <use xlink:href="#svg-help"/>
+        </svg>
+        <div class="Header__divider">&nbsp;</div>
+        <img class="Header__avatar circle" src="/images/temporal/useravatar.png"/>
+      </div>
     </header>
-    <div class="yield">
-        <pre><%= JSON.stringify(flash, null, 2) %></pre>
-
+    <main>
+      <div class="tmp-message">
+        This is the default layout/application.
+        <b>If you need to run some JS set the <code>layout: false</code> and create a new entry point.</b>
+        This is a temporary message while the final visual desing is delivered.
+      </div>
+      <div class="flash">
+        <pre style="margin: 0;"><%= JSON.stringify(flash, null, 2) %></pre>
+      </div>
+      <div class="yield">
         <%= yield %>
-    </div>
-    <footer>
-    </footer>
-</body>
-
+      </div>
+    </main>
+  </body>
 </html>

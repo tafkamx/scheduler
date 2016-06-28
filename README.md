@@ -35,6 +35,11 @@ Add the following to your `/etc/hosts` file:
 127.0.0.1 installation-unit.test-installation.com
 ```
 
+## Compile the assets
+```sh
+$ npm run build
+```
+
 ## Run the server
 
 ```

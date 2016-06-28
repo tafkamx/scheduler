@@ -1,0 +1,49 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+
+@import 'normalize.css';
+@import 'basscss';
+
+@import './../base/variables';
+@import './../base/utils';
+@import './../components/header';
+
+:root {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  line-height: 1.618;
+  color: var(--text-color);
+}
+
+* {box-sizing: border-box}
+
+body {
+  height: 100vh;
+  background: var(--bg-color);
+}
+
+a {color: var(--brand-color)}
+
+svg {fill: currentColor}
+
+main {
+  height: calc(100vh - 60px);
+  padding: 20px;
+  overflow: auto;
+}
+
+.tmp-message {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #FFEB3B;
+}
+
+.flash {
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #ffc107;
+}
+
+.yield {
+  padding: 1rem;
+  background-color: #fff;
+}
