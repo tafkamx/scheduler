@@ -26,7 +26,7 @@ describe('M.BranchSettings', function() {
 
   after(function () {
     return promiseSeries([
-      container.get('Branch').query().delete(),
+      container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
       container.get('BranchSettings').query().delete(),
       container.get('InstallationSettings').query().delete(),
     ]);
