@@ -103,7 +103,7 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
 
               user.password = bcrypt.hashSync(CONFIG[CONFIG.environment].sessions.secret + Date.now(), bcrypt.genSaltSync(12), null).slice(0, 11);
 
-              account.branchName = branch.name;
+              account.branchId = branch.id;
               account.type = 'franchisee';
 
               return req.container.get('User').createWithAccount(user, account);

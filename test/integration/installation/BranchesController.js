@@ -65,7 +65,7 @@ describe('Branches Controller', function () {
   after(function () {
     return Promise.all([
       container.get('User').query().delete(),
-      container.get('Branch').query().delete(),
+      container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
     ]);
   });
 
@@ -87,7 +87,7 @@ describe('Branches Controller', function () {
       .end(function(err, res) {
         expect(err).to.be.equal(null);
         expect(res.status).to.be.equal(200);
-        expect(res.body.length).to.be.equal(1);
+        expect(res.body.length).to.be.equal(2); // our branch + the default branch
         expect(res.body[0].settings).to.not.equal(undefined);
         done();
       });
@@ -170,7 +170,7 @@ describe('Branches Controller', function () {
             password: '12345678',
           },
           franchiseeAccount: {
-            // branchName
+            // branchId
             // type
             // ^ these are done by the endpoint
             // here we could send dob, firstName, lastName etc.

@@ -14,7 +14,7 @@ describe('TeacherAvailability Controller', function() {
   before(function(done) {
     // Creating account1 (Teacher)
     var c = container.create('Account', {
-      branchName: 'default',
+      branchId: container.props.defaultBranchId,
       type: 'teacher'
     });
 
@@ -25,7 +25,7 @@ describe('TeacherAvailability Controller', function() {
 
         container.create('TeacherAvailability', {
           teacherId: account1.id,
-          branchName: account1.branchName,
+          branchId: account1.branchId,
           monday: bitmasks.getBitmask(2),
           tuesday: bitmasks.getBitmask(4)
         }).then(function() {
@@ -109,11 +109,11 @@ describe('TeacherAvailability Controller', function() {
     it('Should create a new TeacherAvailability instance', function(done) {
       agent.post(url + urlFor.TeacherAvailability.create.url())
         .set('Accept', 'application/json')
-        .send({ teacherId: account1.id, branchName: 'default', monday: (2 + 4 + 8) })
+        .send({ teacherId: account1.id, branchId: container.props.defaultBranchId, monday: (2 + 4 + 8) })
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.eql(200);
-          expect(res.body.branchName).to.be.equal('default');
+          expect(res.body.branchId).to.be.equal(container.props.defaultBranchId);
           expect(res.body.monday).to.equal(14);
           done();
         });

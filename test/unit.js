@@ -57,6 +57,14 @@ Promise.resolve()
     });
   })
   .then(function () {
+    return UNIT.create('Branch', {
+      name: 'default',
+    });
+  })
+  .then(function (res) {
+    UNIT.props.defaultBranchId = res.id;
+  })
+  .then(function () {
     // run Mocha
     mocha.run(function (failures) {
       process.on('exit', function () {
@@ -66,6 +74,6 @@ Promise.resolve()
     });
   })
   .catch(function (err) {
-    console.error(err);
-    console.error(err.stack);
+    logger.error(err, err.stack);
+    process.exit(1);
   });

@@ -191,7 +191,7 @@ describe('M.User', function () {
         return promiseSeries([
           container.get('User').query().delete(),
           container.get('Account').query().delete(),
-          container.get('Branch').query().delete(),
+          container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
         ]);
       });
 
@@ -201,7 +201,7 @@ describe('M.User', function () {
             email: 'boop@mcgoo.net',
             password: '12345678',
           }, {
-            branchName: branch.name,
+            branchId: container.props.defaultBranchId,
             type: 'teacher',
           })
           .then(function (res) {
