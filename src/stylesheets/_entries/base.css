@@ -31,11 +31,7 @@ main {
   overflow: auto;
 }
 
-.tmp-message {
-  font-size: .75em;
-  padding: 1rem;
-  background-color: #FFEB3B;
-}
+.yield {}
 
 .flash {
   font-size: .75em;
