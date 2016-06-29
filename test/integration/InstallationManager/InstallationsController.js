@@ -245,49 +245,6 @@ describe('InstallationManager.InstallationsController', function () {
         })
     });
 
-    it('Should update installation attributes if send the same domain', function(done) {
-      var data = {
-        name : 'installation-one',
-        domain : 'delagarza.io'
-      };
-
-      agent.put(baseURL + urlFor.InstallationManager.Installations.update.url(installation.id))
-        .set('Accept', 'application/json')
-        .send(data)
-        .end(function(err, res) {
-          expect(err).to.be.eql(null);
-          expect(res.body.errors).to.be.undefined;
-          expect(res.status).to.be.eql(200);
-          expect(res.body.id).to.be.equal(installation.id);
-          expect(res.body.name).to.be.equal(data.name);
-          done();
-        });
-    });
-
-    it('Should fail update if name exists or domain exists', function(done) {
-      InstallationManager.Installation.query()
-        .where('name', 'installation-two')
-        .then(function(result) {
-          var data = {
-            name : 'installation-one',
-            domain : 'delagarza.io'
-          };
-
-          agent.put(baseURL + urlFor.InstallationManager.Installations.update.url(result[0].id))
-            .set('Accept', 'application/json')
-            .send(data)
-            .end(function(err, res) {
-              expect(err).to.be.instanceof(Error);
-              expect(res.status).to.be.eql(500);
-              expect(err.response.body).to.exists;
-              expect(err.response.body.name[0]).to.be.equal('name already exists.');
-              expect(err.response.body.domain[0]).to.be.equal('domain already exists.');
-              done();
-            });
-        })
-        .catch(done);
-    });
-
   });
 
   describe('#destroy', function () {

@@ -218,37 +218,6 @@ describe('Users Controller', function() {
         });
     });
 
-    it('Should update user attributes if its the same email', function(done) {
-      agent.put(url + urlFor.Users.update.url(user.id))
-        .set('Accept', 'application/json')
-        .send({
-          password : 'abcdefghi'
-        })
-        .end(function(err, res) {
-          expect(err).to.be.eql(null);
-          expect(res.body.errors).to.be.undefined;
-          expect(res.status).to.be.eql(200);
-          expect(res.body.id).to.be.equal(user.id);
-          expect(res.body.email).to.be.equal('email@example.com');
-          done();
-        })
-    });
-
-    it('Should fail update if password doesnt validate', function(done) {
-      agent.put(url + urlFor.Users.update.url(user.id))
-        .set('Accept', 'application/json')
-        .send({
-          password : 'abcd'
-        })
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.eql(500);
-          expect(err.response.body).to.exists;
-          expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-          done();
-        })
-    });
-
   });
 
   describe('#destroy', function () {
