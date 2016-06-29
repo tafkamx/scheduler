@@ -1,0 +1,40 @@
+.ListHeader {
+  position: relative;
+  &__cta {
+    position: absolute;
+    top: 50%;
+    right: 3rem;
+    transform: translate3d(0, -21px, 0);
+  }
+}
+
+.ListItem {
+  display: flex;
+  height: 50px;
+  padding: 0 4rem;
+  margin-bottom: 2px;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+
+  &__muted {
+    color: var(--light-gray);
+    &::before {
+      content: '•';
+      padding: 0 .3rem;
+      margin-left: .3rem;
+    }
+  }
+
+  &__link {
+    font-size: .75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+
+.ListSidebar {
+  width: 320px;
+  height: 320px;
+}

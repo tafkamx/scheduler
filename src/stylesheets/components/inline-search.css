@@ -1,0 +1,22 @@
+.InlineSearch {
+  position: relative;
+  height: 40px;
+  background-color: #f9f9f9;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.InlineSearch__input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0 4rem 0 7.5rem;
+  background-color: transparent;
+}
+
+
+.InlineSearch__icon {
+  position: absolute;
+  left: 4rem;
+  top: 1rem;
+}
