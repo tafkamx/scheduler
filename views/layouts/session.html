@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="/build/stylesheets/session.css"/>
   </head>
   <body>
+    <% if (Object.keys(flash).length > 0) { %>
+    <div class="flash">
+      <pre style="margin: 0;"><%= JSON.stringify(flash, null, 2) %></pre>
+    </div>
+    <% } %>
     <%= yield %>
   </body>
 </html>

@@ -9,6 +9,13 @@
 @import './../components/input';
 @import './../components/button';
 
+.flash {
+  position: relative;
+  font-size: .75em;
+  padding: 1rem;
+  background-color: #ffc107;
+}
+
 :root {
   --gray: #929292;
   font-family: 'Roboto', sans-serif;
