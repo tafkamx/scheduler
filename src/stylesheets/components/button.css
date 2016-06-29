@@ -1,0 +1,23 @@
+button,
+.Button {
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  text-align: center;
+  background-color: transparent;
+
+  &.--primary {
+    background-color: var(--brand-color);
+    color: #fff;
+  }
+
+  &.--circle {
+    font-size: 1.75rem;
+    width: 43px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0;
+    border-radius: 50%;
+    font-weight: 300;
+  }
+}

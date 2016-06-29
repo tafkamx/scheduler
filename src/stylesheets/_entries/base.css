@@ -4,8 +4,15 @@
 @import 'basscss';
 
 @import './../base/variables';
+@import './../base/aria';
 @import './../base/utils';
 @import './../components/header';
+@import './../components/input';
+@import './../components/button';
+@import './../components/dropdown';
+
+@import './../components/list';
+@import './../components/inline-search';
 
 :root {
   font-family: 'Roboto', sans-serif;
@@ -31,11 +38,7 @@ main {
   overflow: auto;
 }
 
-.tmp-message {
-  font-size: .75em;
-  padding: 1rem;
-  background-color: #FFEB3B;
-}
+.yield {}
 
 .flash {
   font-size: .75em;
@@ -43,7 +46,8 @@ main {
   background-color: #ffc107;
 }
 
-.yield {
-  padding: 1rem;
+.Paper {
   background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 }
