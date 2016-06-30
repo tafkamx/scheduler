@@ -20,7 +20,7 @@
       <input class="Button --primary -full-width -ttu" type="submit" value="Send Reset Instructions">
     </form>
     <% } else { %>
-    <p class="SessionForm__title -font-light mt0 mb1">Enter your new password</p>
+    <p class="SessionForm__title -font-light mt0 mb1">Enter your new password.</p>
     <p class="SessionForm__subtitle mt0 mb3 -gray">Make sure you enter something hard to crack and that you can remember. <a href="#">Read this article</a> if you need help.</p>
     <form action="<%= helpers.urlFor.InstallationManager.reset.url() %>" method="POST">
       <input type="hidden" name="_method" value="PUT">
