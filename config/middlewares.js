@@ -72,6 +72,10 @@ var middlewares = [
     path : 'middlewares/Router.js'
   },
   {
+    name: 'Validation Error',
+    path: 'middlewares/ValidationError.js',
+  },
+  {
     name : 'Error Not Found',
     path : 'middlewares/NotFound.js'
   },

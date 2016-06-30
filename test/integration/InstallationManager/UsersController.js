@@ -183,37 +183,6 @@ describe('InstallationManager.UsersController', function () {
       })
   });
 
-  it('Should fail update if email exists', function(done) {
-    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
-      .set('Accept', 'application/json')
-      .send({
-        email : 'test2@example.com',
-        password : 'abcdefghi'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.email[0]).to.be.equal('The email already exists.');
-        done();
-      })
-  });
-
-  it('Should fail update if password doesnt validate', function(done) {
-    agent.put(baseURL + urlFor.InstallationManager.Users.show.url(adminUser.id))
-      .set('Accept', 'application/json')
-      .send({
-        password : 'abcd'
-      })
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.eql(500);
-        expect(err.response.body).to.exists;
-        expect(err.response.body.password[0]).to.be.equal('The password must be at least 8 characters long');
-        done();
-      })
-  });
-
   it('Should destroy a record', function(done) {
     agent.post(baseURL + urlFor.InstallationManager.Users.create.url())
       .send({

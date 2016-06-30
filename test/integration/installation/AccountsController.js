@@ -107,28 +107,6 @@ describe('Accounts Controller', function() {
         });
     });
 
-    it('Should fail if no branchId specified', function(done) {
-      agent.post(url + urlFor.Accounts.create.url())
-        .set('Accept', 'application/json')
-        .send({type: 'teacher'})
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.equal(500);
-          done();
-        });
-    });
-
-    it('Should fail if no type specified', function(done) {
-      agent.post(url + urlFor.Accounts.create.url())
-      .set('Accept', 'application/json')
-      .send({branchId: container.props.defaultBranchId})
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.equal(500);
-        done();
-      });
-    });
-
   });
 
   describe('#edit', function() {
