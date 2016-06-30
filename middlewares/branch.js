@@ -5,6 +5,12 @@ module.exports = function (req, res, next) {
     return next();
   }
 
+  // If there's no container set we're probably in an invalid Branch or in the
+  // InstallationManager, so we shouldn't execute this middleware.
+  if (req.container == null) {
+    return next();
+  }
+
   Promise.resolve()
     .then(function () {
       return req.container.query('Branch')
