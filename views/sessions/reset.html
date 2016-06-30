@@ -1,21 +1,35 @@
-<% if (!query.token) { %>
-  <div>
-    <p>Please enter your new email:</p>
+<div class="SessionWrapper">
+  <div class="SessionHeader flex flex-column justify-center">
+    <p class="SessionHeader__title">Empathia Agency</p>
+    <p class="SessionHeader__subtitle -gray">
+    <span>Password Reset</span>
+    </p>
+  </div>
+  <div class="SessionForm center">
+    <% if (!query.token) { %>
+    <p class="SessionForm__title -font-light mt0 mb1">It’s ok. It happens.</p>
+    <p class="SessionForm__subtitle mt0 mb3 -gray">Enter the email address associated to this account and we will send you instructions to reset your password.</p>
     <form action="<%= helpers.urlFor.reset.url() %>" method="POST">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <input type="text" name="email" value="">
-      <input type="submit" value="Submit">
+      <input class="Input -full-width mb2" type="text" name="email" value="" placeholder="Email">
+      <input class="Button --primary -full-width -ttu" type="submit" value="Send Reset Instructions">
     </form>
-  </div>
-<% } else { %>
-  <div>
-    <p>Please enter your new password:</p>
+    <% } else { %>
+    <p class="SessionForm__title -font-light mt0 mb1">Enter your new password.</p>
+    <p class="SessionForm__subtitle mt0 mb3 -gray">Make sure you enter something hard to crack and that you can remember. <a href="#">Read this article</a> if you need help.</p>
     <form action="<%= helpers.urlFor.reset.url() %>" method="POST">
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input type="hidden" name="token" value="<%= query.token %>">
-      <input type="password" name="password" value="">
-      <input type="submit" value="Submit">
+      <div class="mb2 relative">
+        <input class="Input -full-width" type="password" name="password" value="" placeholder="New Password">
+        <label class="chekbox-over-input -light-gray">
+          <input type="checkbox"/>
+          <span class="ml1">Show</span>
+        </label>
+      </div>
+      <input class="Button --primary -full-width -ttu" type="submit" value="Reset Password">
     </form>
+    <% } %>
   </div>
-<% } %>
+</div>
