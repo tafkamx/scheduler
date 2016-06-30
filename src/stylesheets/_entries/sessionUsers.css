@@ -22,7 +22,7 @@
 
 body {
   height: 100vh;
-  background: #3f4450;
+  background: var(--brand-color);
 
   &::before {
     content: '';
@@ -31,11 +31,6 @@ body {
     left: 0;
     right: 0;
     height: 185px;
-    background: #545863;
+    background: rgba(0,0,0,.15);
   }
-}
-
-a {
-  color: var(--brand-color);
-  &:hover {color: color(var(--brand-color) tint(10%))}
 }

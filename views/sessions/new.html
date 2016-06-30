@@ -1,7 +1,25 @@
-<form class="" action="<%= helpers.urlFor.login.url() %>" method="post">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-  <p>email: <input type="text" name="email" value="" /></p>
-  <p>password: <input type="password" name="password" value="" /></p>
-  <p><input type="submit" value="Login" /></p>
-  <p><a href="<%= helpers.urlFor.reset.url() %>">Forgot password?</a></p>
-</form>
+<div class="SessionWrapper">
+  <div class="SessionHeader flex flex-column justify-center">
+    <div>
+      <img src="/images/temporal/franchisorlogo.png"/>
+    </div>
+    <p class="SessionHeader__subtitle -gray">
+      <span>Franchisor Login</span>
+    </p>
+  </div>
+  <form class="SessionForm" action="<%= helpers.urlFor.login.url() %>" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <input class="Input -full-width mb1" type="text" name="email" value="" placeholder="Email"/>
+    <input class="Input -full-width mb2" type="password" name="password" value="" placeholder="Password" />
+    <div class="SessionForm__info flex mb3">
+      <div class="flex-auto">
+        <label>
+          <input type="checkbox"/>
+          <span class="ml1">Remember me</span>
+        </label>
+      </div>
+      <a href="<%= helpers.urlFor.reset.url() %>">Forgot password?</a>
+    </div>
+    <input class="Button --primary -full-width -ttu" type="submit" value="Log in" />
+  </form>
+</div>
