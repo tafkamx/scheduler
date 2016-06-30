@@ -11,6 +11,9 @@
   height: 16px;
 }
 
+/* Skin */
+.-ttu {text-transform: uppercase}
+
 /* Typography */
 .-font-thin {font-weight: 100}
 .-font-extra-light {font-weight: 200}

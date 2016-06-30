@@ -1,3 +1,11 @@
+.Input {
+  height: 40px;
+  border: none;
+  padding: 0 10px;
+  background-color: #f7f6f6;
+  border-radius: 4px;
+}
+
 input::placeholder {
   font-style: italic;
   color: #c0c0c0;
