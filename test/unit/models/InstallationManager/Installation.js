@@ -230,9 +230,19 @@ describe('InstallationManager.Installation', function () {
             return knex('Branches')
               .then(function (res) {
                 expect(res.length).to.equal(1);
+
+                return knex('InstallationSettings');
+              })
+              .then(function (res) {
+                expect(res.length).to.equal(1);
+
+                return knex('BranchSettings');
+              })
+              .then(function (res) {
+                expect(res.length).to.equal(1);
               })
               .then(knex.destroy);
-          })
+          });
       });
 
       it('Should create installation even when not provided defaultBranchSettings', function () {
@@ -259,9 +269,19 @@ describe('InstallationManager.Installation', function () {
             return knex('Branches')
               .then(function (res) {
                 expect(res.length).to.equal(1);
+
+                return knex('InstallationSettings');
+              })
+              .then(function (res) {
+                expect(res.length).to.equal(1);
+
+                return knex('BranchSettings');
+              })
+              .then(function (res) {
+                expect(res.length).to.equal(1);
               })
               .then(knex.destroy);
-          })
+          });
       });
 
     });
