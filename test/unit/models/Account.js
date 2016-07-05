@@ -54,9 +54,6 @@ describe('M.Acccount', function() {
       })
       .then(function (res) {
         expect(res[0].active).to.equal(true);
-      })
-      .catch(function(err) {
-        console.log(err)
       });
   });
 

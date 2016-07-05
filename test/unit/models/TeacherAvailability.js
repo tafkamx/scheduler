@@ -17,7 +17,7 @@ describe('M.TeacherAvailability', function() {
       container.create('Account', {
         userId: user.id,
         branchId: container.props.defaultBranchId,
-        type: 'teacher'
+        type: 'Teacher'
       }).then(function(account) {
         teacherId = account.id;
 
