@@ -116,14 +116,16 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           email: req.body.franchisorEmail
         };
 
+
       res.format({
         json: function () {
           InstallationManager.Installation
             .createInstallation({
               installation: installationForm,
               franchisor: franchisorForm,
-              baseUrl: res.locals.helpers.generateInstallationUrl('default', installationForm.name),
+              baseUrl: res.locals.helpers.generateInstallationUrl(req.body.defaultBranchName, installationForm.name),
               installationSettings: req.body.installationSettings,
+              defaultBranchName : req.body.defaultBranchName
             })
             .then(function (installation) {
               res.json(installation);
