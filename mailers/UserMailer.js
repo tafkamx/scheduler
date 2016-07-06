@@ -136,7 +136,7 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
         });
       })
       .then(function(branch) {
-        if (branch ==== false) {
+        if (!branch) {
           return false;
         }
 
