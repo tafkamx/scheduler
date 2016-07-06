@@ -9,6 +9,11 @@
     "node": ">=4.0"
   },
   "scripts": {
+    "build": "tarima -fdV",
+    "watch": "tarima -wdVP localhost:3000",
+    "lint": "eslint *.js src bin config models controllers middlewares",
+    "svg": "svg-sprite -s --symbol-dest=svg --symbol-prefix=.svg- --ss=sprite.svg --si --sx --shape-id-generator=svg-%s --dest=views/partials public/svg/*.svg",
+    "pretest": "npm run svg",
     "test": "scripty",
     "test:unit": "scripty",
     "test:integration": "scripty",
@@ -22,31 +27,55 @@
     "iron-node": "scripty",
     "preinstall": "node bin/warn/before-install.js",
     "postinstall": "node bin/warn/post-install.js",
-    "prestart": "node bin/warn/before-start.js"
+    "prestart": "node bin/warn/before-start.js && npm run svg"
+  },
+  "tarima": {
+    "bundle": true,
+    "src": "src/**/*",
+    "dest": "./public/build",
+    "ignoreFiles": [
+      ".gitignore"
+    ],
+    "filter": [
+      "**/_entries/**"
+    ],
+    "rename": "**:{filepath/1/_entries}/{filename}.{extname}",
+    "bundleOptions": {
+      "extensions": {
+        "js": "es6",
+        "css": "post"
+      },
+      "rollup": {
+        "format": "iife",
+        "plugins": [
+          "rollup-plugin-buble"
+        ]
+      },
+      "postcss": {
+        "plugins": [
+          "postcss-import",
+          "postcss-cssnext"
+        ]
+      }
+    }
   },
   "dependencies": {
     "actions": "1.3.0",
-    "autoprefixer-loader": "3.1.0",
+    "basscss": "^8.0.1",
     "bcrypt-node": "0.1.0",
     "bluebird": "3.1.1",
     "body-parser": "1.14.2",
     "checkit": "0.6.0",
     "colors": "1.1.2",
-    "compression-webpack-plugin": "0.2.0",
     "connect-redis": "3.0.2",
     "cookie-parser": "1.4.0",
-    "css-loader": "0.23.1",
     "csurf": "1.8.3",
     "domain-container": "2.6.0",
     "express": "4.13.3",
     "express-session": "^1.13.0",
-    "file-loader": "0.8.5",
     "glob": "6.0.3",
-    "imports-loader": "0.6.5",
     "knex": "0.9.0",
     "krypton-orm": "0.0.15",
-    "less": "2.5.3",
-    "less-loader": "2.2.2",
     "lodash": "3.10.1",
     "lodash-inflection": "1.3.1",
     "method-override": "2.3.5",
@@ -58,6 +87,7 @@
     "neon": "2.0.0",
     "nodemailer": "1.11.0",
     "nodemailer-mailgun-transport": "1.0.1",
+    "normalize.css": "^4.1.1",
     "object-getprototypesof": "1.0.1",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
@@ -72,20 +102,26 @@
     "route-mappings": "0.2.0",
     "scandium-express": "0.0.3",
     "scripty": "1.5.0",
-    "style-loader": "0.13.0",
     "thulium": "2.0.0",
     "thulium-express": "1.0.4",
-    "url-loader": "0.5.7",
     "uuid": "2.0.1",
-    "webpack": "1.12.10",
     "winston": "2.1.1"
   },
   "devDependencies": {
+    "buble": "^0.11.6",
     "chai": "3.4.1",
     "istanbul": "0.4.2",
     "istanbul-combine": "0.3.0",
     "mocha": "2.5.3",
     "nodemailer-stub-transport": "1.0.0",
-    "superagent": "1.6.1"
+    "postcss": "^5.0.21",
+    "postcss-cssnext": "^2.6.0",
+    "postcss-import": "^8.1.2",
+    "rollup": "^0.32.0",
+    "rollup-plugin-buble": "^0.11.0",
+    "superagent": "1.6.1",
+    "svg-sprite": "1.3.1",
+    "tarima-browser-sync": "^0.1.2",
+    "tarima-cli": "0.1.7"
   }
 }

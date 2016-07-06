@@ -6,14 +6,14 @@ describe('M.Branch', function() {
 
   beforeEach(function () {
     return promiseSeries([
-      container.get('Branch').query().delete(),
+      container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
       container.get('BranchSettings').query().delete(),
     ]);
   });
 
   after(function () {
     return promiseSeries([
-      container.get('Branch').query().delete(),
+      container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
       container.get('BranchSettings').query().delete(),
     ]);
   });
@@ -139,7 +139,9 @@ describe('M.Branch', function() {
             });
           })
           .then(function (set) {
-            return container.query('Branch').include('settings');
+            return container.query('Branch')
+              .where('id', '!=', container.props.defaultBranchId)
+              .include('settings');
           })
           .then(function (res) {
             expect(res[0]).to.be.instanceof(M.Branch);

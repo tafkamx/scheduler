@@ -1,18 +1,136 @@
-<pre><%= JSON.stringify(branches, null, 2) %></pre>
+<!-- <pre><%= JSON.stringify(branches, null, 2) %></pre> -->
 
-<table>
-    <tr>
-        <th>Branch ID</th>
-        <th>Branch Name</th>
-    </tr>
+<div class="ListHeader Paper mb3">
+  <div class="py2 px4 flex">
+    <p class="m0 -font-light -font-16">You have <span class="-font-bold"><%= branches.length %></span> active branches</p>
+    <div class="Header__divider">&nbsp;</div>
+    <div class="Dropdown">
+      <button class="Dropdown__head">
+        <span class="Dropdown__head-label">Select</span>
+        <svg class="-s8 -gray">
+          <use xlink:href="#svg-arrow-down"/>
+        </svg>
+      </button>
+      <ul class="Dropdown__body" aria-hidden="true" aria-label="submenu">
+        <li class="Dropdown__item--button">
+          <button>
+            <svg class="-s8">
+              <use xlink:href="#svg-checkmark"/>
+            </svg>
+            <span>All</span>
+          </button>
+        </li>
+        <li class="Dropdown__item--button">
+          <button>None</button>
+        </li>
+        <li class="Dropdown__item--button">
+          <button>Active</button>
+        </li>
+        <li class="Dropdown__item--button">
+          <button>Deactivated</button>
+        </li>
+      </ul>
+    </div>
+    <div class="Dropdown ml2">
+      <button class="Dropdown__head" disabled>
+        <span class="Dropdown__head-label">Actions</span>
+        <svg class="-s8 -gray">
+          <use xlink:href="#svg-arrow-down"/>
+        </svg>
+      </button>
+      <ul class="Dropdown__body" aria-hidden="true" aria-label="submenu">
+        <li class="Dropdown__item--button">
+          <button>Deactivate Selected</button>
+        </li>
+      </ul>
+    </div>
+    <div class="Dropdown ml2">
+      <button class="Dropdown__head" aria-haspopup="true">
+        <span class="Dropdown__head-label">Sort Alphabetically</span>
+        <svg class="-s8 -gray">
+          <use xlink:href="#svg-arrow-down"/>
+        </svg>
+      </button>
+      <ul class="Dropdown__body" aria-hidden="false" aria-label="submenu">
+        <li class="Dropdown__item--button">
+          <button>
+            <svg class="-s8">
+              <use xlink:href="#svg-checkmark"/>
+            </svg>
+            <span>Alphabetically</span>
+          </button>
+        </li>
+        <li class="Dropdown__item--button">
+          <button>
+            <svg class="-s8"></svg>
+            <span>Newest first</span>
+          </button>
+        </li>
+        <li class="Dropdown__item--button">
+          <button>
+            <svg class="-s8"></svg>
+            <span>Oldest first</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="Dropdown ml2">
+      <button class="Dropdown__head" aria-haspopup="true">
+        <span class="Dropdown__head-label">All Branches</span>
+        <svg class="-s8 -gray">
+          <use xlink:href="#svg-arrow-down"/>
+        </svg>
+      </button>
+      <ul class="Dropdown__body" aria-hidden="true" aria-label="submenu">
+        <li class="border-bottom">
+          <label>
+            <input type="checkbox" checked>
+            <span>All Branches</span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>Active Branches</span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>Deactivated Branches</span>
+          </label>
+        </li>
+        <li>
+          <button class="Button -full-width">Apply</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="InlineSearch">
+    <input class="InlineSearch__input" placeholder="Search branches..."/>
+    <svg class="InlineSearch__icon -s16 -light-gray">
+      <use xlink:href="#svg-search"/>
+    </svg>
+  </div>
+  <a class="ListHeader__cta Button --primary --circle" title="New Branch" href="<%= helpers.urlFor.Branches.new.url() %>">+</a>
+</div>
+
+<div class="flex">
+  <div class="flex-auto">
     <% branches.forEach(function (branch) { %>
-    <tr>
-        <td><%= branch.id %></td>
-        <td><%= branch.name %></td>
-        <td><a href="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a></td>
-        <td><a href="<%= helpers.urlFor.Branches.edit.url(branch.id) %>">Edit</a></td>
-    </tr>
+    <div class="ListItem">
+      <input type="checkbox" class="mr3">
+      <div class="-font-14"><%= branch.name %></div>
+      <div class="ListItem__muted"><%= branch.id %></div>
+      <div class="Header__divider">&nbsp;</div>
+      <a class="ListItem__link mr2" href="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a>
+      <a class="ListItem__link" href="<%= helpers.urlFor.Branches.edit.url(branch.id) %>">Edit</a>
+    </div>
     <% }) %>
-</table>
-
-<a href="<%= helpers.urlFor.Branches.new.url() %>">New Branch</a>
+  </div>
+  <div class="Paper ListSidebar ml3">
+    <div class="ListSidebar--empty flex items-center px4 center -full-height -light-gray">
+      <p class="m0">Select a branch from the list to see an activity summary and more options.</p>
+    </div>
+  </div>
+</div>

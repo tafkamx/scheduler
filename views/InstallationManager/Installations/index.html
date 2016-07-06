@@ -1,18 +1,34 @@
-<pre><%= JSON.stringify(installations, null, 2) %></pre>
+<!-- <pre><%= JSON.stringify(installations, null, 2) %></pre> -->
 
-<table>
-    <tr>
-        <th>Installation ID</th>
-        <th>Installation Name</th>
-    </tr>
+<div class="ListHeader Paper mb3">
+  <div class="py2 px4 flex">
+    <p class="m0 -font-light -font-16">You have <span class="-font-bold"><%= installations.length %></span> active installations</p>
+    <div class="Header__divider">&nbsp;</div>
+  </div>
+  <div class="InlineSearch">
+    <input class="InlineSearch__input" placeholder="Search installations..."/>
+    <svg class="InlineSearch__icon -s16 -light-gray">
+      <use xlink:href="#svg-search"/>
+    </svg>
+  </div>
+  <a class="ListHeader__cta Button --primary --circle" title="New Installation" href="<%= helpers.urlFor.InstallationManager.Installations.new.url() %>">+</a>
+</div>
+
+<div class="flex">
+  <div class="flex-auto">
     <% installations.forEach(function (installation) { %>
-    <tr>
-        <td><%= installation.id %></td>
-        <td><%= installation.name %></td>
-        <td><a href="http://default.<%= installation.name %>.<%= CONFIG[CONFIG.environment].defaultDomainName %>?guest_login_token=<%= helpers.guestInstallToken(installation.name) %>">Login to installation</a></td>
-        <td><a href="<%= helpers.urlFor.InstallationManager.Installations.edit.url(installation.id) %>">Edit</a></td>
-    </tr>
+    <div class="ListItem">
+      <input type="checkbox" class="mr3">
+      <div class="-font-14"><%= installation.name %></div>
+      <div class="Header__divider">&nbsp;</div>
+      <a class="ListItem__link mr2" href="http://default.<%= installation.name %>.<%= CONFIG[CONFIG.environment].defaultDomainName %>?guest_login_token=<%= helpers.guestInstallToken(installation.name) %>">Login to installation</a>
+      <a class="ListItem__link" href="<%= helpers.urlFor.InstallationManager.Installations.edit.url(installation.id) %>">Edit</a>
+    </div>
     <% }) %>
-</table>
-
-<a href="<%= helpers.urlFor.InstallationManager.Installations.new.url() %>">New Installation</a>
+  </div>
+  <div class="Paper ListSidebar ml3">
+    <div class="ListSidebar--empty flex items-center px4 center -full-height -light-gray">
+      <p class="m0">Select an installation from the list to see an activity summary and more options.</p>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,7 @@ describe('M.Franchisee', function () {
       .then(function (user) {
         return container.create('Account', {
           userId: user.id,
-          branchName: 'default',
+          branchId: container.props.defaultBranchId,
           type: 'franchisee',
         });
       })

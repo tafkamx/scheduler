@@ -19,7 +19,7 @@ describe('M.StaffMember', function () {
       .then(function (user) {
         return container.create('Account', {
           userId: user.id,
-          branchName: 'default',
+          branchId: container.props.defaultBranchId,
           type: 'staff',
         });
       })

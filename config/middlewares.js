@@ -28,6 +28,10 @@ var middlewares = [
     path: 'middlewares/domain-container.js',
   },
   {
+    name: 'Branch ID',
+    path: 'middlewares/branch.js',
+  },
+  {
     name : 'Redis',
     path : 'middlewares/redis.js'
   },
@@ -66,6 +70,10 @@ var middlewares = [
   {
     name : 'Router',
     path : 'middlewares/Router.js'
+  },
+  {
+    name: 'Validation Error',
+    path: 'middlewares/ValidationError.js',
   },
   {
     name : 'Error Not Found',

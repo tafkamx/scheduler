@@ -14,7 +14,10 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
       }
 
       if (!req.query.token) {
-        return res.render('sessions/new.html',  { urlFor : urlFor });
+        return res.render('sessions/new.html',  {
+          urlFor : urlFor,
+          layout: 'sessionUsers'
+        });
       }
 
       passport.authenticate('InstallationTokenStrategy', function(err, user, info) {
@@ -84,7 +87,10 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
         return res.redirect(urlFor.root.url());
       }
 
-      return res.render('sessions/reset.html');
+      return res.render('sessions/reset.html', {
+        query: req.query,
+        layout: 'sessionUsers'
+      });
     },
 
     resetCreate: function (req, res, next) {

@@ -1,3 +1,4 @@
+/* global Class, InstallationManager, BaseController, neonode, NotFoundError */
 var path = require('path');
 var RESTFulAPI = require(path.join(process.cwd(), 'lib', 'RESTFulAPI'));
 
@@ -41,10 +42,12 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
         .catch(next);
     },
 
-    index : function (req, res, next) {
+    index : function (req, res) {
       res.format({
         html : function() {
-          res.render('InstallationManager/Users/index.html', { adminUsers : res.locals.results });
+          res.render('InstallationManager/Users/index.html', {
+            adminUsers: res.locals.results
+          });
         },
         json : function() {
           res.json(res.locals.results);
@@ -52,7 +55,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
       });
     },
 
-    show : function (req, res, next) {
+    show : function (req, res) {
       res.format({
         html : function() {
           res.render('InstallationManager/Users/show.html');
@@ -63,7 +66,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
       });
     },
 
-    new : function(req, res, next) {
+    new : function(req, res) {
       return res.format({
         html: function () {
           res.render('InstallationManager/Users/new.html');
@@ -86,7 +89,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
       });
     },
 
-    edit : function (req, res, next) {
+    edit : function (req, res) {
       res.format({
         html : function() {
           res.render('InstallationManager/Users/edit.html');
@@ -103,7 +106,7 @@ Class(InstallationManager, 'UsersController').inherits(BaseController)({
           res.locals.adminUser
             .updateAttributes(req.body)
             .save()
-            .then(function(val) {
+            .then(function() {
               res.json(res.locals.adminUser);
             })
             .catch(next);

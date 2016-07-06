@@ -14,7 +14,7 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
   prototype: {
     /* Tries to initially load an Account through various request parameters */
     _loadAccount: function(req, res, next) {
-      var accountId, userId, branchName;
+      var accountId, userId, branchId;
 
       // First check for an Account ID
       if(req.params.id) {
@@ -24,11 +24,11 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
 
       // These will get validated later
       if(req.params.userId) userId = req.params.userId;
-      if(req.params.branchName) branchName = req.params.branchName;
+      if(req.params.branchId) branchId = req.params.branchId;
 
       // If neither of the above is set, look for current logged-in User and current branch
-      if(!userId && req.User) userId = req.User.id; // Defaults to current User (if applicable)
-      if(!branchName && req.branch) branchName = req.branch; // Defaults to current branch
+      if(!userId && req.user) userId = req.user.id; // Defaults to current User (if applicable)
+      if(!branchId && req.branchId) branchId = req.branchId; // Defaults to current branch
 
       if(accountId) {
         req.container.get('Account').getById(accountId)
@@ -38,8 +38,8 @@ var AccountsController = Class('AccountsController').inherits(BaseController)({
 
           next();
         }).catch(next);
-      } else if(userId && branchName) {
-        req.container.get('Account').getByUser(userId, branchName)
+      } else if(userId && branchId) {
+        req.container.get('Account').getByUser(userId, branchId)
         .then(function(account) {
           if(!account) throw new NotFoundError('Account related to User `' + userId + '` not found.');
           res.locals.account = account;

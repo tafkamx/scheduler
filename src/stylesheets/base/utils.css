@@ -1,0 +1,31 @@
+/* Layout */
+.-full-height {height: 100%}
+.-full-width {width: 100%}
+
+.-s8 {
+  width: 8px;
+  height: 8px;
+}
+.-s16 {
+  width: 16px;
+  height: 16px;
+}
+
+/* Skin */
+.-ttu {text-transform: uppercase}
+
+/* Typography */
+.-font-thin {font-weight: 100}
+.-font-extra-light {font-weight: 200}
+.-font-light {font-weight: 300}
+.-font-normal {font-weight: 400}
+.-font-semi-bold {font-weight: 600}
+.-font-bold {font-weight: 700}
+.-font-ultra-bold {font-weight: 900}
+
+.-font-14 {font-size: 1.166666rem}
+.-font-16 {font-size: 1.33333rem}
+
+/* Colors */
+.-gray {color: var(--gray)}
+.-light-gray {color: var(--light-gray)}

@@ -1,0 +1,35 @@
+.Dropdown {
+  position: relative;
+
+  &__head {
+    background-color: transparent;
+    &-label {margin-right: .25rem}
+  }
+
+  &__body {
+    position: absolute;
+    z-index: 1;
+    min-width: 100%;
+    white-space: nowrap;
+    padding: 5px 0;
+    margin: 0;
+    border: 1px solid rgba(0,0,0,.2);
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 8px rgba(0,0,0,.2);
+    list-style: none;
+
+    & > li {
+      padding: .25rem 1.5rem;
+    }
+  }
+
+  &__item--button {
+    padding: 0!important;
+    & > button {
+      width: 100%;
+      padding: .25rem 1.5rem;
+      text-align: left;
+    }
+  }
+}

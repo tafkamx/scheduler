@@ -13,7 +13,7 @@ describe('Accounts Controller', function() {
   before(function(done) {
     // Creating account1 (Teacher)
     container.create('Account', {
-      branchName: 'default',
+      branchId: container.props.defaultBranchId,
       type: 'teacher'
     }).then(function() {
       container.get('Account').query()
@@ -76,7 +76,7 @@ describe('Accounts Controller', function() {
       agent.post(url + urlFor.Accounts.create.url())
         .set('Accept', 'application/json')
         .send({
-          branchName: 'default',
+          branchId: container.props.defaultBranchId,
           type: 'teacher',
           location: {
             name: 'something',
@@ -93,7 +93,7 @@ describe('Accounts Controller', function() {
         .end(function(err, res) {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.eql(200);
-          expect(res.body.branchName).to.be.equal('default');
+          expect(res.body.branchId).to.be.equal(container.props.defaultBranchId);
           expect(res.body.type).to.be.equal('teacher');
 
           container.query('Account')
@@ -105,28 +105,6 @@ describe('Accounts Controller', function() {
               done();
             });
         });
-    });
-
-    it('Should fail if no branchName specified', function(done) {
-      agent.post(url + urlFor.Accounts.create.url())
-        .set('Accept', 'application/json')
-        .send({type: 'teacher'})
-        .end(function(err, res) {
-          expect(err).to.be.instanceof(Error);
-          expect(res.status).to.be.equal(500);
-          done();
-        });
-    });
-
-    it('Should fail if no type specified', function(done) {
-      agent.post(url + urlFor.Accounts.create.url())
-      .set('Accept', 'application/json')
-      .send({branchName: 'default'})
-      .end(function(err, res) {
-        expect(err).to.be.instanceof(Error);
-        expect(res.status).to.be.equal(500);
-        done();
-      });
     });
 
   });
@@ -149,7 +127,7 @@ describe('Accounts Controller', function() {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
         expect(res.body.type).to.be.equal('teacher');
-        expect(res.body.branchName).to.be.equal('default');
+        expect(res.body.branchId).to.be.equal(container.props.defaultBranchId);
         done();
       });
     });
@@ -157,7 +135,7 @@ describe('Accounts Controller', function() {
     it('Should update Account attributes', function(done) {
       agent.put(url + urlFor.Accounts.update.url(account1.id))
         .set('Accept', 'application/json')
-        .send({ id: account1.id, firstName: 'Debra', type: 'teacher', branchName: 'default' })
+        .send({ id: account1.id, firstName: 'Debra', type: 'teacher', branchId: container.props.defaultBranchId })
         .end(function(err, res) {
           expect(err).to.be.eql(null);
           expect(res.body.errors).to.be.undefined;

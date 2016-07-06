@@ -60,7 +60,11 @@ npm-debug.log
 tmp
 .tmp
 dist
+public/build
+views/partials/svg/
 
-config.js
+config/config.js
 knexfile.js
 knexinstallationmanager.js
+#tarima
+build/index.json

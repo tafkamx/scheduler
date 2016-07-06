@@ -16,14 +16,14 @@ describe('M.TeacherAvailability', function() {
     }).then(function(user) {
       container.create('Account', {
         userId: user.id,
-        branchName: 'default',
+        branchId: container.props.defaultBranchId,
         type: 'teacher'
       }).then(function(account) {
         teacherId = account.id;
 
         container.create('TeacherAvailability', {
           teacherId: account.id,
-          branchName: account.branchName,
+          branchId: account.branchId,
           monday: bitmasks.getBitmask(2),
           tuesday: bitmasks.getBitmask(4)
         }).then(function() {
@@ -76,7 +76,7 @@ describe('M.TeacherAvailability', function() {
   describe('#getAllAvailableOn', function() {
 
     it('Should return an Array of Account IDs', function(done) {
-      container.get('TeacherAvailability').getAllAvailableOn('default', 'monday', [2])
+      container.get('TeacherAvailability').getAllAvailableOn(container.props.defaultBranchId, 'monday', [2])
       .then(function(ids) {
         expect(ids).to.be.an('array');
         expect(ids.length).to.equal(1);
@@ -94,7 +94,7 @@ describe('M.TeacherAvailability', function() {
     });
 
     it('Should resolve with valid UUIDs from Accounts table', function(done) {
-      container.get('TeacherAvailability').getAllAvailableOn('default', 'monday', [2])
+      container.get('TeacherAvailability').getAllAvailableOn(container.props.defaultBranchId, 'monday', [2])
       .then(function(ids) {
         var id = ids[0];
         expect(id).to.equal(teacherId);
@@ -102,7 +102,7 @@ describe('M.TeacherAvailability', function() {
       });
     });
 
-    it('Should work with branchName set to false or undefined', function(done) {
+    it('Should work with branchId set to false or undefined', function(done) {
       container.get('TeacherAvailability').getAllAvailableOn(false, 'monday', [2])
       .then(function(ids) {
         expect(ids).to.be.an('array');
@@ -112,7 +112,7 @@ describe('M.TeacherAvailability', function() {
     });
 
     it('Should work with Object for `days` and no `hours` set', function(done) {
-      container.get('TeacherAvailability').getAllAvailableOn('default', {'monday': 2})
+      container.get('TeacherAvailability').getAllAvailableOn(container.props.defaultBranchId, {'monday': 2})
       .then(function(ids) {
         expect(ids).to.be.an('array');
         expect(ids.length).to.equal(1);
@@ -121,7 +121,7 @@ describe('M.TeacherAvailability', function() {
     });
 
     it('Should support multiple days', function(done) {
-      container.get('TeacherAvailability').getAllAvailableOn('default', {'monday': 2, 'tuesday': 4})
+      container.get('TeacherAvailability').getAllAvailableOn(container.props.defaultBranchId, {'monday': 2, 'tuesday': 4})
       .then(function(ids) {
         expect(ids).to.be.an('array');
         expect(ids.length).to.equal(1);

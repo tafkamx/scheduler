@@ -1,0 +1,31 @@
+button,
+.Button {
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  text-align: center;
+  background-color: transparent;
+
+  font-size: 13px;
+  height: 40px;
+  letter-spacing: 1px;
+  border-radius: 3px;
+
+  &.--circle {
+    font-size: 1.75rem;
+    width: 43px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0;
+    letter-spacing: 0;
+    border-radius: 50%;
+    font-weight: 300;
+  }
+}
+
+.Button.--primary {
+  background-color: var(--brand-color);
+  color: #fff;
+  &:hover {background-color: color(var(--brand-color) tint(10%))}
+  &:active {background-color: color(var(--brand-color) shade(10%))}
+}
