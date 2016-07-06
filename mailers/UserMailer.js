@@ -109,6 +109,41 @@ var UserMailer = Class('UserMailer').inherits(BaseMailer)({
       return this._send(options);
     },
 
+    _getUserBranch: function(user) {
+      var container = user.constructor._container;
+
+      if (!container) {
+        throw new Error('Can\'t access user container');
+      }
+
+      return container.query('Account').where({
+        user_id : user.id
+      })
+      .then(function(account) {
+        if (account.length === 0) {
+          return false;
+        }
+
+        return container.query('Branch').where({
+          id : account[0].branchId
+        })
+        .then(function(branch) {
+          if (branch.length === 0) {
+            return false;
+          }
+
+          return branch[0];
+        });
+      })
+      .then(function(branch) {
+        if (branch ==== false) {
+          return false;
+        }
+
+        return branch.name;
+      });
+    }
+
   },
 });
 

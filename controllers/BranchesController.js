@@ -56,7 +56,6 @@ var BranchesController = Class('BranchesController').inherits(BaseController)({
     },
 
     index: function (req, res, next) {
-
       res.format({
         html: function () {
           res.render('Branches/index.html', { branches : res.locals.results });
