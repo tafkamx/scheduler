@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
+var Promise = require('bluebird');
 
 Class(M, 'User').inherits(DynamicModel)({
   tableName : 'Users',
@@ -152,6 +153,111 @@ Class(M, 'User').inherits(DynamicModel)({
 
       return this;
     },
+
+    getRole : function() {
+      var user = this;
+      var container = this.constructor._container;
+
+      var role = false;
+
+      return container.query('InstallationSettings')
+        .where('franchisor_id', user.id )
+        .then(settings => {
+          if (settings.length !== 0) {
+            role = 'Franchisor';
+            return true;
+          }
+
+          return false
+        })
+        .then(isFranchisor => {
+          if (isFranchisor) {
+            return false;
+          }
+
+          return container.query('Account')
+            .where('user_id', user.id)
+            .then(accounts => {
+              if (accounts.length === 0) {
+                return role;
+              }
+
+              role = accounts[0].type;
+
+              return true;
+            });
+        })
+        .then(() => {
+          return role;
+        });
+    },
+
+    getBranch : function() {
+      var user = this;
+      var container = this.constructor._container;
+
+      var branch = false;
+
+      return this.getRole().then(role => {
+        if (!role) { // means Franchisor
+          return false;
+        }
+
+        return container.query('Account')
+          .include('branch')
+          .where('user_id', user.id)
+          .then(accounts => {
+            if (accounts.length === 0) {
+              return false;
+            }
+
+            var account = accounts[0];
+
+            if (!account.branch) {
+              return false;
+            }
+
+            return account.branch;
+          });
+      })
+      .then(branch => {
+        return branch.name;
+      });
+    },
+
+    getHostname : function() {
+      var user = this;
+      var container = this.constructor._container;
+
+      var branch,
+        customDomain,
+        installationName,
+        hostname;
+
+      return this.getBranch(branch => {
+        branch = branch;
+        return Promise.resolve();
+      })
+      .then(() => {
+        return InstallationManager.Installation.query()
+          .where('name', container.props.installationName)
+          .then(installation => {
+            installationName = installation[0].name;
+            customDomain = installation[0].domain || null;
+
+            return Promise.resolve();
+          });
+      })
+      .then(() => {
+        if (customDomain) {
+          hostname =  branch ? [branch, customDomain].join('.') : customDomain;
+        } else {
+          hostname =  branch ? [branch, installationName, CONFIG.env().defaultDomainName].join('.') : [installationName, CONFIG.env().defaultDomainName].join('.');
+        }
+
+        return hostname;
+      });
+    }
   }
 });
 
