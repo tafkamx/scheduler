@@ -202,7 +202,7 @@ describe('M.User', function () {
             password: '12345678',
           }, {
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
           })
           .then(function (res) {
             expect(res).to.have.property('user');

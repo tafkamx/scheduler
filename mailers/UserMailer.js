@@ -13,98 +13,102 @@ var templates = {
 
 var UserMailer = Class('UserMailer').inherits(BaseMailer)({
   prototype: {
+
+    baseUrl: null,
+
+    init: function (config) {
+      var that = this;
+
+      if (_.isUndefined(config.baseUrl)) {
+        throw new Error('baseUrl cannot be undefined');
+      }
+
+      that.baseUrl = config.baseUrl;
+    },
+
     sendActivationLink: function (user) {
       var that = this;
 
-      return user.getHostname().then(hostname => {
-        var templateOptions = {
-          user: user,
-          helpers : {
-            urlFor : urlFor,
-          },
-          hostname: hostname,
-        };
+      var templateOptions = {
+        user: user,
+        helpers : {
+          urlFor : urlFor,
+        },
+        baseUrl: that.baseUrl,
+      };
 
-        var options = {
-          from: 'from@patos.net',
-          to: user.email,
-          subject: 'PatOS: Activate your account.',
-          html: that._compileTemplate(templates.sendActivationLink, templateOptions)
-        };
+      var options = {
+        from: 'from@patos.net',
+        to: user.email,
+        subject: 'PatOS: Activate your account.',
+        html: this._compileTemplate(templates.sendActivationLink, templateOptions)
+      };
 
-        return that._send(options);
-      })
-
-
+      return this._send(options);
     },
 
     sendChangedPasswordNotification: function (user) {
       var that = this;
 
-      return user.getHostname().then(hostname => {
-        var templateOptions = {
-          user: user,
-          hostname: hostname,
-        };
+      var templateOptions = {
+        user: user,
+        baseUrl: that.baseUrl,
+      };
 
-        var options = {
-          from: 'from@patos.net',
-          to: user.email,
-          subject: 'PatOS: Your password was changed.',
-          html: that._compileTemplate(templates.sendChangedPasswordNotification, templateOptions)
-        };
+      var options = {
+        from: 'from@patos.net',
+        to: user.email,
+        subject: 'PatOS: Your password was changed.',
+        html: this._compileTemplate(templates.sendChangedPasswordNotification, templateOptions)
+      };
 
-        return that._send(options);
-      });
+      return this._send(options);
     },
 
     sendChangedEmailEmails: function (user) {
       var that = this;
 
-      return user.getHostname().then(hostname => {
-        var templateOptions = {
-          user: user,
-          hostname: hostname,
-        };
+      var templateOptions = {
+        user: user,
+        baseUrl: that.baseUrl,
+      };
 
-        var options = {
-          from: 'from@patos.net',
-          to: user._oldEmail,
-          subject: 'PatOS: Your email was changed.',
-          html: that._compileTemplate(templates.sendChangedEmail, templateOptions)
-        };
+      var options = {
+        from: 'from@patos.net',
+        to: user._oldEmail,
+        subject: 'PatOS: Your email was changed.',
+        html: this._compileTemplate(templates.sendChangedEmail, templateOptions)
+      };
 
-        return that
-          ._send(options)
-          .then(() => {
-            return that.sendActivationLink(user);
-          })
-      });
+      return this
+        ._send(options)
+        .then(function () {
+          return that.sendActivationLink(user);
+        })
     },
 
     sendResetPassword: function (user, token) {
       var that = this;
 
-      return user.getHostname().then(hostname => {
-        var templateOptions = {
-          helpers: {
-            urlFor: urlFor
-          },
-          user: user,
-          token: token,
-          hostname: hostname,
-        };
+      var templateOptions = {
+        helpers: {
+          urlFor: urlFor
+        },
+        user: user,
+        token: token,
+        baseUrl: that.baseUrl,
+      };
 
-        var options = {
-          from: 'from@patos.net',
-          to: user.email,
-          subject: 'PatOS: Reset password.',
-          html: that._compileTemplate(templates.sendResetPassword, templateOptions)
-        };
+      var options = {
+        from: 'from@patos.net',
+        to: user.email,
+        subject: 'PatOS: Reset password.',
+        html: this._compileTemplate(templates.sendResetPassword, templateOptions)
+      };
 
-        return that._send(options);
-      });
+      return this._send(options);
     },
+
   },
 });
 

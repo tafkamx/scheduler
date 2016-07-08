@@ -14,7 +14,7 @@ describe('Accounts Controller', function() {
     // Creating account1 (Teacher)
     container.create('Account', {
       branchId: container.props.defaultBranchId,
-      type: 'Teacher'
+      type: 'teacher'
     }).then(function() {
       container.get('Account').query()
       .then(function(res) {
@@ -77,7 +77,7 @@ describe('Accounts Controller', function() {
         .set('Accept', 'application/json')
         .send({
           branchId: container.props.defaultBranchId,
-          type: 'Teacher',
+          type: 'teacher',
           location: {
             name: 'something',
             address1: 'something',
@@ -94,7 +94,7 @@ describe('Accounts Controller', function() {
           expect(err).to.be.equal(null);
           expect(res.status).to.be.eql(200);
           expect(res.body.branchId).to.be.equal(container.props.defaultBranchId);
-          expect(res.body.type).to.be.equal('Teacher');
+          expect(res.body.type).to.be.equal('teacher');
 
           container.query('Account')
             .where('id', res.body.id)
@@ -126,7 +126,7 @@ describe('Accounts Controller', function() {
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.type).to.be.equal('Teacher');
+        expect(res.body.type).to.be.equal('teacher');
         expect(res.body.branchId).to.be.equal(container.props.defaultBranchId);
         done();
       });
@@ -135,7 +135,7 @@ describe('Accounts Controller', function() {
     it('Should update Account attributes', function(done) {
       agent.put(url + urlFor.Accounts.update.url(account1.id))
         .set('Accept', 'application/json')
-        .send({ id: account1.id, firstName: 'Debra', type: 'Teacher', branchId: container.props.defaultBranchId })
+        .send({ id: account1.id, firstName: 'Debra', type: 'teacher', branchId: container.props.defaultBranchId })
         .end(function(err, res) {
           expect(err).to.be.eql(null);
           expect(res.body.errors).to.be.undefined;

@@ -45,10 +45,10 @@ var Account = Class(M ,'Account').inherits(DynamicModel)({
    * Update this Object to create more Account Types. The values should link to Model names to be used within DomainContainer.
    */
   types: {
-    'Teacher': 'Teacher',
-    'Student': 'Student',
-    'Franchisee': 'Franchisee',
-    'StaffMember': 'StaffMember',
+    'teacher': 'Teacher',
+    'student': 'Student',
+    'franchisee': 'Franchisee',
+    'staff': 'StaffMember',
   },
 
   /**

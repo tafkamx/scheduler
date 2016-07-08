@@ -33,7 +33,7 @@ Class(M, 'BranchSettings').inherits(DynamicModel)({
       'required',
       {
         rule : function(val) {
-          var knex = this.target._container._knex;
+          var knex = this.target._knex;
 
           return knex('pg_timezone_names').select('name').where('name', val).then(function(result) {
             if (result.length === 0) {

@@ -113,65 +113,10 @@ describe('Sessions Controller', function () {
       .catch(done);
   });
 
-  // Create Installation Settings
-  before(function(done) {
-    var branch1,
-      branch2;
-
-    Promise.all([
-      cont1.create('InstallationSettings', {
-        language: 'en-CA',
-        currency: 'CAD',
-        timezone: 'America/Toronto',
-        franchisorId : user1.id
-      }),
-
-      cont2.create('InstallationSettings', {
-        language: 'en-CA',
-        currency: 'CAD',
-        timezone: 'America/Toronto',
-        franchisorId : user2.id
-      }),
-
-      cont1.create('Branch', {
-        name : 'default'
-      }).then(function(branch) {
-        return cont1.create('BranchSettings', {
-          language: 'en-CA',
-          currency: 'CAD',
-          timezone: 'America/Toronto',
-          branchId : branch.id
-        });
-      }),
-
-      cont2.create('Branch', {
-        name : 'default'
-      }).then(function(branch) {
-        return cont2.create('BranchSettings', {
-          language: 'en-CA',
-          currency: 'CAD',
-          timezone: 'America/Toronto',
-          branchId : branch.id
-        })
-      }),
-    ])
-    .then(function() {
-      done();
-    })
-    .catch(done);
-
-  })
-
   after(function () {
     return promiseSeries([
-      cont1.get('InstallationSettings').query().delete(),
-      cont1.get('BranchSettings').query().delete(),
-      cont1.get('Branch').query().delete(),
       cont1.get('User').query().delete(),
       cont1.get('ResetPasswordToken').query().delete(),
-      cont2.get('InstallationSettings').query().delete(),
-      cont2.get('BranchSettings').query().delete(),
-      cont2.get('Branch').query().delete(),
       cont2.get('User').query().delete(),
       cont2.get('ResetPasswordToken').query().delete(),
       InstallationManager.Installation.query()
@@ -467,10 +412,7 @@ describe('Sessions Controller', function () {
               .then(function () {
                 return doneTest();
               })
-              .catch(err => {
-                console.trace(err);
-                doneTest()
-              });
+              .catch(doneTest);
           });
       });
 

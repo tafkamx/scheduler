@@ -7,7 +7,7 @@ var user = {
   password: '12345678'
 };
 
-describe('InstallationManager.UserMailer', function() {
+describe('UserMailer', function() {
 
   it('Should success sendActivationLink', function(done) {
     return userMailer.sendActivationLink(user).then(function(res) {
