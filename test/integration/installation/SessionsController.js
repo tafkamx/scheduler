@@ -467,10 +467,7 @@ describe('Sessions Controller', function () {
               .then(function () {
                 return doneTest();
               })
-              .catch(err => {
-                console.trace(err);
-                doneTest()
-              });
+              .catch(doneTest);
           });
       });
 
