@@ -1,6 +1,5 @@
 var bcrypt = require('bcrypt-node');
 var path = require('path');
-var Promise = require('bluebird');
 
 var userMailer = new InstallationManager.UserMailer({});
 
@@ -130,12 +129,6 @@ Class(InstallationManager, 'User').inherits(InstallationManager.InstallationMana
 
       return this;
     },
-
-    getHostname : function() {
-      return Promise.resove().then(() => {
-        return CONFIG.env().defaultDomainName;
-      });
-    }
   }
 });
 

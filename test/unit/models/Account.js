@@ -29,7 +29,7 @@ describe('M.Acccount', function() {
         return container.create('Account', {
           userId: user.id,
           branchId: container.props.defaultBranchId,
-          type: 'Teacher',
+          type: 'teacher',
         });
       });
   };
@@ -68,7 +68,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: user.id,
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             location: {
               name: 'something',
               address1: 'something',
@@ -166,7 +166,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: 'asdf',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -192,7 +192,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            type: 'Teacher',
+            type: 'teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -215,7 +215,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: 'asdfasdfasdf',
-            type: 'Teacher',
+            type: 'teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -242,7 +242,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             firstName: _.repeat('a', 126),
           })
           .then(function () {
@@ -270,7 +270,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             lastName: _.repeat('a', 126),
           })
           .then(function () {
@@ -307,7 +307,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             dob: 'asdf'
           })
           .then(function () {
@@ -335,7 +335,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             locationId: 'asdf',
           })
           .then(function () {
@@ -360,7 +360,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'Teacher',
+            type: 'teacher',
             locationId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
           })
           .then(function () {
@@ -398,7 +398,7 @@ describe('M.Acccount', function() {
               .create('Account', {
                 userId: user.id,
                 branchId: container.props.defaultBranchId,
-                type: 'Teacher',
+                type: 'teacher',
                 location: {
                   name: 'something',
                   address1: 'something',

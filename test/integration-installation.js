@@ -52,7 +52,9 @@ Promise.resolve()
       },
       modelExtras: {
         mailers: {
-          user: new UserMailer(),
+          user: new UserMailer({
+            baseUrl: 'http://default.installation-inte.test-installation.com:3000',
+          }),
         },
       },
     });

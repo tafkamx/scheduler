@@ -88,7 +88,6 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
      *   baseUrl: '',
      *   installationSettings: {},
      *   defaultBranchSettings: {},
-     *   defaultBranchName : ''
      * }
      */
 
@@ -112,7 +111,9 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
           models: M,
           modelExtras: {
             mailers: {
-              user: new UserMailer(),
+              user: new UserMailer({
+                baseUrl: config.baseUrl,
+              }),
             },
           },
         });
@@ -126,17 +127,9 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
         return container.create('InstallationSettings', config.installationSettings);
       })
       .then(function () {
-        if (!config.defaultBranchName) {
-          return false;
-        }
-
-        return container.create('Branch', { name: config.defaultBranchName });
+        return container.create('Branch', { name: 'default' });
       })
       .then(function (branch) {
-        if (!branch) {
-          return false;
-        }
-
         if (!config.defaultBranchSettings) {
           config.defaultBranchSettings = _.clone(config.installationSettings);
         }

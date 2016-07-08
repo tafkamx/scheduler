@@ -214,6 +214,7 @@ describe('M.BranchSettings', function() {
               language: 'en-CA',
               currency: 'CAD',
               timezone: 'America/Toronto',
+              branchId: branch.id,
               franchisorId: user.id,
             });
           })
@@ -234,13 +235,6 @@ describe('M.BranchSettings', function() {
               .then(function () {
                 return container.update(settings);
               });
-          })
-          .then(function(settings) {
-            expect(settings.language).to.be.equal('en-CA');
-            expect(settings.currency).to.be.equal('CAD');
-            expect(settings.timezone).to.be.equal('America/Toronto');
-
-            return Promise.resolve();
           });
       });
 

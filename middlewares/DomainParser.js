@@ -46,7 +46,7 @@ var parser = function(req, res, next) {
     if (subdomain.length === 2) {
       req.branch = subdomain[0];
     } else {
-      req.branch = null;
+      req.branch = 'default';
     }
 
     next();

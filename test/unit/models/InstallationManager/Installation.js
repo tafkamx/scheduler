@@ -201,35 +201,6 @@ describe('InstallationManager.Installation', function () {
           });
       });
 
-      it('Should create an installation without branch', function() {
-        return Promise.resolve()
-          .then(function () {
-            return InstallationManager.Installation.createInstallation({
-              installation: {
-                name: 'boop',
-              },
-              franchisor: {
-                email: 'franchisor@example.com',
-              },
-              baseUrl: 'patos.net',
-              installationSettings: {
-                language: 'en-CA',
-                currency: 'CAD',
-                timezone: 'America/Toronto',
-              }
-            });
-          })
-          .then(function (installation) {
-            var knex = installation.getDatabase();
-
-            return knex('Branches')
-              .then(function (res) {
-                expect(res.length).to.equal(0);
-              })
-              .then(knex.destroy);
-          })
-      });
-
       it('Should create installation', function () {
         return Promise.resolve()
           .then(function () {
@@ -251,7 +222,6 @@ describe('InstallationManager.Installation', function () {
                 currency: 'CAD',
                 timezone: 'America/Toronto',
               },
-              defaultBranchName : 'default'
             });
           })
           .then(function (installation) {
@@ -291,7 +261,6 @@ describe('InstallationManager.Installation', function () {
                 currency: 'CAD',
                 timezone: 'America/Toronto',
               },
-              defaultBranchName : 'default'
             });
           })
           .then(function (installation) {

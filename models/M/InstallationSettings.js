@@ -40,7 +40,7 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
       'required',
       {
         rule : function(val) {
-          var knex = this.target._container._knex;
+          var knex = this.target._knex;
 
           return knex('pg_timezone_names').select('name').where('name', val).then(function(result) {
             if (result.length === 0) {
@@ -57,8 +57,12 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
       'uuid',
       {
         rule: function (val) {
-          return this.target._container.query('User')
-            .where('id', val)
+          var that = this.target;
+
+          var query = that._knex('Users')
+            .where('id', val);
+
+          return query
             .then(function (result) {
               if (result.length === 0) {
                 throw new Error('The franchisorId does not exist.');
@@ -91,7 +95,7 @@ Class(M, 'InstallationSettings').inherits(DynamicModel)({
       var model = this;
 
       this.on('beforeSave', function(done) {
-        model.constructor.query(model._container._knex).delete().then(function() {
+        model.constructor.query(model._knex).delete().then(function() {
           return done();
         }).catch(done);
       });
