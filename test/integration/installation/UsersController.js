@@ -3,6 +3,7 @@ var agent = sa.agent();
 var container = INTE;
 var path = require('path');
 
+var userMailer = new UserMailer();
 
 var url = container.props.url;
 

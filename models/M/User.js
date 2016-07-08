@@ -156,7 +156,7 @@ Class(M, 'User').inherits(DynamicModel)({
 
     getRole : function() {
       var user = this;
-      var container = this.constructor._container;
+      var container = this._container;
 
       var role = false;
 
@@ -194,7 +194,7 @@ Class(M, 'User').inherits(DynamicModel)({
 
     getBranch : function() {
       var user = this;
-      var container = this.constructor._container;
+      var container = this._container;
 
       var branch = false;
 
@@ -227,7 +227,7 @@ Class(M, 'User').inherits(DynamicModel)({
 
     getHostname : function() {
       var user = this;
-      var container = this.constructor._container;
+      var container = this._container;
 
       var branch,
         customDomain,
@@ -242,13 +242,22 @@ Class(M, 'User').inherits(DynamicModel)({
         return InstallationManager.Installation.query()
           .where('name', container.props.installationName)
           .then(installation => {
+
+            if (installation.length === 0) {
+              return Promise.resolve(false);
+            }
+
             installationName = installation[0].name;
             customDomain = installation[0].domain || null;
 
-            return Promise.resolve();
+            return Promise.resolve(true);
           });
       })
-      .then(() => {
+      .then((hasInstallation) => {
+        if (!hasInstallation) {
+          return '';
+        }
+
         if (customDomain) {
           hostname =  branch ? [branch, customDomain].join('.') : customDomain;
         } else {

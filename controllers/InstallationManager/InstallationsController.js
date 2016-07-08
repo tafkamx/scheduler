@@ -158,16 +158,25 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
               }
 
               var installation = res.locals.installation;
-              var installationKnex = installation.getDatabase();
+              var container;
 
-              return M.InstallationSettings.query(installationKnex)
+              if (neonode.containers[installation.name]) {
+                container = neonode.containers[installation.name]
+              } else {
+                container = new DomainContainer({
+                  knex: installation.getDatabase(),
+                  models: M,
+                  modelExtras: {
+                    mailers: {
+                      user: new UserMailer(),
+                    },
+                  },
+                });
+              }
+
+              return container.query('InstallationSettings')
                 .then(function(settings) {
-                  settings[0].updateAttributes(req.body.installationSettings);
-
-                  return settings[0].save(installationKnex);
-                })
-                .then(function () {
-                  return installationKnex.destroy();
+                  return container.update(settings[0], req.body.installationSettings);
                 });
             })
             .then(function() {

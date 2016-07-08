@@ -112,9 +112,7 @@ Class(InstallationManager, 'Installation').inherits(InstallationManager.Installa
           models: M,
           modelExtras: {
             mailers: {
-              user: new UserMailer({
-                baseUrl: config.baseUrl,
-              }),
+              user: new UserMailer(),
             },
           },
         });
