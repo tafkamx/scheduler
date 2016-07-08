@@ -123,7 +123,7 @@
       <div class="-font-14"><%= branch.name %></div>
       <div class="ListItem__muted"><%= branch.id %></div>
       <div class="Header__divider">&nbsp;</div>
-      <a class="ListItem__link mr2" href="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a>
+      <a class="ListItem__link mr2" href="<%= helpers.generateBranchInstallationUrl(branch.name) %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a>
       <a class="ListItem__link" href="<%= helpers.urlFor.Branches.edit.url(branch.id) %>">Edit</a>
     </div>
     <% }) %>
