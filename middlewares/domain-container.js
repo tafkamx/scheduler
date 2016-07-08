@@ -10,6 +10,7 @@ var knex = require('knex');
 var getCurrentInstallationUrl = require(path.join(process.cwd(), 'lib', 'utils', 'get-current-installation-url.js'));
 
 var containers = {};
+neonode.containers = containers;
 
 module.exports = function (req, res, next) {
   var name = req.installationName;
@@ -39,13 +40,14 @@ module.exports = function (req, res, next) {
       var knexInst = knex(conf[CONFIG.environment]);
 
       var container = new DomainContainer({
+        props : {
+          installationName : req.installationName
+        },
         knex: knexInst,
         models: M,
         modelExtras: {
           mailers: {
-            user: new UserMailer({
-              baseUrl: getCurrentInstallationUrl(req),
-            }),
+            user: new UserMailer(),
           },
         },
       });

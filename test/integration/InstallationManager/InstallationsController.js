@@ -192,23 +192,6 @@ describe('InstallationManager.InstallationsController', function () {
             });
         })
         .then(function () {
-          return knex('Branches')
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-
-              return knex('InstallationSettings');
-            })
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-
-              return knex('BranchSettings');
-            })
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-            })
-            .then(knex.destroy);
-        })
-        .then(function () {
           return done();
         })
         .catch(done);
