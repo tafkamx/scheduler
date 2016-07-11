@@ -1,0 +1,39 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+
+@import 'normalize.css';
+@import 'basscss-flexbox';
+@import 'basscss-margin';
+
+@import './../base/variables';
+@import './../base/utils';
+
+@import './../components/session';
+@import './../components/input';
+@import './../components/button';
+
+:root {
+  --gray: #929292;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  line-height: 1.618;
+  color: var(--text-color);
+}
+
+* {box-sizing: border-box}
+*
+svg {
+  fill: currentColor;
+}
+
+body {
+  height: 100vh;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 185px;
+  }
+}
