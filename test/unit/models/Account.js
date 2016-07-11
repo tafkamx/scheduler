@@ -8,11 +8,11 @@ describe('M.Acccount', function() {
   var container = UNIT;
 
   var cleanup = function () {
-    return promiseSeries([
-      container.get('Location').query().delete(),
-      container.get('Teacher').query().delete(),
-      container.get('Account').query().delete(),
-      container.get('User').query().delete(),
+    return truncate([
+      container.get('Location'),
+      container.get('Teacher'),
+      container.get('Account'),
+      container.get('User')
     ]);
   };
 

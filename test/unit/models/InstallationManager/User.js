@@ -6,23 +6,17 @@ var _ = require('lodash');
 describe('InstallationManager.User', function () {
 
   after(function () {
-    return Promise.all([
-      InstallationManager.User.query().delete(),
-    ]);
+    return truncate(InstallationManager.User);
   });
 
   describe('Validations', function () {
 
     beforeEach(function () {
-      return Promise.all([
-        InstallationManager.User.query().delete(),
-      ]);
+      return truncate(InstallationManager.User);
     });
 
     after(function () {
-      return Promise.all([
-        InstallationManager.User.query().delete(),
-      ]);
+      return truncate(InstallationManager.User);
     });
 
     describe('email', function () {

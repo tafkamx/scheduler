@@ -29,10 +29,10 @@ describe('M.StaffMember', function () {
   });
 
   after(function () {
-    return promiseSeries([
-      container.get('StaffMember').query().delete(),
-      container.get('Account').query().delete(),
-      container.get('User').query().delete(),
+    return truncate([
+      container.get('StaffMember'),
+      container.get('Account'),
+      container.get('User')
     ]);
   });
 

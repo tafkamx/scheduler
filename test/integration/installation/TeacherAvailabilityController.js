@@ -38,7 +38,7 @@ describe('TeacherAvailability Controller', function() {
   });
 
   after(function(done) {
-    container.get('Account').query().delete()
+    truncate(container.get('Account'))
     .then(function() {
       done();
     }).catch(done);
