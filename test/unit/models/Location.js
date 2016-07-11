@@ -7,9 +7,7 @@ describe('M.Location', function () {
   var container = UNIT;
 
   var cleanup = function () {
-    return Promise.all([
-      container.get('Location').query().delete(),
-    ]);
+    return truncate(container.get('Location'));
   };
 
   beforeEach(cleanup);

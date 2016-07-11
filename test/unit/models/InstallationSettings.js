@@ -26,15 +26,13 @@ describe('M.InstallationSettings', function () {
   });
 
   beforeEach(function () {
-    return Promise.all([
-      container.get('InstallationSettings').query().delete(),
-    ]);
+    return truncate(container.get('InstallationSettings'));
   });
 
   after(function () {
-    return promiseSeries([
-      container.get('User').query().delete(),
-      container.get('InstallationSettings').query().delete(),
+    return truncate([
+      container.get('User'),
+      container.get('InstallationSettings')
     ]);
   });
 

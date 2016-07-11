@@ -56,9 +56,7 @@ describe('Users Controller', function() {
 
   // Cleanup
   after(function(done) {
-    return Promise.all([
-      container.get('User').query().delete(),
-    ])
+    truncate(container.get('User'))
       .then(function () {
         done();
       })
