@@ -1,19 +1,10 @@
 global.expect = require('chai').expect;
 global.sa = require('superagent');
 global.Promise = require('bluebird');
-var _ = require('lodash');
 
 var path = require('path');
 
-global.truncate = (models) => {
-  if (!_.isArray(models)) {
-    models = [models];
-  }
-
-  return Promise.each(models, function (model) {
-    return model.knex().raw('truncate table "' + model.tableName + '" cascade');
-  });
-};
+global.truncate = require(path.join(__dirname, 'utils', 'truncate'));
 
 global.promiseSeries = require(path.join(process.cwd(), 'lib', 'utils', 'promise-all-series.js'));
 
