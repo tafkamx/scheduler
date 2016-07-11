@@ -99,8 +99,6 @@
 
 .SessionFooter {
   font-size: 11px;
-  color: #fff;
-  opacity: .6;
 
   & a {color: currentColor}
 }
