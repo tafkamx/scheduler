@@ -17,12 +17,13 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
         if (req.branchId) {
           return res.render('sessions/franchisee_new.html',  {
             urlFor : urlFor,
-            layout: 'sessionUsers'
+            branch: req.branch,
+            layout: 'sessionFranchisee'
           });
         } else {
           return res.render('sessions/new.html',  {
             urlFor : urlFor,
-            layout: 'sessionUsers'
+            layout: 'sessionFranchisor'
           });
         }
       }
@@ -97,12 +98,13 @@ var SessionsController = Class('SessionsController').inherits(BaseController)({
       if (req.branchId) {
         return res.render('sessions/franchisee_reset.html', {
           query: req.query,
-          layout: 'sessionUsers'
+          branch: req.branch,
+          layout: 'sessionFranchisee'
         });
       } else {
         return res.render('sessions/reset.html', {
           query: req.query,
-          layout: 'sessionUsers'
+          layout: 'sessionFranchisor'
         });
       }
     },

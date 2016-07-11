@@ -1,0 +1,15 @@
+@import './sessionBase.css';
+
+body {
+  background: var(--brand-color);
+
+  &::before {
+    background: rgba(0,0,0,.15);
+  }
+}
+
+.SessionFooter {
+  color: #fff;
+  opacity: .6;
+}
+
