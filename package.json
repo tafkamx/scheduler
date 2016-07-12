@@ -100,6 +100,7 @@
     "req-flash": "0.0.2",
     "rimraf": "2.5.0",
     "route-mappings": "0.2.0",
+    "s3-uploader": "git+https://github.com/greduan/node-s3-uploader.git",
     "scandium-express": "0.0.3",
     "scripty": "1.5.0",
     "thulium": "2.0.0",
