@@ -135,3 +135,14 @@
     </div>
   </div>
 </div>
+
+<script src="/build/javascripts/branchesIndex.js"></script>
+<script>
+var options = {
+  element: document.querySelector('.yield'),
+  data: {
+    branches: <%= JSON.stringify(branches) %>
+  }
+};
+new BranchesIndex(options);
+</script>
