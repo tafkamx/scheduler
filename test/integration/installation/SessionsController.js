@@ -113,12 +113,69 @@ describe('Sessions Controller', function () {
       .catch(done);
   });
 
+  // Create Installation Settings
+  before(function(done) {
+    var branch1,
+      branch2;
+
+    Promise.all([
+      cont1.create('InstallationSettings', {
+        language: 'en-CA',
+        currency: 'CAD',
+        timezone: 'America/Toronto',
+        franchisorId : user1.id
+      }),
+
+      cont2.create('InstallationSettings', {
+        language: 'en-CA',
+        currency: 'CAD',
+        timezone: 'America/Toronto',
+        franchisorId : user2.id
+      }),
+
+      cont1.create('Branch', {
+        name : 'default'
+      }).then(function(branch) {
+        return cont1.create('BranchSettings', {
+          language: 'en-CA',
+          currency: 'CAD',
+          timezone: 'America/Toronto',
+          branchId : branch.id
+        });
+      }),
+
+      cont2.create('Branch', {
+        name : 'default'
+      }).then(function(branch) {
+        return cont2.create('BranchSettings', {
+          language: 'en-CA',
+          currency: 'CAD',
+          timezone: 'America/Toronto',
+          branchId : branch.id
+        })
+      }),
+    ])
+    .then(function() {
+      done();
+    })
+    .catch(done);
+
+  })
+
   after(function () {
     return promiseSeries([
-      cont1.get('User').query().delete(),
-      cont1.get('ResetPasswordToken').query().delete(),
-      cont2.get('User').query().delete(),
-      cont2.get('ResetPasswordToken').query().delete(),
+      truncate([
+        cont1.get('InstallationSettings'),
+        cont1.get('BranchSettings'),
+        cont1.get('Branch'),
+        cont1.get('User'),
+        cont1.get('ResetPasswordToken'),
+        cont2.get('InstallationSettings'),
+        cont2.get('BranchSettings'),
+        cont2.get('Branch'),
+        cont2.get('User'),
+        cont2.get('ResetPasswordToken'),
+      ]),
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),

@@ -35,9 +35,7 @@ describe('InstallationManager.UsersController', function () {
 
   // Cleanup
   after(function () {
-    return Promise.all([
-      InstallationManager.User.query().delete(),
-    ]);
+    return truncate(InstallationManager.User);
   });
 
   it('Should render /InstallationManager/Users/', function(done) {

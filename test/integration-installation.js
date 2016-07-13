@@ -4,6 +4,8 @@ global.Promise = require('bluebird');
 
 var path = require('path');
 
+global.truncate = require(path.join(__dirname, 'utils', 'truncate'));
+
 global.promiseSeries = require(path.join(process.cwd(), 'lib', 'utils', 'promise-all-series.js'));
 
 var DomainContainer = require('domain-container');
@@ -52,9 +54,7 @@ Promise.resolve()
       },
       modelExtras: {
         mailers: {
-          user: new UserMailer({
-            baseUrl: 'http://default.installation-inte.test-installation.com:3000',
-          }),
+          user: new UserMailer(),
         },
       },
     });
