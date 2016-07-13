@@ -1,7 +1,5 @@
-<!-- <pre><%= JSON.stringify(branches, null, 2) %></pre> -->
-
 <div class="ListHeader Paper mb3">
-  <div class="py2 px4 flex">
+  <div class="py2 px3 flex items-center">
     <p class="m0 -font-light -font-16">You have <span class="-font-bold"><%= branches.length %></span> active branches</p>
     <div class="Header__divider">&nbsp;</div>
     <div class="Dropdown">
@@ -51,7 +49,7 @@
           <use xlink:href="#svg-arrow-down"/>
         </svg>
       </button>
-      <ul class="Dropdown__body" aria-hidden="false" aria-label="submenu">
+      <ul class="Dropdown__body" aria-hidden="true" aria-label="submenu">
         <li class="Dropdown__item--button">
           <button>
             <svg class="-s8">
@@ -101,7 +99,7 @@
           </label>
         </li>
         <li>
-          <button class="Button -full-width">Apply</button>
+          <button class="Button -sm -full-width">Apply</button>
         </li>
       </ul>
     </div>
@@ -116,20 +114,23 @@
 </div>
 
 <div class="flex">
-  <div class="flex-auto">
+  <div class="ListWrapper flex-auto">
     <% branches.forEach(function (branch) { %>
-    <div class="ListItem">
-      <input type="checkbox" class="mr3">
-      <div class="-font-14"><%= branch.name %></div>
-      <div class="ListItem__muted"><%= branch.id %></div>
-      <div class="Header__divider">&nbsp;</div>
-      <a class="ListItem__link mr2" href="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>">Login to branch</a>
-      <a class="ListItem__link" href="<%= helpers.urlFor.Branches.edit.url(branch.id) %>">Edit</a>
-    </div>
+      <div class="ListItem"
+        data-login-url="<%= helpers.currentInstallationUrl %>?guest_login_token=<%= helpers.guestBranchToken(branch.name) %>"
+        data-edit-url="<%= helpers.urlFor.Branches.edit.url(branch.id) %>"
+      >
+        <input type="checkbox" class="mr3"/>
+        <div class="-font-14 -ttc" data-branch-id="<%= branch.id %>"><%= branch.name %></div>
+        <div class="ListItem__muted flex-auto">Managed by {{John Doe}}</div>
+        <svg class="-s12 -gray -on-active">
+          <use xlink:href="#svg-arrow-right-bold"></use>
+        </svg>
+      </div>
     <% }) %>
   </div>
-  <div class="Paper ListSidebar ml3">
-    <div class="ListSidebar--empty flex items-center px4 center -full-height -light-gray">
+  <div class="ListSidebar Paper ml3">
+    <div class="ListSidebar__empty flex items-center px4 center -full-height -light-gray">
       <p class="m0">Select a branch from the list to see an activity summary and more options.</p>
     </div>
   </div>
