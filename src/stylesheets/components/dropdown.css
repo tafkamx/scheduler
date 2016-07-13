@@ -24,6 +24,10 @@
     }
   }
 
+  &.-right {
+    & .Dropdown__body {right: 0}
+  }
+
   &__item--button {
     padding: 0!important;
     & > button {
@@ -31,5 +35,18 @@
       padding: .25rem 1.5rem;
       text-align: left;
     }
+  }
+}
+
+.Dropdown__backdrop {
+  display: none;
+  user-select: none;
+  &.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100vw;
+    height: 100vh;
   }
 }
