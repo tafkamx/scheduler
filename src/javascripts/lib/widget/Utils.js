@@ -1,4 +1,4 @@
-import Widget from './Widget';
+import Widget from './';
 
 export function mix(...modules) {
   let desc;
@@ -13,10 +13,10 @@ export function mix(...modules) {
   modules.map(module => {
     Object.getOwnPropertyNames(module.prototype).map(key => {
       if (key !== 'constructor' && key !== 'name') {
-          let desc = Object.getOwnPropertyDescriptor(module.prototype, key);
-          Object.defineProperty(_Mix.prototype, key, desc);
+        desc = Object.getOwnPropertyDescriptor(module.prototype, key);
+        Object.defineProperty(_Mix.prototype, key, desc);
       }
-    })
+    });
   });
 
   return _Mix;
