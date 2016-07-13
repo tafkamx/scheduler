@@ -51,9 +51,11 @@
     </header>
     <main>
       <div class="yield">
+        <% if (Object.keys(flash).length > 0) { %>
         <div class="flash">
           <pre style="margin: 0;"><%= JSON.stringify(flash, null, 2) %></pre>
         </div>
+        <% } %>
         <%= yield %>
       </div>
     </main>
