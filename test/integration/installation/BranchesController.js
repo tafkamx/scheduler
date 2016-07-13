@@ -64,7 +64,7 @@ describe('Branches Controller', function () {
   // Cleanup
   after(function () {
     return Promise.all([
-      container.get('User').query().delete(),
+      truncate(container.get('User')),
       container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
     ]);
   });

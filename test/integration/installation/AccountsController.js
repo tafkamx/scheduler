@@ -25,7 +25,7 @@ describe('Accounts Controller', function() {
   });
 
   after(function(done) {
-    container.get('Account').query().delete()
+    return truncate(container.get('Account'))
     .then(function() {
       done();
     }).catch(done);

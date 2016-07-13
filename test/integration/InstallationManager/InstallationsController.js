@@ -65,7 +65,7 @@ describe('InstallationManager.InstallationsController', function () {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-      InstallationManager.User.query().delete(),
+      truncate(InstallationManager.User)
     ]);
   });
 

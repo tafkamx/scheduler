@@ -164,16 +164,18 @@ describe('Sessions Controller', function () {
 
   after(function () {
     return promiseSeries([
-      cont1.get('InstallationSettings').query().delete(),
-      cont1.get('BranchSettings').query().delete(),
-      cont1.get('Branch').query().delete(),
-      cont1.get('User').query().delete(),
-      cont1.get('ResetPasswordToken').query().delete(),
-      cont2.get('InstallationSettings').query().delete(),
-      cont2.get('BranchSettings').query().delete(),
-      cont2.get('Branch').query().delete(),
-      cont2.get('User').query().delete(),
-      cont2.get('ResetPasswordToken').query().delete(),
+      truncate([
+        cont1.get('InstallationSettings'),
+        cont1.get('BranchSettings'),
+        cont1.get('Branch'),
+        cont1.get('User'),
+        cont1.get('ResetPasswordToken'),
+        cont2.get('InstallationSettings'),
+        cont2.get('BranchSettings'),
+        cont2.get('Branch'),
+        cont2.get('User'),
+        cont2.get('ResetPasswordToken'),
+      ]),
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
