@@ -6,13 +6,21 @@
   width: 8px;
   height: 8px;
 }
+
+.-s12 {
+  width: 12px;
+  height: 12px;
+}
+
 .-s16 {
   width: 16px;
   height: 16px;
 }
 
-/* Skin */
+/* Text */
 .-ttu {text-transform: uppercase}
+.-ttc {text-transform: capitalize}
+.-ls1 {letter-spacing: 1px}
 
 /* Typography */
 .-font-thin {font-weight: 100}
@@ -26,6 +34,8 @@
 
 .-font-14 {font-size: 1.166666rem}
 .-font-16 {font-size: 1.33333rem}
+.-font-17 {font-size: 1.416666rem}
+.-font-26 {font-size: 2.166666rem}
 
 /* Colors */
 .-gray {color: var(--gray)}
