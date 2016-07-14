@@ -8,23 +8,17 @@ describe('M.User', function () {
   var container = UNIT;
 
   after(function () {
-    return Promise.all([
-      container.get('User').query().delete(),
-    ]);
+    return truncate(container.get('User'));
   });
 
   describe('Validations', function () {
 
     beforeEach(function () {
-      return Promise.all([
-        container.get('User').query().delete(),
-      ]);
+      return truncate(container.get('User'));
     });
 
     after(function () {
-      return Promise.all([
-        container.get('User').query().delete(),
-      ]);
+      return truncate(container.get('User'));
     });
 
     describe('email', function () {
@@ -181,16 +175,19 @@ describe('M.User', function () {
       });
 
       beforeEach(function () {
-        return promiseSeries([
-          container.get('User').query().delete(),
-          container.get('Account').query().delete(),
+        return truncate([
+          container.get('User'),
+          container.get('Account')
         ]);
+
       });
 
       after(function () {
         return promiseSeries([
-          container.get('User').query().delete(),
-          container.get('Account').query().delete(),
+          truncate([
+            container.get('User'),
+            container.get('Account')
+          ]),
           container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
         ]);
       });
@@ -202,7 +199,7 @@ describe('M.User', function () {
             password: '12345678',
           }, {
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
           })
           .then(function (res) {
             expect(res).to.have.property('user');

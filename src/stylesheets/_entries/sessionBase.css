@@ -6,6 +6,7 @@
 
 @import './../base/variables';
 @import './../base/utils';
+
 @import './../components/session';
 @import './../components/input';
 @import './../components/button';
@@ -19,10 +20,13 @@
 }
 
 * {box-sizing: border-box}
+*
+svg {
+  fill: currentColor;
+}
 
 body {
   height: 100vh;
-  background: var(--brand-color);
 
   &::before {
     content: '';
@@ -31,6 +35,5 @@ body {
     left: 0;
     right: 0;
     height: 185px;
-    background: rgba(0,0,0,.15);
   }
 }

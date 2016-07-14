@@ -18,17 +18,19 @@ describe('M.BranchSettings', function() {
   });
 
   beforeEach(function () {
-    return promiseSeries([
-      container.get('BranchSettings').query().delete(),
-      container.get('InstallationSettings').query().delete(),
+    return truncate([
+      container.get('BranchSettings'),
+      container.get('InstallationSettings')
     ]);
   });
 
   after(function () {
     return promiseSeries([
       container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
-      container.get('BranchSettings').query().delete(),
-      container.get('InstallationSettings').query().delete(),
+      truncate([
+        container.get('BranchSettings'),
+        container.get('InstallationSettings')
+      ])
     ]);
   });
 
@@ -201,9 +203,9 @@ describe('M.BranchSettings', function() {
       });
 
       after(function () {
-        return promiseSeries([
-          container.get('InstallationSettings').query().delete(),
-          container.get('User').query().delete(),
+        return truncate([
+          container.get('InstallationSettings'),
+          container.get('User')
         ]);
       });
 
@@ -214,7 +216,6 @@ describe('M.BranchSettings', function() {
               language: 'en-CA',
               currency: 'CAD',
               timezone: 'America/Toronto',
-              branchId: branch.id,
               franchisorId: user.id,
             });
           })
@@ -235,6 +236,13 @@ describe('M.BranchSettings', function() {
               .then(function () {
                 return container.update(settings);
               });
+          })
+          .then(function(settings) {
+            expect(settings.language).to.be.equal('en-CA');
+            expect(settings.currency).to.be.equal('CAD');
+            expect(settings.timezone).to.be.equal('America/Toronto');
+
+            return Promise.resolve();
           });
       });
 

@@ -4,10 +4,11 @@
       <img src="/images/temporal/franchisorlogo.png" alt="Installation Logo"/>
     </div>
     <p class="SessionHeader__subtitle">
-      <span class="-gray">Franchisor Login</span>
+      <span class="-font-bold"><%= branch %></span>
     </p>
   </div>
   <form class="SessionForm" action="<%= helpers.urlFor.login.url() %>" method="post">
+    <p class="SessionForm__small-label -gray -ttu center">Branch Login</p>
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <input class="Input -full-width mb1" type="text" name="email" value="" placeholder="Email"/>
     <input class="Input -full-width mb2" type="password" name="password" value="" placeholder="Password" />

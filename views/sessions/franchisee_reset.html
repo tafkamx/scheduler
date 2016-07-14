@@ -2,10 +2,11 @@
   <div class="SessionHeader flex flex-column justify-center">
     <p class="SessionHeader__title">Empathia Agency</p>
     <p class="SessionHeader__subtitle">
-    <span class="-gray">Password Reset</span>
+      <span class="-font-bold"><%= branch %></span>
     </p>
   </div>
   <div class="SessionForm center">
+    <p class="SessionForm__small-label -gray -ttu">Reset Password</p>
     <% if (!query.token) { %>
     <p class="SessionForm__title -font-light mt0 mb1">It’s ok. It happens.</p>
     <p class="SessionForm__subtitle mt0 mb3 -gray">Enter the email address associated to this account and we will send you instructions to reset your password.</p>

@@ -15,7 +15,7 @@ describe('TeacherAvailability Controller', function() {
     // Creating account1 (Teacher)
     var c = container.create('Account', {
       branchId: container.props.defaultBranchId,
-      type: 'teacher'
+      type: 'Teacher'
     });
 
     c.then(function() {
@@ -38,7 +38,7 @@ describe('TeacherAvailability Controller', function() {
   });
 
   after(function(done) {
-    container.get('Account').query().delete()
+    truncate(container.get('Account'))
     .then(function() {
       done();
     }).catch(done);

@@ -17,7 +17,7 @@ describe('M.TeacherAvailability', function() {
       container.create('Account', {
         userId: user.id,
         branchId: container.props.defaultBranchId,
-        type: 'teacher'
+        type: 'Teacher'
       }).then(function(account) {
         teacherId = account.id;
 
@@ -34,11 +34,11 @@ describe('M.TeacherAvailability', function() {
   });
 
   after(function() {
-    return Promise.all([
-      container.get('Teacher').query().delete(),
-      container.get('TeacherAvailability').query().delete(),
-      container.get('Account').query().delete(),
-      container.get('User').query().delete(),
+    return truncate([
+      container.get('Teacher'),
+      container.get('TeacherAvailability'),
+      container.get('Account'),
+      container.get('User')
     ]);
   });
 

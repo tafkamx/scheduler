@@ -8,11 +8,11 @@ describe('M.Acccount', function() {
   var container = UNIT;
 
   var cleanup = function () {
-    return promiseSeries([
-      container.get('Location').query().delete(),
-      container.get('Teacher').query().delete(),
-      container.get('Account').query().delete(),
-      container.get('User').query().delete(),
+    return truncate([
+      container.get('Location'),
+      container.get('Teacher'),
+      container.get('Account'),
+      container.get('User')
     ]);
   };
 
@@ -29,7 +29,7 @@ describe('M.Acccount', function() {
         return container.create('Account', {
           userId: user.id,
           branchId: container.props.defaultBranchId,
-          type: 'teacher',
+          type: 'Teacher',
         });
       });
   };
@@ -68,7 +68,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: user.id,
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             location: {
               name: 'something',
               address1: 'something',
@@ -166,7 +166,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: 'asdf',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -192,7 +192,7 @@ describe('M.Acccount', function() {
         container
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
-            type: 'teacher',
+            type: 'Teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -215,7 +215,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: 'asdfasdfasdf',
-            type: 'teacher',
+            type: 'Teacher',
           })
           .then(function () {
             expect.fail('should have rejected');
@@ -242,7 +242,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             firstName: _.repeat('a', 126),
           })
           .then(function () {
@@ -270,7 +270,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             lastName: _.repeat('a', 126),
           })
           .then(function () {
@@ -307,7 +307,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             dob: 'asdf'
           })
           .then(function () {
@@ -335,7 +335,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             locationId: 'asdf',
           })
           .then(function () {
@@ -360,7 +360,7 @@ describe('M.Acccount', function() {
           .create('Account', {
             userId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
             branchId: container.props.defaultBranchId,
-            type: 'teacher',
+            type: 'Teacher',
             locationId: '6c1c39c8-e267-406a-ba59-82243c2c14e0',
           })
           .then(function () {
@@ -398,7 +398,7 @@ describe('M.Acccount', function() {
               .create('Account', {
                 userId: user.id,
                 branchId: container.props.defaultBranchId,
-                type: 'teacher',
+                type: 'Teacher',
                 location: {
                   name: 'something',
                   address1: 'something',

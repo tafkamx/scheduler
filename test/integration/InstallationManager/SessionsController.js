@@ -23,7 +23,7 @@ describe('InstallationManager.SessionsController', function() {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-      InstallationManager.User.query().delete(),
+      truncate(InstallationManager.User)
     ]);
   });
 
@@ -167,7 +167,7 @@ describe('InstallationManager.SessionsController', function() {
               .then(function (result) {
                 expect(result.length).to.equal(1);
 
-                return InstallationManager.ResetPasswordToken.query().delete();
+                return truncate(InstallationManager.ResetPasswordToken);
               })
               .then(function () {
                 return doneTest();
@@ -258,7 +258,7 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
+                return truncate(InstallationManager.ResetPasswordToken);
               })
               .then(function () {
                 return doneTest();
@@ -328,7 +328,7 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
+                return truncate(InstallationManager.ResetPasswordToken);
               })
               .then(function () {
                 return doneTest();
@@ -378,7 +378,7 @@ describe('InstallationManager.SessionsController', function() {
                 });
               })
               .then(function () {
-                return InstallationManager.ResetPasswordToken.query().delete();
+                return truncate(InstallationManager.ResetPasswordToken);
               })
               .then(function () {
                 return doneTest();

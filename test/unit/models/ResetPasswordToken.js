@@ -20,9 +20,9 @@ describe('M.ResetPasswordToken', function () {
   });
 
   after(function () {
-    return promiseSeries([
-      container.get('User').query().delete(),
-      container.get('ResetPasswordToken').query().delete(),
+    return truncate([
+      container.get('User'),
+      container.get('ResetPasswordToken')
     ]);
   });
 
