@@ -9,6 +9,7 @@ describe('M.StaffMember', function () {
   var account;
 
   before(function () {
+    this.timeout(8000);
     return Promise.resolve()
       .then(function () {
         return container.create('User', {
@@ -29,6 +30,7 @@ describe('M.StaffMember', function () {
   });
 
   after(function () {
+    this.timeout(8000);
     return truncate([
       container.get('StaffMember'),
       container.get('Account'),
