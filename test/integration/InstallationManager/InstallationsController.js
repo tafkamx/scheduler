@@ -5,6 +5,7 @@ describe('InstallationManager.InstallationsController', function () {
 
   // Admin user, to login
   before(function () {
+    this.timeout(8000);
     adminUser = new InstallationManager.User({
       email: 'test@example.com',
       password: '12345678',
@@ -35,7 +36,7 @@ describe('InstallationManager.InstallationsController', function () {
 
   // Installation, test CRUD stuff
   before(function () {
-    this.timeout(4000);
+    this.timeout(8000);
 
     var data = {
       installation: {
@@ -143,7 +144,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   describe('#create', function () {
-    this.timeout(4000);
+    this.timeout(8000);
 
     before(function () {
       return InstallationManager.Installation.query()
@@ -248,7 +249,7 @@ describe('InstallationManager.InstallationsController', function () {
   });
 
   describe('#destroy', function () {
-    this.timeout(4000);
+    this.timeout(8000);
 
     it('Should destroy a record', function(done) {
       agent.post(baseURL + urlFor.InstallationManager.Installations.url())

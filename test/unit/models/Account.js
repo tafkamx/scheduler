@@ -8,6 +8,7 @@ describe('M.Acccount', function() {
   var container = UNIT;
 
   var cleanup = function () {
+    this.timeout(8000);
     return truncate([
       container.get('Location'),
       container.get('Teacher'),

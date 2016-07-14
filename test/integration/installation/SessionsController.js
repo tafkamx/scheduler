@@ -22,6 +22,7 @@ describe('Sessions Controller', function () {
 
   // Create installations and DomainContainers
   before(function (done) {
+    this.timeout(8000);
     var inst1 = new InstallationManager.Installation({
       name: 'installation-one',
     });
@@ -81,7 +82,7 @@ describe('Sessions Controller', function () {
 
   // Create users used in tests
   before(function (done) {
-    this.timeout(4000);
+    this.timeout(8000);
 
     Promise.resolve()
       .then(function () {
@@ -163,6 +164,7 @@ describe('Sessions Controller', function () {
   })
 
   after(function () {
+    this.timeout(8000);
     return promiseSeries([
       truncate([
         cont1.get('InstallationSettings'),

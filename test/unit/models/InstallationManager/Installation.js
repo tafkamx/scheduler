@@ -175,7 +175,7 @@ describe('InstallationManager.Installation', function () {
   describe('Class methods', function () {
 
     describe('::createInstallation', function () {
-      this.timeout(4000);
+      this.timeout(8000);
 
       var knex = Knex(CONFIG.database[CONFIG.environment]);
 
@@ -322,7 +322,7 @@ describe('InstallationManager.Installation', function () {
   describe('Methods', function () {
 
     describe('#createDatabase', function () {
-
+      this.timeout(8000);
       var knex = Knex(CONFIG.database[CONFIG.environment]);
 
       beforeEach(function () {
