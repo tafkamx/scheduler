@@ -1,4 +1,5 @@
 import Widget from '../lib/widget';
+import KEYCODES from '../constants/keycodes';
 
 export default class Dropdown extends Widget {
   static _createBackdrop() {
@@ -13,6 +14,13 @@ export default class Dropdown extends Widget {
 
   static backdropClickHandler() {
     Dropdown.activeDropdown.deactivate();
+  }
+
+  static keyUpHandler(ev) {
+    if (ev.which === KEYCODES.ESC) {
+      ev.preventDefault();
+      Dropdown.activeDropdown.deactivate();
+    }
   }
 
   constructor(config) {
@@ -46,6 +54,8 @@ export default class Dropdown extends Widget {
     this.bodyElement.setAttribute('aria-hidden', !this.active);
     Dropdown.backdrop.classList.add('active');
     Dropdown.activeDropdown = this;
+
+    document.addEventListener('keyup', Dropdown.keyUpHandler);
   }
 
   deactivate() {
@@ -53,6 +63,8 @@ export default class Dropdown extends Widget {
     this.bodyElement.setAttribute('aria-hidden', !this.active);
     Dropdown.backdrop.classList.remove('active');
     Dropdown.activeDropdown = null;
+
+    document.removeEventListener('keyup', Dropdown.keyUpHandler);
   }
 
   destroy() {
