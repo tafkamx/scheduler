@@ -21,7 +21,7 @@
       <input type="checkbox" class="mr3">
       <div class="-font-14"><%= installation.name %></div>
       <div class="Header__divider">&nbsp;</div>
-      <a class="ListItem__link mr2" href="http://default.<%= installation.name %>.<%= CONFIG[CONFIG.environment].defaultDomainName %>?guest_login_token=<%= helpers.guestInstallToken(installation.name) %>">Login to installation</a>
+      <a class="ListItem__link mr2" href=" <%= helpers.generateInstallationUrl(installation.name) %>?guest_login_token=<%= helpers.guestInstallToken(installation.name) %>">Login to installation</a>
       <a class="ListItem__link" href="<%= helpers.urlFor.InstallationManager.Installations.edit.url(installation.id) %>">Edit</a>
     </div>
     <% }) %>

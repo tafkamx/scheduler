@@ -23,7 +23,7 @@ function GuestUsersMiddleware(req, res, next) {
   }
 
   // When in a installation, but not logged in or without a guest session or token, redirect to branch login.
-  if (req.installationName && req.originalUrl.indexOf(BRANCH_LOGIN_URL) !== 0 && !req.session.passport && !req.session.guest && !req.query.guest_login_token) {
+  if (req.installationName && req.branch && req.originalUrl.indexOf(BRANCH_LOGIN_URL) !== 0 && !req.session.passport && !req.session.guest && !req.query.guest_login_token) {
     return res.redirect(BRANCH_LOGIN_URL);
   }
 
@@ -47,22 +47,16 @@ function GuestUsersMiddleware(req, res, next) {
     const branchName = req.branch;
     const guest = req.session.guest;
     const grants = guest.grantee.grants;
-    const requiredAccess = (!branchName) ? 'Installation' : branchName === 'default' ? 'InstallationOrDefaultBranch' : 'Branch';
-    switch(requiredAccess) {
-      case 'Installation': 
+    const requiredAccess = !branchName ? 'Installation' : 'Branch';
+    if (requiredAccess === 'Installation') {
       if (grants.access !== requiredAccess) return next();
       if (grants.installationName !== installationName) return next();
-      break;
-      case 'Branch': 
+    } else {
       if (grants.access !== requiredAccess) return next();
       if (grants.installationName !== installationName) return next();
       if (grants.branchName !== branchName) return next();
-      break;
-      case 'InstallationOrDefaultBranch': 
-      if (grants.installationName !== installationName) return next();
-      if (grants.branchName && grants.branchName !== 'default') return next();
-      break;
     }
+
     loadGuestUser(req).then(next).catch(next);
   } else {
     next();
@@ -72,8 +66,10 @@ function GuestUsersMiddleware(req, res, next) {
 function setGuestAsFranchisor(req, grantee) {
   return new Promise(function(resolve, reject) {
     InstallationManager.User.query()
-    .where({id: 'e767ec98-9e5f-4db1-84dc-ee92174d864e'}) // TODO replace w/ installation franchisor
-    .limit(1) 
+    .select('Users.*')
+    .leftJoin('UsersInfo', 'UsersInfo.user_id', 'Users.id')
+    .where({'UsersInfo.role': 'Franchisor'})
+    .limit(1)
     .then(function(users) {
       if (users.length) {
         var user = users[0];
@@ -87,15 +83,19 @@ function setGuestAsFranchisor(req, grantee) {
 }
 
 function setGuestAsBranchAdmin(req, grantee) {
+  const branchName = grantee.grants.branchName;
   return new Promise(function(resolve, reject) {
     req.container.query('User')
-    .limit(1) 
+    .select('Users.*')
+    .leftJoin('Accounts', 'Accounts.user_id', 'Users.id')
+    .leftJoin('Franchisees', 'Franchisees.account_id', 'Accounts.id')
+    .limit(1)
     .then(function(users) {
       if (users.length) {
         var user = users[0];
         resolve({id: user.id, email: user.email, grantee: grantee});
       } else {
-        reject(new Error('There is no Admin account available.'));
+        reject(new Error('There is no Franchisee account available.'));
       }
     })
     .catch(reject);
@@ -116,7 +116,6 @@ function setGuestUser(req, grantee) {
 function loadGuestUser(req) {
   const guest = req.session.guest;
   const grants = guest.grantee.grants;
-
   if (grants.role === 'Franchisor') {
     return new Promise(function(resolve, reject) {
       InstallationManager.User.query()
