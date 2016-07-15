@@ -7,7 +7,7 @@ var path = require('path');
 var url = container.props.url;
 
 describe('Branches Controller', function () {
-
+  this.timeout(16000);
   var branch;
 
   // Create Branch for tests requiring existing branch
@@ -152,7 +152,7 @@ describe('Branches Controller', function () {
   });
 
   describe('#create', function () {
-    this.timeout(4000);
+    this.timeout(16000);
 
     it('Should create a new Branch', function(done) {
       agent
@@ -222,7 +222,7 @@ describe('Branches Controller', function () {
   });
 
   describe('#update', function () {
-    this.timeout(4000);
+    this.timeout(16000);
 
     it('Should update plain Branch\'s attributes', function(done) {
       agent
