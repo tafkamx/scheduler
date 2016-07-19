@@ -5,18 +5,11 @@ import ListSidebar from '../components/ListSidebar';
 import ListSidebarInfoBranch from '../components/ListSidebarInfoBranch';
 
 class BranchesIndex extends Widget {
-  constructor(config) {
-    super(config);
-    this._handlers = {};
-    this._setup()._bindEvents();
-    return this;
-  }
-
   /* Register the children widgets.
-   * @private
+   * @public
    * @return {BranchesIndex}
    */
-  _setup() {
+  run() {
     Array.from(this.element.querySelectorAll('.Dropdown')).forEach((el, index) => {
       this.appendChild(new Dropdown({
         name: `dropdown_${index}`,
@@ -39,14 +32,17 @@ class BranchesIndex extends Widget {
       name: 'infoElement'
     })).render(this.listSidebar.element);
 
+    this._bindEvents();
+
     return this;
   }
 
   /* Register the DOM events and/or CustomEvents it listen to.
    * @private
-   * @listens {ListManager.ListItem.Click}
+   * @listens {ListManager.itemClick}
    */
   _bindEvents() {
+    this._handlers = {};
     this._handlers._listManagerItemClickedHandler = this._listManagerItemClickedHandler.bind(this);
     this.listManager.bind('ListManager.ListItem.Click', this._handlers._listManagerItemClickedHandler);
   }
