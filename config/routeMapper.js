@@ -1,5 +1,5 @@
 module.exports = RouteMapper()
-  .get('/', 'Home#index')
+  .get('/', { to: 'Home#index', as: 'root' })
   .get('/login', { to: 'Sessions#new', as: 'login' })
   .get('/logout', { to: 'Sessions#destroy', as: 'logout' })
   .post('/login', { to: 'Sessions#create', as: 'login' })
@@ -29,7 +29,7 @@ module.exports = RouteMapper()
 
   .namespace('/InstallationManager', function() {
     return RouteMapper()
-      .get('/', 'Home#index')
+      .get('/', { to: 'Home#index', as: 'InstallationManager' })
       .get('/login', { to: 'Sessions#new' })
       .get('/logout', { to: 'Sessions#destroy' })
       .post('/login', { to: 'Sessions#create' })
