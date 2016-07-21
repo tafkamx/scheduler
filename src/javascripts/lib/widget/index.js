@@ -3,22 +3,20 @@ import CustomEventSupport from './CustomEventSupport';
 import NodeSupport from './NodeSupport';
 
 export default class Widget extends mix(NodeSupport, CustomEventSupport) {
-  constructor(config = {}) {
-    super();
-
-    const _defaults = {
+  get _defaults() {
+    return {
       element: null,
       active: false,
       disabled: false,
       __destroyed: false,
+      data: {},
     };
+  }
 
-    Object.assign(_defaults, config);
-    Object.assign(this, _defaults);
+  constructor(config = {}) {
+    super();
 
-    if (this.data === undefined) {
-      this.data = Object.assign({}, this.constructor.data);
-    }
+    Object.assign(this, this._defaults, config);
 
     if (this.element === null) {
       const element = document.createElement('div');
@@ -31,8 +29,8 @@ export default class Widget extends mix(NodeSupport, CustomEventSupport) {
     return '<div></div>';
   }
 
-  _getTemplate() {
-    return this.template();
+  _getTemplate(data) {
+    return this.template(data);
   }
 
   activate() {
@@ -150,12 +148,6 @@ export default class Widget extends mix(NodeSupport, CustomEventSupport) {
   }
 
   _render(element, beforeElement) {
-    // if (this.element === null) {
-    //   const element = document.createElement('div');
-    //   element.insertAdjacentHTML('beforeend', this._getTemplate(this.data));
-    //   this.element = element.firstElementChild;
-    // }
-
     if (beforeElement) {
       element.insertBefore(this.element, beforeElement);
     } else {
@@ -163,5 +155,3 @@ export default class Widget extends mix(NodeSupport, CustomEventSupport) {
     }
   }
 }
-
-Widget.data = {};

@@ -1,6 +1,6 @@
 var path = require('path');
 
-var userMailer = new UserMailer({ baseUrl: CONFIG.env().defaultDomainName });
+var userMailer = new InstallationManager.UserMailer({ baseUrl: CONFIG.env().defaultDomainName });
 
 var user = {
   email: 'sergio@delagarza.io',

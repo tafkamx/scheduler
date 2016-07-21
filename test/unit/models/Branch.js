@@ -7,14 +7,14 @@ describe('M.Branch', function() {
   beforeEach(function () {
     return promiseSeries([
       container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
-      container.get('BranchSettings').query().delete(),
+      truncate(container.get('BranchSettings'))
     ]);
   });
 
   after(function () {
     return promiseSeries([
       container.get('Branch').query().delete().where('id', '!=', container.props.defaultBranchId),
-      container.get('BranchSettings').query().delete(),
+      truncate(container.get('BranchSettings'))
     ]);
   });
 

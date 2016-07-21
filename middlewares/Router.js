@@ -12,17 +12,14 @@ logger.info('Routes')
 var _helpers = [];
 
 routeMapper.routes.forEach(function(route) {
+  var _handler = route.handler.slice();
+
   // save named callback
   _helpers.push(route.as);
 
-  // append given Foo#bar
-  if (route.to) {
-    route.handler.push(route.to);
-  }
-  var _handler   = route.handler.join('.').split('#');
-  var controller = _handler[0];
-  var action     = _handler[1] || route.action;
   var verbs      = [route.verb];
+  var action     = route._actionName || _handler.pop();
+  var controller = route._resourceName || _handler.pop();
 
   verbs.forEach(function(verb) {
     logger.info((verb.toUpperCase() + '      ').substr(0, 7) + ' ' + route.path + '   ' + controller + '#' + action);
@@ -72,8 +69,8 @@ routeMapper.routes.forEach(function(route) {
     var resourceName = route.handler[route.handler.length - 1];
 
     // append built middleware for this resource
-    if (ACL.resources[resourceName]) {
-      args.push(ACL.middlewares[resourceName]);
+    if (ACL.middlewares[resourceName] && ACL.middlewares[resourceName][route.action]) {
+      args.push(ACL.middlewares[resourceName][route.action]);
     }
 
     args.push(controllerMethod);

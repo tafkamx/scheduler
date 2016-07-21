@@ -1,0 +1,26 @@
+<div class="SessionWrapper">
+  <div class="SessionHeader flex flex-column justify-center">
+    <div>
+      <img src="/images/temporal/franchisorlogo.png" alt="Installation Logo"/>
+    </div>
+    <p class="SessionHeader__subtitle">
+      <span class="-font-bold"><%= branch %></span>
+    </p>
+  </div>
+  <form class="SessionForm" action="<%= helpers.urlFor.login.url() %>" method="post">
+    <p class="SessionForm__small-label -gray -ttu center">Branch Login</p>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <input class="Input -full-width mb1" type="text" name="email" value="" placeholder="Email"/>
+    <input class="Input -full-width mb2" type="password" name="password" value="" placeholder="Password" />
+    <div class="SessionForm__info flex mb3">
+      <div class="flex-auto">
+        <label>
+          <input type="checkbox"/>
+          <span class="ml1">Remember me</span>
+        </label>
+      </div>
+      <a href="<%= helpers.urlFor.reset.url() %>">Forgot password?</a>
+    </div>
+    <input class="Button --primary -full-width -ttu" type="submit" value="Log in" />
+  </form>
+</div>

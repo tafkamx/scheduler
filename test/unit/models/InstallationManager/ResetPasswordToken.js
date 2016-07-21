@@ -112,9 +112,9 @@ describe('InstallationManager.ResetPasswordToken', function () {
   });
 
   after(function () {
-    return promiseSeries([
-      InstallationManager.ResetPasswordToken.query().delete(),
-      InstallationManager.User.query().delete(),
+    return truncate([
+      InstallationManager.ResetPasswordToken,
+      InstallationManager.User
     ]);
   });
 

@@ -20,7 +20,7 @@ describe('M.Franchisee', function () {
         return container.create('Account', {
           userId: user.id,
           branchId: container.props.defaultBranchId,
-          type: 'franchisee',
+          type: 'Franchisee',
         });
       })
       .then(function (res) {
@@ -29,10 +29,10 @@ describe('M.Franchisee', function () {
   });
 
   after(function () {
-    return promiseSeries([
-      container.get('Franchisee').query().delete(),
-      container.get('Account').query().delete(),
-      container.get('User').query().delete(),
+    return truncate([
+      container.get('Franchisee'),
+      container.get('Account'),
+      container.get('User')
     ]);
   });
 

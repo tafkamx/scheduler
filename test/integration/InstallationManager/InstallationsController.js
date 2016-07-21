@@ -65,7 +65,7 @@ describe('InstallationManager.InstallationsController', function () {
       InstallationManager.Installation.query()
         .where('name', 'not in', ['installation-inte', 'installation-unit'])
         .delete(),
-      InstallationManager.User.query().delete(),
+      truncate(InstallationManager.User)
     ]);
   });
 
@@ -190,23 +190,6 @@ describe('InstallationManager.InstallationsController', function () {
 
               user = result[0];
             });
-        })
-        .then(function () {
-          return knex('Branches')
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-
-              return knex('InstallationSettings');
-            })
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-
-              return knex('BranchSettings');
-            })
-            .then(function (res) {
-              expect(res.length).to.equal(1);
-            })
-            .then(knex.destroy);
         })
         .then(function () {
           return done();

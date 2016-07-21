@@ -116,14 +116,16 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
           email: req.body.franchisorEmail
         };
 
+
       res.format({
         json: function () {
           InstallationManager.Installation
             .createInstallation({
               installation: installationForm,
               franchisor: franchisorForm,
-              baseUrl: res.locals.helpers.generateInstallationUrl('default', installationForm.name),
+              baseUrl: res.locals.helpers.generateInstallationUrl(req.body.defaultBranchName, installationForm.name),
               installationSettings: req.body.installationSettings,
+              defaultBranchName : req.body.defaultBranchName
             })
             .then(function (installation) {
               res.json(installation);
@@ -156,16 +158,25 @@ Class(InstallationManager, 'InstallationsController').inherits(BaseController)({
               }
 
               var installation = res.locals.installation;
-              var installationKnex = installation.getDatabase();
+              var container;
 
-              return M.InstallationSettings.query(installationKnex)
+              if (neonode.containers[installation.name]) {
+                container = neonode.containers[installation.name]
+              } else {
+                container = new DomainContainer({
+                  knex: installation.getDatabase(),
+                  models: M,
+                  modelExtras: {
+                    mailers: {
+                      user: new UserMailer(),
+                    },
+                  },
+                });
+              }
+
+              return container.query('InstallationSettings')
                 .then(function(settings) {
-                  settings[0].updateAttributes(req.body.installationSettings);
-
-                  return settings[0].save(installationKnex);
-                })
-                .then(function () {
-                  return installationKnex.destroy();
+                  return container.update(settings[0], req.body.installationSettings);
                 });
             })
             .then(function() {

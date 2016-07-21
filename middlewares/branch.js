@@ -11,6 +11,11 @@ module.exports = function (req, res, next) {
     return next();
   }
 
+  // When accessing an installation without a branch. (As Franchisor)
+  if (req.branch === null) {
+    return next();
+  }
+
   Promise.resolve()
     .then(function () {
       return req.container.query('Branch')
